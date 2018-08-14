@@ -2,7 +2,9 @@ package com.rweqx.controller;
 
 import com.rweqx.components.ChosenStudent;
 import com.rweqx.components.DurationCell;
+import com.rweqx.components.PaidCell;
 import com.rweqx.model.DataModel;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -12,10 +14,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -28,37 +32,38 @@ public class AddClass implements Initializable {
     private ObservableList<String> chosenStudents;
     private List<ChosenStudent> chosenStudentsLabels;
 
+    private ObservableList<String> searchMatchNames;
+    private ObservableList<String> classTypes;
+
 
     @FXML
     private HBox selectedStudentsBox;
-
     @FXML
     private TextField studentsBar;
-
     @FXML
     private ListView<String> studentsListView;
-
-    private ObservableList<String> searchMatchNames;
-
     @FXML
     private ListView<String> durationListView;
-
     @FXML
     private ListView<String> paidListView;
-
     @FXML
     private CheckBox sameDurationCheck;
-
     @FXML
     private DatePicker datePicker;
-
     @FXML
     private ChoiceBox<String> classTypeChoices;
+    @FXML
+    private TextField tSingleDuration;
+
 
     public AddClass(){
         currentSearch = new SimpleStringProperty();
         chosenStudents = FXCollections.observableArrayList();
         searchMatchNames = FXCollections.observableArrayList();
+        classTypes = FXCollections.observableArrayList();
+
+        classTypes.addAll("1 on 1", "Group", "1 on 2", "1 on 3");
+
 
         chosenStudentsLabels = new ArrayList<>();
     }
@@ -68,29 +73,38 @@ public class AddClass implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        tSingleDuration.setVisible(false);
 
+        classTypeChoices.setItems(classTypes);
+
+        sameDurationCheck.selectedProperty().addListener((obs, oldVal, newVal)->{
+            if(sameDurationCheck.isSelected()) {
+                durationListView.setVisible(false);
+                tSingleDuration.setVisible(true);
+            }else{
+                durationListView.setVisible(true);
+                tSingleDuration.setVisible(false);
+            }
+        });
         studentsListView.setItems(searchMatchNames);
+        studentsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        studentsListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal)->{
+            String selectedItem = studentsListView.getSelectionModel().getSelectedItem();
+            if(selectedItem == null)
+                return;
+            addStudent(selectedItem);
+        });
 
         durationListView.setItems(chosenStudents);
-        durationListView.setCellFactory((list)->{
-            return new DurationCell();
-        });
+        durationListView.setCellFactory(param -> new DurationCell());
 
-        studentsListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal)->{
-
-        });
+        paidListView.setItems(chosenStudents);
+        paidListView.setCellFactory(param-> new PaidCell());
 
         studentsBar.setOnAction(e->{
             if(studentsListView.getItems().size() > 0) {
                 String s = studentsListView.getItems().get(0);
-                //Add student!
-                chosenStudents.add(s);
-                ChosenStudent cs = new ChosenStudent(s);
-                chosenStudentsLabels.add(cs);
-                cs.setOnAction(this::removeButton);
-
-                selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
-                currentSearch.set("");
+                addStudent(s);
             }
 
         });
@@ -101,10 +115,13 @@ public class AddClass implements Initializable {
 
             String search = newVal;
             search = search.trim().toLowerCase();
+
             if (search.equals("")){
                 System.out.println("Removing all...");
                 searchMatchNames.removeAll();
+                studentsListView.getSelectionModel().clearSelection();
                 studentsListView.getItems().clear();
+
             }else{
                 String finalSearch = search;
                 System.out.println("Match to " + finalSearch);
@@ -128,11 +145,27 @@ public class AddClass implements Initializable {
         });
     }
 
+    private void addStudent(String s) {
+        //Add student!
+        System.out.println("Adding Student " + s);
+        chosenStudents.add(s);
+        ChosenStudent cs = new ChosenStudent(s);
+        chosenStudentsLabels.add(cs);
+        cs.setOnAction(this::removeButton);
+
+        Platform.runLater(()->{
+            selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
+            currentSearch.set("");
+        });
+    }
+
     private void removeButton(ActionEvent e) {
         ChosenStudent cs = (ChosenStudent)e.getSource();
-        chosenStudents.remove(cs.getName());
 
-        selectedStudentsBox.getChildren().setAll();
+        System.out.println("Removing Student " + cs.getName());
+        chosenStudents.remove(cs.getName());
+        chosenStudentsLabels.remove(cs);
+        selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
 
     }
 }

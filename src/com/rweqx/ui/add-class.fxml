@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -13,6 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rweqx.controller.AddClass">
@@ -25,14 +27,15 @@
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="220.0" minHeight="30.0" prefHeight="220.0" vgrow="ALWAYS" />
+                <RowConstraints maxHeight="85.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
                 <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2">
                     <children>
-                  <HBox fx:id="selectedStudentsBox" prefHeight="100.0" prefWidth="200.0" spacing="10.0" />
+                  <HBox fx:id="selectedStudentsBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="25.0" spacing="10.0" />
                         <TextField fx:id="studentsBar" promptText="Students" />
-                  <ListView fx:id="studentsListView" prefHeight="200.0" prefWidth="200.0" />
+                  <ListView fx:id="studentsListView" />
                     </children>
                 </VBox>
                 <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
@@ -62,7 +65,12 @@
                         <CheckBox fx:id="sameDurationCheck" mnemonicParsing="false" text="Same Duration" />
                      </children>
                   </HBox>
-                        <ListView fx:id="durationListView" prefHeight="200.0" prefWidth="200.0" />
+                  <StackPane>
+                     <children>
+                        <TextField fx:id="tSingleDuration" promptText="Enter hours for entire class" StackPane.alignment="TOP_CENTER" />
+                              <ListView fx:id="durationListView" prefHeight="200.0" prefWidth="200.0" />
+                     </children>
+                  </StackPane>
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
@@ -75,6 +83,21 @@
                   </HBox>
                   <ListView fx:id="paidListView" prefHeight="200.0" prefWidth="200.0" />
                </children></VBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
+               <children>
+                  <AnchorPane>
+                     <children>
+                        <Button fx:id="bCancel" mnemonicParsing="false" prefWidth="100.0" text="Cancel" AnchorPane.bottomAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                  <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <AnchorPane>
+                     <children>
+                        <Button fx:id="bSave" mnemonicParsing="false" prefWidth="100.0" text="Save" AnchorPane.bottomAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </HBox>
             </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

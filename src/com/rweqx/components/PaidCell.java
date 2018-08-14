@@ -9,29 +9,28 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 
-public class DurationCell extends ListCell<String> {
+public class PaidCell extends ListCell<String> {
 
     private HBox box;
 
-    private TextField tDuration;
+    private TextField tPaid;
     private Label lName;
     private IntegerProperty duration;
 
-    public DurationCell(){
+    public PaidCell(){
         super();
         duration = new SimpleIntegerProperty(0);
-        tDuration = new TextField("");
-        tDuration.setPromptText("Hours");
+        tPaid = new TextField("");
+        tPaid.setPromptText("$ Paid");
 
         lName = new Label("(empty)");
         Pane spacer = new Pane();
 
         HBox.setHgrow(spacer, Priority.ALWAYS);
-
-
-        box = new HBox(10, lName, spacer, tDuration);
+        box = new HBox(10, lName, spacer, tPaid);
 
     }
+
     @Override
     public void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
@@ -44,4 +43,3 @@ public class DurationCell extends ListCell<String> {
         }
     }
 }
-
