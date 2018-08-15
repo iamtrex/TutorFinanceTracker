@@ -10,104 +10,109 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rweqx.controller.AddClass">
     <children>
-        <GridPane hgap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="220.0" minHeight="30.0" prefHeight="220.0" vgrow="ALWAYS" />
-                <RowConstraints maxHeight="85.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-            <children>
-                <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2">
+      <VBox layoutY="-8.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+                <VBox prefHeight="200.0" prefWidth="100.0">
                     <children>
                   <HBox fx:id="selectedStudentsBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="30.0" spacing="10.0">
                      <padding>
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                     </padding></HBox>
+                     </padding>
+                  </HBox>
                         <TextField fx:id="studentsBar" promptText="Students" />
                   <ListView fx:id="studentsListView" />
                     </children>
                 </VBox>
-                <VBox spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                <VBox spacing="5.0">
                     <children>
                   <HBox>
                      <children>
-                        <Label text="Class Type" />
+                        <Label styleClass="viewing-label" stylesheets="@../styles/style.css" text="Class Type" />
                         <Pane HBox.hgrow="ALWAYS" />
-                              <ChoiceBox fx:id="classTypeChoices" prefWidth="175.0" />
+                              <ChoiceBox fx:id="classTypeChoices" prefWidth="175.0" stylesheets="@../styles/style.css" />
                      </children>
                   </HBox>
                   <HBox>
                      <children>
-                        <Label text="Date" HBox.hgrow="ALWAYS" />
-                        <Pane HBox.hgrow="ALWAYS" />
-                              <DatePicker fx:id="datePicker" HBox.hgrow="ALWAYS" />
+                        <Label styleClass="viewing-label" stylesheets="@../styles/style.css" text="Date" HBox.hgrow="ALWAYS" />
+                        <Pane stylesheets="@../styles/style.css" HBox.hgrow="ALWAYS" />
+                              <DatePicker fx:id="datePicker" stylesheets="@../styles/style.css" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                     </children>
                 </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
+            <HBox VBox.vgrow="ALWAYS">
                <children>
-                  <HBox spacing="5.0">
+                  <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Label text="Duration" />
-                        <Pane HBox.hgrow="ALWAYS" />
-                        <CheckBox fx:id="sameDurationCheck" mnemonicParsing="false" text="Same Duration" />
+                        <HBox spacing="5.0">
+                           <children>
+                              <Label styleClass="viewing-label" stylesheets="@../styles/style.css" text="Duration" />
+                              <Pane HBox.hgrow="ALWAYS" />
+                              <CheckBox fx:id="sameDurationCheck" mnemonicParsing="false" styleClass="smaller-viewing-label" stylesheets="@../styles/style.css" text="Same Duration" />
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                        <StackPane VBox.vgrow="ALWAYS">
+                           <children>
+                              <ScrollPane fx:id="scrollDuration" hbarPolicy="NEVER">
+                                 <content>
+                                    <VBox fx:id="durationBox" prefHeight="10.0" prefWidth="1000.0" spacing="2.0">
+                                       <padding>
+                                          <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                       </padding>
+                                    </VBox>
+                                 </content>
+                              </ScrollPane>
+                              <TextField fx:id="tSingleDuration" promptText="Enter hours for entire class" visible="false" StackPane.alignment="TOP_CENTER">
+                                 <StackPane.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </StackPane.margin>
+                              </TextField>
+                           </children>
+                        </StackPane>
                      </children>
-                  </HBox>
-                  <StackPane VBox.vgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <ScrollPane fx:id="scrollDuration" hbarPolicy="NEVER" prefHeight="211.0" prefWidth="295.0">
+                        <HBox spacing="5.0">
+                           <children>
+                              <Label styleClass="viewing-label" stylesheets="@../styles/style.css" text="Paid" />
+                              <Pane HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <ScrollPane fx:id="scrollPaid" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                            <content>
-                              <VBox fx:id="durationBox" prefHeight="200.0" prefWidth="1000.0" spacing="2.0">
+                              <VBox fx:id="paidBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="100000.0" spacing="2.0">
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
                                  <padding>
                                     <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                                 </padding></VBox>
+                                 </padding>
+                              </VBox>
                            </content>
                         </ScrollPane>
-                        <TextField fx:id="tSingleDuration" promptText="Enter hours for entire class" visible="false" StackPane.alignment="TOP_CENTER">
-                           <StackPane.margin>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </StackPane.margin></TextField>
                      </children>
-                  </StackPane>
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </VBox>
                </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <children>
-                  <HBox spacing="5.0">
-                     <children>
-                        <Label text="Paid" />
-                        <Pane HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-                  <ScrollPane fx:id="scrollPaid" hbarPolicy="NEVER" prefHeight="238.0" prefWidth="285.0" VBox.vgrow="ALWAYS">
-                     <content>
-                        <VBox fx:id="paidBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="100000.0" spacing="2.0">
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                           <padding>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </padding></VBox>
-                     </content>
-                  </ScrollPane>
-               </children></VBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <AnchorPane>
                      <children>
@@ -122,10 +127,10 @@
                   </AnchorPane>
                </children>
             </HBox>
-            </children>
+         </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
-        </GridPane>
+      </VBox>
     </children>
 </AnchorPane>

@@ -44,7 +44,7 @@ public class Logger {
     }
 
     public void log(String message, LogLevel level){
-        String log = "[" + level.getLogType()+ "] " + message;
+        String log = "[" + level.getLogType()+ "] " + message + "\n";
         logController.appendLog(log);
         System.out.println(log);
     }

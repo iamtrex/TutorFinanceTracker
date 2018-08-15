@@ -19,7 +19,7 @@ public class StudentsModel {
         students.add(new Student(1, "Rex"));
         students.add(new Student(2, "Howard Lin"));
         students.add(new Student(3, "Sammy"));
-        students.add(new Student(1, "Rex"));
+        students.add(new Student(4, "Joshua Pak"));
         students.add(new Student(2, "Howard Lin"));
         students.add(new Student(3, "Sammy"));
         students.add(new Student(1, "Rex"));

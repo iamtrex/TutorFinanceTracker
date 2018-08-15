@@ -46,16 +46,16 @@
                   <Insets />
                </opaqueInsets>
             </HBox>
-            <HBox layoutX="10.0" layoutY="27.0">
-               <children>
-                  <Label styleClass="viewing-label" stylesheets="@../styles/style.css" text="Students" />
-               </children>
-            </HBox>
-            <TableView fx:id="studentTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+            <HBox layoutX="10.0" layoutY="27.0" />
+            <TableView fx:id="studentTable" VBox.vgrow="ALWAYS">
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn fx:id="studentNameCol" prefWidth="200.0" text="Student" />
+                <TableColumn fx:id="durationCol" prefWidth="200.0" text="Duration" />
+                  <TableColumn fx:id="paidCol" prefWidth="200.0" text="Paid" />
               </columns>
+               <VBox.margin>
+                  <Insets bottom="20.0" left="50.0" right="50.0" />
+               </VBox.margin>
             </TableView>
          </children>
          <padding>

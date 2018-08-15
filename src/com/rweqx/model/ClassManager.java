@@ -10,11 +10,14 @@ public class ClassManager {
     private Random idGenerator;
 
     private Set<Class> classes;
+    private Map<Long, Class> classMap;
 
     private DataModel model;
 
     public ClassManager(DataModel model){
         idGenerator = new Random();
+
+        classMap = new HashMap<>();
         classes = new HashSet<>();
 
         this.model = model;
@@ -33,13 +36,15 @@ public class ClassManager {
         Class cl = new Class(id, classType, date);
 
         for(StudentInClassElement stuElt : studentElts){
-            Student stu = model.getStudentsModel().getStudentByName(stuElt.getStudentName());
-            cl.addStudent(stu, stuElt.getDuration(), stuElt.getPaid());
+            //Student stu = model.getStudentsModel().getStudentByName(stuElt.getStudentName());
+            //cl.addStudent(stu, stuElt.getDuration(), stuElt.getPaid());
+            cl.addStudent(stuElt);
         }
 
         Logger.getInstance().log("Added new class" + cl.toString() , LogLevel.D);
 
         classes.add(cl);
+        classMap.put(id, cl);
 
         return id;
     }
@@ -52,5 +57,15 @@ public class ClassManager {
         }
 
         return l;
+    }
+
+    public Class getClassByID(long classID) {
+        Class c = classMap.get(classID);
+        if(c == null){
+            Logger.getInstance().log("Cannot find class with ID " + classID + " it doesn't exit", LogLevel.S);
+        }
+
+        return c;
+
     }
 }

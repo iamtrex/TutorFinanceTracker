@@ -4,6 +4,12 @@
 
 }
 
+.smaller-viewing-label{
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+
+}
+
 .clean-button{
 
     -fx-focus-color: transparent;
@@ -11,3 +17,4 @@
 
 
 }
+

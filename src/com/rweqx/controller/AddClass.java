@@ -131,6 +131,7 @@ public class AddClass implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        datePicker.setValue(LocalDate.now());
 
         classTypeChoices.setItems(classTypes);
         scrollDuration.setFitToWidth(true);

@@ -7,6 +7,8 @@ public class Class {
     private long classID;
 
     private Set<Student> students;
+    private List<StudentInClassElement> stuElts;
+
     private Map<Student, Double> studentPaid;
     private Map<Student, Double> studentDuration;
 
@@ -21,13 +23,24 @@ public class Class {
         students = new HashSet<>();
         studentPaid = new HashMap<>();
         studentDuration = new HashMap<>();
+        stuElts = new ArrayList<>();
+
 
     }
 
+    public void addStudent(StudentInClassElement stuElt){
+        stuElts.add(stuElt);
+    }
+    /*
     public void addStudent(Student student, double duration, double paid){
         students.add(student);
         studentDuration.put(student, duration);
         studentPaid.put(student, paid);
+
+    }*/
+
+    public List<StudentInClassElement> getStuElts(){
+        return stuElts;
     }
 
     public Date getDate(){
