@@ -117,4 +117,8 @@ public class RootController implements Initializable {
             logger.log("Cannot load " + fxml, LogLevel.S);
         }
     }
+
+    public DataModel getModel() {
+        return dataModel;
+    }
 }

@@ -5,39 +5,26 @@ import java.util.*;
 public class Class {
 
     private long classID;
-
-    private Set<Student> students;
-    private List<StudentInClassElement> stuElts;
-
-    private Map<Student, Double> studentPaid;
-    private Map<Student, Double> studentDuration;
-
     private Date date;
     private String classType;
+
+    private Set<Student> students;
+
+    private List<StudentInClassElement> stuElts;
+
+
 
     public Class(long classID, String classType, Date date){
         this.classID = classID;
         this.classType = classType;
         this.date = date;
-
         students = new HashSet<>();
-        studentPaid = new HashMap<>();
-        studentDuration = new HashMap<>();
         stuElts = new ArrayList<>();
-
-
     }
 
     public void addStudent(StudentInClassElement stuElt){
         stuElts.add(stuElt);
     }
-    /*
-    public void addStudent(Student student, double duration, double paid){
-        students.add(student);
-        studentDuration.put(student, duration);
-        studentPaid.put(student, paid);
-
-    }*/
 
     public List<StudentInClassElement> getStuElts(){
         return stuElts;
@@ -69,11 +56,14 @@ public class Class {
     public String toString() {
         return "Class{" +
                 "classID=" + classID +
-                ", students=" + students.toString() +
-                ", studentPaid=" + studentPaid +
-                ", studentDuration=" + studentDuration +
                 ", date=" + date +
                 ", classType='" + classType + '\'' +
+                ", students=" + students +
+                ", stuElts=" + stuElts +
                 '}';
+    }
+
+    public Long getClassID() {
+        return classID;
     }
 }

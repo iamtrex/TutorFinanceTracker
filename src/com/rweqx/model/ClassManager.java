@@ -68,4 +68,14 @@ public class ClassManager {
         return c;
 
     }
+
+    public Set<Class> getAllClasses() {
+        return classes;
+    }
+
+    public void addClass(Class c) {
+        classes.add(c);
+        classMap.put(c.getClassID(), c);
+
+    }
 }

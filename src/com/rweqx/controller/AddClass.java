@@ -30,8 +30,11 @@ import java.util.stream.Collectors;
 
 public class AddClass implements Initializable {
 
+    //TODO MAKE THIS CHANGE BUTTON LOOKS...
     public static final int ADD_MODE = 1;
     public static final int EDIT_MODE = 2;
+
+    private int current_mode = ADD_MODE; //Default is addClass.
 
     private DataModel dataModel;
 

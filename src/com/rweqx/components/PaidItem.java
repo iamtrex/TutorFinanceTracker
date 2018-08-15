@@ -43,7 +43,7 @@ public class PaidItem extends HBox {
                 paid.set(0);
             } else {
                 //Match regex.
-                Pattern p = Pattern.compile("\\d*.\\d*");
+                Pattern p = Pattern.compile("\\d*\\.\\d*");
                 Matcher m = p.matcher(text);
                 if (m.matches() && !text.equals(".")) {
                     //System.out.println("IS number. ");
