@@ -49,4 +49,10 @@ public class StudentsModel {
 
         return result.get();
     }
+
+    public Student getStudentByName(String studentName) {
+        Optional<Student> result = students.stream().filter(s->s.getName().equals(studentName)).findFirst();
+
+        return result.get();
+    }
 }

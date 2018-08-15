@@ -2,7 +2,8 @@ package com.rweqx.model;
 
 public class DataModel {
 
-    private ClassesModel classesModel;
+
+    private ClassManager classManager;
     private PaymentModel paymentModel;
     private StudentsModel studentsModel;
 
@@ -15,14 +16,15 @@ public class DataModel {
         return paymentModel;
     }
 
-    public ClassesModel getClassesModel() {
-        return classesModel;
+    public ClassManager getClassManager() {
+        return classManager;
     }
 
 
     public DataModel(){
-        classesModel = new ClassesModel();
+        classManager = new ClassManager(this);
         paymentModel = new PaymentModel();
         studentsModel = new StudentsModel();
     }
+
 }

@@ -7,6 +7,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -33,7 +34,10 @@
             <children>
                 <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2">
                     <children>
-                  <HBox fx:id="selectedStudentsBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="25.0" spacing="10.0" />
+                  <HBox fx:id="selectedStudentsBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="30.0" spacing="10.0">
+                     <padding>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </padding></HBox>
                         <TextField fx:id="studentsBar" promptText="Students" />
                   <ListView fx:id="studentsListView" />
                     </children>
@@ -65,10 +69,20 @@
                         <CheckBox fx:id="sameDurationCheck" mnemonicParsing="false" text="Same Duration" />
                      </children>
                   </HBox>
-                  <StackPane>
+                  <StackPane VBox.vgrow="ALWAYS">
                      <children>
-                        <TextField fx:id="tSingleDuration" promptText="Enter hours for entire class" StackPane.alignment="TOP_CENTER" />
-                              <ListView fx:id="durationListView" prefHeight="200.0" prefWidth="200.0" />
+                        <ScrollPane fx:id="scrollDuration" hbarPolicy="NEVER" prefHeight="211.0" prefWidth="295.0">
+                           <content>
+                              <VBox fx:id="durationBox" prefHeight="200.0" prefWidth="1000.0" spacing="2.0">
+                                 <padding>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </padding></VBox>
+                           </content>
+                        </ScrollPane>
+                        <TextField fx:id="tSingleDuration" promptText="Enter hours for entire class" visible="false" StackPane.alignment="TOP_CENTER">
+                           <StackPane.margin>
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                           </StackPane.margin></TextField>
                      </children>
                   </StackPane>
                </children>
@@ -81,7 +95,17 @@
                         <Pane HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
-                  <ListView fx:id="paidListView" prefHeight="200.0" prefWidth="200.0" />
+                  <ScrollPane fx:id="scrollPaid" hbarPolicy="NEVER" prefHeight="238.0" prefWidth="285.0" VBox.vgrow="ALWAYS">
+                     <content>
+                        <VBox fx:id="paidBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="100000.0" spacing="2.0">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                           </padding></VBox>
+                     </content>
+                  </ScrollPane>
                </children></VBox>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
                <children>

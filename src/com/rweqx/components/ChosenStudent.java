@@ -1,23 +1,25 @@
 package com.rweqx.components;
 
+import de.jensd.fx.glyphs.GlyphsDude;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.*;
 
-public class ChosenStudent extends Pane {
+
+public class ChosenStudent extends AnchorPane {
     public String getName() {
         return name;
     }
 
 
-
-    private Button removeButton;
-    private Label lName;
 
     private String name;
 
@@ -26,16 +28,29 @@ public class ChosenStudent extends Pane {
 
         this.name = name;
 
-        lName = new Label(name);
-        removeButton = new Button("x");
+        Text tName = new Text(name);
+
+        Text iDel = GlyphsDude.createIcon(FontAwesomeIcon.TIMES, "20");
+        AnchorPane anchorPane = new AnchorPane();
+        AnchorPane.setLeftAnchor(tName, 2.0);
+        AnchorPane.setRightAnchor(iDel, 2.0);
+        AnchorPane.setTopAnchor(tName, 0.0);
+        AnchorPane.setTopAnchor(iDel, 0.0);
+        AnchorPane.setBottomAnchor(tName, 0.0);
+        AnchorPane.setBottomAnchor(iDel, 0.0);
+
+        anchorPane.getChildren().addAll(tName, iDel);
+        Button removeButton = new Button("",anchorPane);
+
         removeButton.setOnAction((e)->{
             fireEvent(e);
         });
 
-
-        HBox hbox = new HBox(10, lName, removeButton);
-        this.getChildren().add(hbox);
-
+        this.setPrefWidth(150);
+        this.setPrefHeight(20);
+        this.getChildren().setAll(removeButton);
+        AnchorPane.setLeftAnchor(removeButton, 0.0);
+        AnchorPane.setRightAnchor(removeButton, 0.0);
 
     }
 

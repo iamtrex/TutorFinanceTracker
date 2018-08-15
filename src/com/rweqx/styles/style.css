@@ -1,0 +1,13 @@
+.viewing-label{
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+
+}
+
+.clean-button{
+
+    -fx-focus-color: transparent;
+    -fx-background-color: rgba(255, 255, 255, 0.0);
+
+
+}

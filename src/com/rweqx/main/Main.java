@@ -34,6 +34,11 @@ public class Main extends Application {
 
         logger.log("Done init", LogLevel.D);
 
+        /*   //TODO STYLESHEET?
+            Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
+            StyleManager.getInstance().addUserAgentStylesheet(getClass().getResource("/style.css").toString());
+         */
+
     }
 
     @Override
