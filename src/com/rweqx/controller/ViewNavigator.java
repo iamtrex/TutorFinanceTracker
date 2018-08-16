@@ -2,6 +2,7 @@ package com.rweqx.controller;
 
 import com.rweqx.controller.RootController;
 import com.rweqx.model.DataModel;
+import com.rweqx.model.Event;
 import javafx.scene.layout.Pane;
 
 import java.util.HashMap;
@@ -21,4 +22,5 @@ public class ViewNavigator {
     public static void loadScene(Pane p){
         rc.loadScene(p);
     }
+
 }

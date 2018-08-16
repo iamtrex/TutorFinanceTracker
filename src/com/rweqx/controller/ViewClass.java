@@ -4,7 +4,9 @@ import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 import com.rweqx.model.Class;
 import com.rweqx.model.DataModel;
+import com.rweqx.model.Student;
 import com.rweqx.model.StudentInClassElement;
+import com.rweqx.util.DateUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,6 +19,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 public class ViewClass implements Initializable {
 
@@ -48,11 +51,18 @@ public class ViewClass implements Initializable {
 
 
         Class c = dataModel.getClassManager().getClassByID(classID);
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy");
-        lDate.setText(sdf.format(c.getDate()));
+        lDate.setText(DateUtil.getYearMonthDayFromDate(c.getDate()));
         lClassType.setText(c.getClassType());
 
-        ObservableList<StudentInClassElement> stuElts = FXCollections.observableArrayList(c.getStuElts());
+        Set<Student> students = c.getStudents();
+        System.out.println("Viewing this many students " + students.size());
+        ObservableList<StudentInClassElement> stuElts = FXCollections.observableArrayList();
+        for(Student student : students){
+            double duration = c.getDurationFromStudent(student.getID());
+            double paid = dataModel.getPaymentModel().getPaymentByID(c.getPaidIDFromStudent(student.getID()));
+            stuElts.add(new StudentInClassElement(student.getName(), duration, paid));
+        }
+
 
         studentNameCol.setCellValueFactory(
                 new PropertyValueFactory<StudentInClassElement, String>("studentName"));

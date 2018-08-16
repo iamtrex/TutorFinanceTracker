@@ -2,19 +2,19 @@ package com.rweqx.model;
 
 import java.util.Date;
 
-public class Payment {
+/**
+ * While saving student name is redundant, it makes it easier for someone to read logs in cases where that is needed. Thus we are keeping it.
+ *
+ */
+public class Payment extends Event{
 
-    private int studentID;
     private double value;
-    private Date date;
 
-    public int getStudentID() {
-        return studentID;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setStudentID(int studentID) {
-        this.studentID = studentID;
-    }
+    private Student student;
 
     public double getValue() {
         return value;
@@ -24,18 +24,12 @@ public class Payment {
         this.value = value;
     }
 
-    public Date getDate() {
-        return date;
-    }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public Payment(int studentID, double value, Date date){
-        this.studentID = studentID;
+    public Payment(long eventID, Student student, double value, Date date){
+        super(eventID, date);
         this.value = value;
-        this.date = date;
+        this.student = student;
+
     }
 
 }

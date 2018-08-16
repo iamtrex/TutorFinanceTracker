@@ -6,49 +6,68 @@ import com.google.gson.GsonBuilder;
 import com.rweqx.constants.Constants;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
+import org.hildan.fxgson.FxGson;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
+import java.util.Set;
 
 public class JSONWriter {
 
-    private GsonBuilder builder;
     private Gson gson;
 
     public JSONWriter(){
-        builder = new GsonBuilder();
-        builder.setPrettyPrinting();
+        gson = FxGson.coreBuilder().setPrettyPrinting().create();
 
-        gson = builder.create();
     }
 
-    public void writeClassToFile(Class c, String classFile){
-        System.out.println("Writing class " + c);
+    public void writeStudentsToFile(List<Student> students, String studentFile){
+        System.out.println("Writing students" + students);
+        String fileName = Constants.SAVE_FOLDER + studentFile;
+        checkFile(fileName);
+
+        String json = gson.toJson(students);
+        write(fileName, json);
+    }
+
+    public void writePaymentToFile(Set<Payment> paymentList, String paymentFile){
+        System.out.println("Writing payments" + paymentList);
+
+        String fileName = Constants.SAVE_FOLDER + paymentFile;
+        checkFile(fileName);
+        String json = gson.toJson(paymentList);
+        write(fileName, json);
+    }
+
+    private void write(String fileName, String toWrite){
+
+        try {
+            Writer writer = new FileWriter(fileName);
+
+            System.out.println("Writing " + toWrite);
+
+            writer.write(toWrite);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void writeClassesToFile(Set<Class> classList, String classFile){
+        System.out.println("Writing class " + classList);
 
         String fileName = Constants.SAVE_FOLDER + classFile;
 
         System.out.println("Writing to " + fileName);
         checkFile(fileName);
 
-        try {
-            Writer writer = new FileWriter(fileName);
-
-
-            String json = gson.toJson(c);
-            System.out.println("Writing " + json);
-
-            writer.write(json);
-
-            //writer.append("Hello World");
-
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        String json = gson.toJson(classList);
+        write(fileName, json);
 
     }
 
@@ -65,14 +84,6 @@ public class JSONWriter {
         }
     }
 
-    public void writePaymentToFile(Payment p, String paymentFile){
-
-    }
-
-    public void writeStudentProfileToJSON(Student s){
-
-
-    }
 
 
 }

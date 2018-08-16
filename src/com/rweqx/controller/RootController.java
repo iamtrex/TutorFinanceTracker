@@ -16,9 +16,9 @@ import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.*;
 
 public class RootController implements Initializable {
 
@@ -72,11 +72,14 @@ public class RootController implements Initializable {
         try {
             FXMLLoader addClassLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/add-class.fxml"));
             FXMLLoader studentsLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/show-students.fxml"));
+            FXMLLoader dayViewLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/day-view.fxml"));
+            FXMLLoader addPaymentLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/add-payment.fxml"));
 
             //Load and put into map.
             clickMap.put(bAddClass, addClassLoader.load());
             clickMap.put(bStudents, studentsLoader.load());
-
+            clickMap.put(bCalendar, dayViewLoader.load());
+            clickMap.put(bAddPayment, addPaymentLoader.load());
 
             //Init models.
             AddClass addClassController = addClassLoader.getController();
@@ -84,6 +87,13 @@ public class RootController implements Initializable {
 
             ShowStudents showStudentsController = studentsLoader.getController();
             showStudentsController.initModel(dataModel);
+
+            DayViewController dvc = dayViewLoader.getController();
+            dvc.initModel(dataModel);
+            dvc.setDate(Calendar.getInstance().getTime()); //default view is today.
+
+            AddPaymentController apc = addPaymentLoader.getController();
+            apc.initModel(dataModel);
 
 
         } catch (IOException e) {
@@ -100,6 +110,21 @@ public class RootController implements Initializable {
             }
         });
 
+    }
+
+    public FXMLLoader loadSceneAndGetLoader(String fxml){
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+
+        try{
+            Pane p = loader.load();
+            content.getChildren().setAll(p);
+        }catch(IOException e){
+            //Don't load.
+            logger.log("Cannot load " + fxml, LogLevel.S);
+        }
+
+        return loader;
     }
 
     public void loadScene(Pane p){

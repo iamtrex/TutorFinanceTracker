@@ -1,69 +1,60 @@
 package com.rweqx.model;
 
+import com.rweqx.logger.LogLevel;
+import com.rweqx.logger.Logger;
+
 import java.util.*;
 
-public class Class {
+/**
+ * While saving student name is redundant, it makes it easier for someone to read logs in cases where that is needed. Thus we are keeping it.
+ *
+ */
+public class Class extends Event{
 
-    private long classID;
-    private Date date;
+
     private String classType;
+    private Map<Integer, Double> durationMap;
+    private Map<Integer, Long> paymentMap;
 
     private Set<Student> students;
 
-    private List<StudentInClassElement> stuElts;
 
-
-
-    public Class(long classID, String classType, Date date){
-        this.classID = classID;
+    public Class(long eventID, String classType, Date date){
+        super(eventID, date);
         this.classType = classType;
-        this.date = date;
         students = new HashSet<>();
-        stuElts = new ArrayList<>();
+        durationMap = new HashMap<>();
+        paymentMap = new HashMap<>();
+
     }
 
-    public void addStudent(StudentInClassElement stuElt){
-        stuElts.add(stuElt);
+    public void addPayment(Student s, long pid){
+        if(!students.contains(s)){
+            Logger.getInstance().log("Student " + s + " tried to pay, but wasn't in this class", LogLevel.W);
+        }else{
+            paymentMap.put(s.getID(), pid);
+        }
     }
 
-    public List<StudentInClassElement> getStuElts(){
-        return stuElts;
+    public void addStudent(Student s, double duration){
+        students.add(s);
+        durationMap.put(s.getID(), duration);
     }
 
-    public Date getDate(){
-        return date;
+    public Set<Student> getStudents() {
+        return students;
+    }
+
+    public Double getDurationFromStudent(int sid){
+        return durationMap.get(sid);
+    }
+
+    public long getPaidIDFromStudent(int sid){
+        return paymentMap.get(sid) == null ? -1 : paymentMap.get(sid);
     }
 
     public String getClassType(){
         return classType;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Class aClass = (Class) o;
-        return classID == aClass.classID;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(classID);
-    }
-
-    @Override
-    public String toString() {
-        return "Class{" +
-                "classID=" + classID +
-                ", date=" + date +
-                ", classType='" + classType + '\'' +
-                ", students=" + students +
-                ", stuElts=" + stuElts +
-                '}';
-    }
-
-    public Long getClassID() {
-        return classID;
-    }
 }

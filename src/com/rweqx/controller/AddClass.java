@@ -3,7 +3,10 @@ package com.rweqx.controller;
 import com.rweqx.components.*;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
+import com.rweqx.model.Class;
 import com.rweqx.model.DataModel;
+import com.rweqx.components.WarningPopUp;
+import com.rweqx.model.Student;
 import com.rweqx.model.StudentInClassElement;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -85,13 +88,52 @@ public class AddClass implements Initializable {
 
     public void selectMode(int i){
         //Selects mode.
-
+        current_mode = i;
     }
 
     public void initModel(DataModel model) {
         this.dataModel = model;
     }
 
+    public void loadClass(Class c) {
+        //TODO SETUP EDITING... RIGHT NOW WON'T SUPPORT IT...
+        reset();
+
+        for(Student s : c.getStudents()){
+            String name = s.getName();
+            addStudent(name);
+            DurationItem di = durationMap.get(name);
+            di.setDuration(c.getDurationFromStudent(s.getID()));
+
+            PaidItem pi = paidMap.get(name);
+            if(c.getPaidIDFromStudent(s.getID()) != -1) {
+                pi.setPaid(dataModel.getPaymentModel().getPaymentByID(c.getPaidIDFromStudent(s.getID())));
+            }
+
+        }
+    }
+
+    public void reset(){
+        durationMap.clear();
+        paidMap.clear();
+        currentSearch.setValue("");
+        chosenStudents.clear();
+        searchMatchNames.clear();
+        chosenStudentsLabels.clear();
+
+        classTypeChoices.setValue(null);
+
+        durationBox.getChildren().clear();
+        paidBox.getChildren().clear();
+
+        sameDurationCheck.setSelected(false);
+        datePicker.setValue(LocalDate.now());
+
+        Platform.runLater(()->{
+            selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
+            currentSearch.set("");
+        });
+    }
     public AddClass(){
         durationMap = new HashMap<>();
         paidMap = new HashMap<>();
@@ -141,59 +183,13 @@ public class AddClass implements Initializable {
         scrollPaid.setFitToWidth(true);
 
         bSave.setOnAction((e)->{
-            if(true){ //TODO Perform checks
-                String classType = classTypeChoices.getValue();
-                LocalDate localDate = datePicker.getValue();
-                Date date = Date.from(Instant.from(localDate.atStartOfDay(ZoneId.systemDefault())));
-
-                List<StudentInClassElement> studentElts = new ArrayList<>();
-
-                double sameDuration = 0;
-                if(sameDurationCheck.isSelected()) {
-                    try {
-                        sameDuration = Double.parseDouble(tSingleDuration.getText().trim());
-                    } catch (Exception exp) {
-
-                        exp.printStackTrace();
-                    }
-                }
-
-                System.out.println(chosenStudents.size());
-                for(String student : chosenStudents) {
-                    double duration, paid;
-                    if(sameDurationCheck.isSelected()){
-                        duration = sameDuration;
-                    }else{
-
-                        DurationItem di = durationMap.get(student);
-                        if(di != null){
-                            duration = di.getDuration();
-                        }else {
-                            Logger.getInstance().log("Duration Item was null, data was corrupted, cannot add student :(", LogLevel.S);
-                            throw new IllegalStateException();
-                        }
-                    }
-
-
-                    PaidItem pi = paidMap.get(student);
-                    if (pi != null) {
-                        paid = pi.getPaid();
-                    }else{
-                        Logger.getInstance().log("Paid item was null, data was corrupted, cannot add student :(", LogLevel.S);
-                        throw new IllegalStateException();
-                    }
-
-                    studentElts.add(new StudentInClassElement(student, duration, paid));
-                }
-                long classID = dataModel.getClassManager().createAndAddClass(classType, date, studentElts);
-
-                switchToViewClass(classID);
-
+            if(saveAndSwitchToViewClass()){ //If succeeded
+                reset();
             }
         });
 
         bCancel.setOnAction((e)->{
-           ViewNavigator.loadScene("/com/rweqx/ui/add-class.fxml");
+           reset();
         });
 
         sameDurationCheck.selectedProperty().addListener((obs, oldVal, newVal)->{
@@ -247,12 +243,11 @@ public class AddClass implements Initializable {
             addStudent(selectedItem);
         });
 
-        studentsBar.setOnAction(e->{
+        studentsBar.setOnAction(e->{ //Add First item in list on enter press.
             if(studentsListView.getItems().size() > 0) {
                 String s = studentsListView.getItems().get(0);
                 addStudent(s);
             }
-
         });
 
         currentSearch.addListener((obs, oldVal, newVal)->{
@@ -262,7 +257,7 @@ public class AddClass implements Initializable {
             search = search.trim().toLowerCase();
 
             if (search.equals("")){
-                searchMatchNames.removeAll();
+                searchMatchNames.clear();
                 studentsListView.getSelectionModel().clearSelection();
                 studentsListView.getItems().clear();
 
@@ -285,6 +280,79 @@ public class AddClass implements Initializable {
 
             }
         });
+    }
+
+    private boolean saveAndSwitchToViewClass() {
+        String classType = classTypeChoices.getValue();
+        LocalDate localDate = datePicker.getValue();
+        boolean sameDuration = sameDurationCheck.isSelected();
+        double singleDurationLength = 0.0;
+
+        if(localDate == null){
+            new WarningPopUp("No Date Picked!");
+            return false;
+        }else if(classType == null){
+            new WarningPopUp("No Type Picked!");
+            return false;
+        }else if(chosenStudents.size() == 0){
+            new WarningPopUp("No Students Picked!");
+            return false;
+        }else if(sameDuration){
+            try {
+                singleDurationLength = Double.parseDouble(tSingleDuration.getText());
+            }catch(NumberFormatException nfe) {
+                //Ignore
+                singleDurationLength = 0;
+            }
+            if(singleDurationLength <= 0){
+                new WarningPopUp("Duration is 0 or malformed");
+                return false;
+            }
+        }else{
+            for(String student: chosenStudents){
+                DurationItem di = durationMap.get(student);
+                if(di == null){
+                    Logger.getInstance().log("Duration item could not be found for " + student, LogLevel.S);
+                    return false;
+                }else if(di.getDuration() <= 0){
+                    new WarningPopUp("Duration for " + student + " is 0 or malformed");
+                    return false;
+                }
+            }
+        }
+        //All Checks passed:
+
+        Date date = Date.from(Instant.from(localDate.atStartOfDay(ZoneId.systemDefault())));
+
+        List<StudentInClassElement> studElts = new ArrayList<>();
+        for(String student : chosenStudents) {
+            double duration, paid;
+            if(sameDuration){
+                duration = singleDurationLength;
+            }else{
+                DurationItem di = durationMap.get(student);
+                if(di != null){
+                    duration = di.getDuration();
+                }else {
+                    Logger.getInstance().log("Duration Item was null, data was corrupted, cannot add student :(", LogLevel.S);
+                    throw new IllegalStateException();
+                }
+            }
+
+            PaidItem pi = paidMap.get(student);
+            if (pi != null) {
+                paid = pi.getPaid();
+            }else{
+                Logger.getInstance().log("Paid item was null, data was corrupted, cannot add student :(", LogLevel.S);
+                throw new IllegalStateException();
+            }
+
+            studElts.add(new StudentInClassElement(student, duration, paid));
+        }
+
+        long classID = dataModel.createAndAddClass(classType, date, studElts);
+        switchToViewClass(classID);
+        return true;
     }
 
     private void switchToViewClass(long classID) {

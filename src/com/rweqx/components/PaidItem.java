@@ -1,5 +1,6 @@
 package com.rweqx.components;
 
+import com.rweqx.constants.Constants;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -43,7 +44,7 @@ public class PaidItem extends HBox {
                 paid.set(0);
             } else {
                 //Match regex.
-                Pattern p = Pattern.compile("\\d*\\.\\d*");
+                Pattern p = Pattern.compile(Constants.NUMBER_REGEX);
                 Matcher m = p.matcher(text);
                 if (m.matches() && !text.equals(".")) {
                     //System.out.println("IS number. ");
@@ -62,6 +63,10 @@ public class PaidItem extends HBox {
     public Double getPaid() {
 
         return paid.doubleValue();
+    }
+
+    public void setPaid(Double d){
+        paid.set(d);
     }
 
 

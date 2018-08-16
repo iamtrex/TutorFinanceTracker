@@ -22,7 +22,7 @@ public class Main extends Application {
     private DataModel model;
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage){
         this.primaryStage = primaryStage;
         logger = Logger.getInstance();
 
@@ -62,7 +62,9 @@ public class Main extends Application {
             ViewNavigator.setRootController(loader.getController());
 
         }catch(IOException e){
-
+            e.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 

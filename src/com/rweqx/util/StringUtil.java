@@ -1,5 +1,10 @@
 package com.rweqx.util;
 
+import com.rweqx.constants.Constants;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class StringUtil {
     /**
      * Faster way of performing a.toLowerCase().contains(b.toLowerCase()) for two
@@ -24,6 +29,20 @@ public class StringUtil {
                 return true;
         }
 
+        return false;
+    }
+
+    public static boolean isPositiveNumber(String text) {
+        //System.out.println(text);
+        if (text.equalsIgnoreCase("")) {
+            return false;
+        }
+        //Match regex.
+        Pattern p = Pattern.compile(Constants.NUMBER_REGEX);
+        Matcher m = p.matcher(text);
+        if (m.matches() && !text.equals(".")) {
+            return true;
+        }
         return false;
     }
 }

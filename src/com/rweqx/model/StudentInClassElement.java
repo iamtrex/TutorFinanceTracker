@@ -29,4 +29,12 @@ public class StudentInClassElement {
         return duration.get();
     }
 
+    @Override
+    public String toString() {
+        return "StudentInClassElement{" +
+                "studentName=" + studentName.get() +
+                ", duration=" + duration.get() +
+                ", paid=" + paid.get() +
+                '}';
+    }
 }
