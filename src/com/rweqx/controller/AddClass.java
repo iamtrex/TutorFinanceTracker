@@ -8,6 +8,7 @@ import com.rweqx.model.DataModel;
 import com.rweqx.components.WarningPopUp;
 import com.rweqx.model.Student;
 import com.rweqx.model.StudentInClassElement;
+import com.rweqx.util.DateUtil;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -322,7 +323,7 @@ public class AddClass implements Initializable {
         }
         //All Checks passed:
 
-        Date date = Date.from(Instant.from(localDate.atStartOfDay(ZoneId.systemDefault())));
+        Date date = DateUtil.localDateToDate(localDate);
 
         List<StudentInClassElement> studElts = new ArrayList<>();
         for(String student : chosenStudents) {

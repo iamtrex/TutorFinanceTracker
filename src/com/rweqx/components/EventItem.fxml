@@ -8,11 +8,11 @@
 
 <fx:root alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="10.0" type="HBox" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rweqx.controller.EventItemController">
    <children>
-      <Label fx:id="lType" styleClass="viewing-label" stylesheets="@../styles/style.css" />
-      <Label fx:id="lStudents" styleClass="viewing-label" stylesheets="@../styles/style.css" />
-      <Label fx:id="lPaid" styleClass="viewing-label" stylesheets="@../styles/style.css" />
+      <Label fx:id="lType" styleClass="smaller-viewing-label" stylesheets="@../styles/style.css" />
+      <Label fx:id="lStudents" styleClass="smaller-viewing-label" stylesheets="@../styles/style.css" />
+      <Label fx:id="lPaid" styleClass="smaller-viewing-label" stylesheets="@../styles/style.css" />
       <Pane HBox.hgrow="ALWAYS" />
-      <Button fx:id="bEdit" mnemonicParsing="false" text="Edit" />
+      <Button fx:id="bEdit" mnemonicParsing="false" styleClass="clean-button" stylesheets="@../styles/style.css" text="Edit" />
    </children>
    <padding>
       <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

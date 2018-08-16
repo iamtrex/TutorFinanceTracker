@@ -1,6 +1,9 @@
 package com.rweqx.util;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -21,4 +24,11 @@ public class DateUtil {
     }
 
 
+    public static Date localDateToDate(LocalDate localDate) {
+        return Date.from(Instant.from(localDate.atStartOfDay(ZoneId.systemDefault())));
+    }
+
+    public static LocalDate dateToLocalDate(Date date) {
+        return LocalDate.from(date.toInstant().atZone(ZoneId.systemDefault()));
+    }
 }

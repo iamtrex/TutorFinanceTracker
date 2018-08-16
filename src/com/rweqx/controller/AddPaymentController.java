@@ -5,6 +5,7 @@ import com.rweqx.constants.Constants;
 import com.rweqx.model.DataModel;
 import com.rweqx.model.Payment;
 import com.rweqx.model.Student;
+import com.rweqx.util.DateUtil;
 import com.rweqx.util.StringUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -102,7 +103,9 @@ public class AddPaymentController implements Initializable {
             new WarningPopUp("Invalid student.");
             return false;
         }
-        Date date = Date.from(Instant.from(datePicker.getValue().atStartOfDay(ZoneId.systemDefault())));
+
+        Date date = DateUtil.localDateToDate(datePicker.getValue());
+
         double amount = Double.parseDouble(tPaid.getText());
 
         long pid = model.createAndAddPayment(student, date, amount);

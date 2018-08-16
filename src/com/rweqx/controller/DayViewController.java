@@ -9,11 +9,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,6 +27,9 @@ public class DayViewController {
 
     @FXML
     private ScrollPane eventScroll;
+
+    @FXML
+    private DatePicker datePicker;
 
     private Date showingDate;
 
@@ -41,7 +48,11 @@ public class DayViewController {
 
         System.out.println("Setting Date");
 
-        lDate.setText(DateUtil.getYearMonthDayFromDate(date));
+        datePicker.setValue(DateUtil.dateToLocalDate(date));
+        datePicker.valueProperty().addListener((obs, oldVal, newVal) ->{
+           setDate(DateUtil.localDateToDate(newVal));
+        });
+
         System.out.println(Calendar.getInstance().getTime());
 
         List<Event> events = dataModel.getAllEventsOnDate(date);
