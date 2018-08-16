@@ -1,7 +1,7 @@
 package com.rweqx.components;
 
-import de.jensd.fx.glyphs.GlyphsDude;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.event.ActionEvent;
@@ -30,7 +30,8 @@ public class ChosenStudent extends AnchorPane {
 
         Text tName = new Text(name);
 
-        Text iDel = GlyphsDude.createIcon(FontAwesomeIcon.TIMES, "20");
+
+        Text iDel = FontAwesomeIconFactory.get().createIcon(FontAwesomeIcon.TIMES, "20");
         AnchorPane anchorPane = new AnchorPane();
         AnchorPane.setLeftAnchor(tName, 2.0);
         AnchorPane.setRightAnchor(iDel, 2.0);
