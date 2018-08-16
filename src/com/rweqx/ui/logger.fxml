@@ -9,6 +9,6 @@
       <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
    </padding>
    <children>
-      <TextArea fx:id="tLog" editable="false" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+      <TextArea fx:id="tLog" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" VBox.vgrow="ALWAYS" />
    </children>
 </VBox>

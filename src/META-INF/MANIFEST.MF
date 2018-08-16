@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: controlsfx-8.40.14.jar gson-2.8.5.jar fx-gson-3.1.0.jar fo
+ ntawesomefx-8.9.jar controlsfx-8.40.14.jar fx-gson-3.1.0.jar
+Main-Class: com.rweqx.main.Main
+
