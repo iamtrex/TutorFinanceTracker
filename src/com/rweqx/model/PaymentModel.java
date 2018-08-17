@@ -4,9 +4,6 @@ import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 import com.rweqx.util.DateUtil;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
 
 public class PaymentModel {
@@ -55,5 +52,24 @@ public class PaymentModel {
             }
         }
         return 0.0;
+    }
+
+    public List<Payment> getAllPaymentsBy(int id) {
+        List<Payment> allPayments = new ArrayList<>();
+        for(Payment p : payments){
+            if(p.getStudent().getID() == id){
+                allPayments.add(p);
+            }
+        }
+        return allPayments;
+    }
+
+    public double getTotalPaidBy(int id) {
+        List<Payment> payments = getAllPaymentsBy(id);
+        double total = 0;
+        for(Payment p : payments){
+            total += p.getValue();
+        }
+        return total;
     }
 }

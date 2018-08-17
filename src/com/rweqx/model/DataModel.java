@@ -3,8 +3,10 @@ package com.rweqx.model;
 import com.rweqx.constants.Constants;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
+import com.rweqx.util.DateUtil;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DataModel {
 
@@ -12,10 +14,16 @@ public class DataModel {
     private ClassManager classManager;
     private PaymentModel paymentModel;
     private StudentsModel studentsModel;
+    private ClassTypes classTypeManager;
+
+
 
     private JSONWriter saveWriter;
     private JSONReader saveReader;
 
+    public ClassTypes getClassTypeManager() {
+        return classTypeManager;
+    }
     public StudentsModel getStudentsModel() {
         return studentsModel;
     }
@@ -32,6 +40,11 @@ public class DataModel {
 
     public DataModel(){
         idGenerator = new Random();
+        classTypeManager = new ClassTypes();
+        List<String> types = new ArrayList(List.of("1 on 1", "Group", "1 on 2", "1 on 3"));
+        //TODO READ FROM FILE.
+        classTypeManager.setClassTypes(types);
+
         classManager = new ClassManager(this);
         paymentModel = new PaymentModel();
         studentsModel = new StudentsModel();
@@ -108,5 +121,30 @@ public class DataModel {
         long pid = getNewID();
         paymentModel.createPayment(pid, student, amount, date);
         return pid;
+    }
+
+    public List<Event> getAllEventsByStudent(Student currentStudent) {
+        List<Event> allEvents = new ArrayList<>();
+        allEvents.addAll(classManager.getAllClassesBy(currentStudent.getID()));
+        allEvents.addAll(paymentModel.getAllPaymentsBy(currentStudent.getID()));
+        return allEvents;
+    }
+
+    public List<Event> getAllEventsByStudentInMonth(Student currentStudent, int month) {
+        List<Event> allEvents = getAllEventsByStudent(currentStudent);
+        List<Event> monthEvents = allEvents.stream()
+                .filter(e -> month == DateUtil.getMonthFromDate(e.getDate()))
+                .collect(Collectors.toList());
+        return monthEvents;
+    }
+
+    public double getAllEventsByStudentOutstanding(Student currentStudent) {
+        double allTimePaid = paymentModel.getTotalPaidBy(currentStudent.getID());
+        double allTimeCost = classManager.getTotalOwedBy(currentStudent);
+
+        System.out.println("Studnet " + currentStudent.getName() + " has costs : " + allTimeCost + " of which they have paid" +
+                allTimePaid + " of which outstanding  " + (allTimeCost - allTimePaid));
+
+        return allTimeCost-allTimePaid;
     }
 }

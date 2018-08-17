@@ -31,4 +31,9 @@ public class DateUtil {
     public static LocalDate dateToLocalDate(Date date) {
         return LocalDate.from(date.toInstant().atZone(ZoneId.systemDefault()));
     }
+
+    public static int getMonthFromDate(Date date) {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return localDate.getMonthValue();
+    }
 }

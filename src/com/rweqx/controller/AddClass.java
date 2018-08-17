@@ -1,11 +1,13 @@
 package com.rweqx.controller;
 
-import com.rweqx.components.*;
+import com.rweqx.components.ChosenStudent;
+import com.rweqx.components.DurationItem;
+import com.rweqx.components.PaidItem;
+import com.rweqx.components.WarningPopUp;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 import com.rweqx.model.Class;
 import com.rweqx.model.DataModel;
-import com.rweqx.components.WarningPopUp;
 import com.rweqx.model.Student;
 import com.rweqx.model.StudentInClassElement;
 import com.rweqx.util.DateUtil;
@@ -26,9 +28,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -142,8 +142,8 @@ public class AddClass implements Initializable {
         currentSearch = new SimpleStringProperty();
         chosenStudents = FXCollections.observableArrayList();
         searchMatchNames = FXCollections.observableArrayList();
+        //TODO load from ClassTypeManager.
         classTypes = FXCollections.observableArrayList();
-
         classTypes.addAll("1 on 1", "Group", "1 on 2", "1 on 3");
 
 

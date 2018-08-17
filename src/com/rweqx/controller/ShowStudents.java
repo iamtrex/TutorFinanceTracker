@@ -90,6 +90,7 @@ public class ShowStudents implements Initializable {
             spc.setStudent(sb.getStudentID());
             ViewNavigator.loadScene(p);
         }catch(IOException io){
+            io.printStackTrace();
             Logger.getInstance().log("Cannot load Student " + sb.getStudentName(), LogLevel.S);
         }
 

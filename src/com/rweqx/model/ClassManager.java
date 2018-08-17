@@ -4,8 +4,6 @@ import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 import com.rweqx.util.DateUtil;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class ClassManager {
@@ -61,5 +59,29 @@ public class ClassManager {
                 todayClasses.add(c);
         }
         return todayClasses;
+    }
+
+    public List<Class> getAllClassesBy(int id) {
+        List<Class> allClasses = new ArrayList<>();
+        Student s = model.getStudentsModel().getStudentByID(id);
+        for(Class c : classes){
+            if(c.getStudents().contains(s)){
+                allClasses.add(c);
+            }
+        }
+        return allClasses;
+    }
+
+    public double getTotalOwedBy(Student currentStudent) {
+        double total = 0;
+        for(Class c : getAllClassesBy(currentStudent.getID())){
+            int type = model.getClassTypeManager().getClassKeyCodeByName(c.getClassType());
+            double costPerHour = currentStudent.getClassFeeByType(type);
+            double hours = c.getDurationFromStudent(currentStudent.getID());
+            total += costPerHour * hours;
+        }
+
+        return total;
+
     }
 }
