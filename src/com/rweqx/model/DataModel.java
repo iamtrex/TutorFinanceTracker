@@ -4,6 +4,7 @@ import com.rweqx.constants.Constants;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 import com.rweqx.util.DateUtil;
+import javafx.util.Pair;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,15 +15,14 @@ public class DataModel {
     private ClassManager classManager;
     private PaymentModel paymentModel;
     private StudentsModel studentsModel;
-    private ClassTypes classTypeManager;
-
+    private ClassFeeManager classFeeManager;
 
 
     private JSONWriter saveWriter;
     private JSONReader saveReader;
 
-    public ClassTypes getClassTypeManager() {
-        return classTypeManager;
+    public ClassFeeManager getClassFeeManager(){
+        return classFeeManager;
     }
     public StudentsModel getStudentsModel() {
         return studentsModel;
@@ -40,14 +40,14 @@ public class DataModel {
 
     public DataModel(){
         idGenerator = new Random();
-        classTypeManager = new ClassTypes();
         List<String> types = new ArrayList(List.of("1 on 1", "Group", "1 on 2", "1 on 3"));
-        //TODO READ FROM FILE.
-        classTypeManager.setClassTypes(types);
+
 
         classManager = new ClassManager(this);
         paymentModel = new PaymentModel();
         studentsModel = new StudentsModel();
+        classFeeManager = new ClassFeeManager();
+
         saveWriter = new JSONWriter();
         saveReader = new JSONReader();
         readSaves();
@@ -60,6 +60,16 @@ public class DataModel {
 
         Set<Payment> payments = saveReader.readPaymentFromJson(Constants.SAVE_FOLDER + Constants.PAYMENT_SAVE_FILE);
         paymentModel.addPayments(payments);
+
+        //Read students...  //TODO REMOVE TEMP CODE.
+        Pair<String, Double> a = new Pair<>("1 on 1", 75.0);
+        Pair<String, Double> b = new Pair<>("Group", 25.0);
+        Pair<String, Double> c = new Pair<>("1 on 2", 75.0);
+        Pair<String, Double> d = new Pair<>("1 on 3", 75.0);
+        List<Pair<String, Double>> list = new ArrayList<>(List.of(a, b, c, d));
+        for(Student s : studentsModel.getAllStudents()){
+            classFeeManager.registerStudent(s, list);
+        }
 
     }
 

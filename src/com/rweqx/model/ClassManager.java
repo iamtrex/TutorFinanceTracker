@@ -75,8 +75,7 @@ public class ClassManager {
     public double getTotalOwedBy(Student currentStudent) {
         double total = 0;
         for(Class c : getAllClassesBy(currentStudent.getID())){
-            int type = model.getClassTypeManager().getClassKeyCodeByName(c.getClassType());
-            double costPerHour = currentStudent.getClassFeeByType(type);
+            double costPerHour = model.getClassFeeManager().getRateForStudent(currentStudent, c.getClassType());
             double hours = c.getDurationFromStudent(currentStudent.getID());
             total += costPerHour * hours;
         }
