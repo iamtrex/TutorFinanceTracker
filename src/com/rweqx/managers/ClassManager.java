@@ -30,6 +30,16 @@ public class ClassManager {
         return classes;
     }
 
+    public void deleteClass(long classID){
+        Class c = classMap.get(classID);
+        if(c == null){
+            Logger.getInstance().log("Cannot find class with ID " + classID + " when trying to remove", LogLevel.S);
+            return;
+        }
+        classes.remove(c);
+        classMap.remove(c);
+    }
+
     public void addClasses(List<Class> newClasses){
         newClasses.forEach(this::addClass);
     }

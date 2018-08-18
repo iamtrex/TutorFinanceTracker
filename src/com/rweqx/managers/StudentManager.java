@@ -20,6 +20,8 @@ public class StudentManager {
 
         Map<String, Double> classRates = new HashMap<>();
 
+        //TEMP CODE, REMOVE LATER.
+        List<Student> students = new ArrayList<>();
         students.add(new Student(1, "Rex", classRates));
         students.add(new Student(2, "Howard Lin", classRates));
         students.add(new Student(3, "Sammy", classRates));
@@ -27,6 +29,7 @@ public class StudentManager {
         students.add(new Student(20, "Howard Lin", classRates));
         students.add(new Student(10, "Rex v2", classRates));
         students.add(new Student(300, "Sammy is a pig", classRates));
+        addStudents(students);
     }
 
     public void addStudents(List<Student> newStudents){
