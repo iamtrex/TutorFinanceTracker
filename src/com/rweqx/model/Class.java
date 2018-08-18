@@ -1,5 +1,6 @@
 package com.rweqx.model;
 
+import com.rweqx.controller.StudentEventItemController;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 
@@ -10,10 +11,14 @@ import java.util.Set;
 public class Class extends Event{
 
     private Set<StuDurPaid> studentsInfoSet;
+    private String classType;
 
-    public Class(long eventID, LocalDate date) {
+
+    public Class(long eventID, LocalDate date, String classType) {
         super(eventID, date);
+        this.classType = classType;
         studentsInfoSet = new HashSet<>();
+
 
     }
 
@@ -47,11 +52,37 @@ public class Class extends Event{
         studentsInfoSet.add(new StuDurPaid(stuID, duration, paymentID));
     }
 
-    private boolean containsStudent(long stuID) {
+    public boolean containsStudent(long stuID) {
         return studentsInfoSet.stream()
                 .filter(s-> s.getStuID() == stuID)
                 .findFirst()
                 .isPresent();
 
     }
+
+    //TOOD can we make this a stream?
+    public long getPaidIDOfStudent(long stuID){
+        for(StuDurPaid sdp : studentsInfoSet){
+            if(sdp.getStuID() == stuID){
+                return sdp.getPaidID();
+            }
+        }
+        Logger.getInstance().log("Cannot find student in class, should not happen... ", LogLevel.S);
+        return -1;
+    }
+
+    public Double getDurationOfStudent(long stuID) {
+        for(StuDurPaid sdp : studentsInfoSet){
+            if(sdp.getStuID() == stuID){
+                return sdp.getDuration();
+            }
+        }
+        Logger.getInstance().log("Cannot find student in class, should not happen... ", LogLevel.S);
+        return 0.0;
+    }
+
+    public String getClassType() {
+        return classType;
+    }
+
 }

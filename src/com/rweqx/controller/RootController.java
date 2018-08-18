@@ -20,6 +20,8 @@ import java.util.Stack;
 public class RootController extends BaseController{
 
     private Map<String, Pane> subSceneMap;
+    private Map<String, BaseController> subSceneControllerMap;
+
 
     @FXML
     private GridPane rootGrid;
@@ -34,6 +36,8 @@ public class RootController extends BaseController{
 
     public RootController(){
         subSceneMap = new HashMap<>();
+        subSceneControllerMap = new HashMap<>();
+
         history = new Stack<>();
 
     }
@@ -47,15 +51,26 @@ public class RootController extends BaseController{
         bc.initModel(this.modelManager, this.sceneModel);
 
         subSceneMap.put(name, pane);
+        subSceneControllerMap.put(name, bc);
     }
 
     private void switchSceneTo(String sceneName) {
         Pane p = subSceneMap.get(sceneName);
         if(p != null){
+            //TELL SCENE IT'S BEING LOADED FIRST.
+            BaseController bc = subSceneControllerMap.get(sceneName);
+            if(bc == null)
+                throw new IllegalStateException();
+            bc.sceneLoaded();
+
+
+            paneHolder.getChildren().setAll(p);
+
             if(paneHolder.getChildren().size() > 0)
                 history.add((Pane) paneHolder.getChildren().get(0));
 
-            paneHolder.getChildren().setAll(p);
+
+
         }
 
     }
@@ -76,6 +91,8 @@ public class RootController extends BaseController{
             addPaneAndController(AddEditPaymentController.class.getSimpleName(), "/com/rweqx/ui/add-edit-payment.fxml");
             addPaneAndController(StudentProfilesListController.class.getSimpleName(), "/com/rweqx/ui/student-profiles-list.fxml");
 
+            addPaneAndController(StudentProfileController.class.getSimpleName(), "/com/rweqx/ui/student-profile.fxml");
+
             //SETUP LEFT PANE.
             FXMLLoader leftPaneLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/left-pane.fxml"));
             Pane leftPane = leftPaneLoader.load();
@@ -86,6 +103,7 @@ public class RootController extends BaseController{
             GridPane.setRowIndex(leftPane, 0);
             GridPane.setColumnIndex(leftPane, 0);
             System.out.println(rootGrid.getChildren());
+
         }catch(IOException e){
             e.printStackTrace();
         }catch(Exception e){

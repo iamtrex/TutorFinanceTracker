@@ -6,6 +6,7 @@ import java.util.*;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 import com.rweqx.model.Class;
+import com.rweqx.model.Event;
 import com.rweqx.model.Student;
 import com.rweqx.util.DateUtil;
 
@@ -69,15 +70,25 @@ public class ClassManager {
         return todayClasses;
     }
 
-    public List<Class> getAllClassesBy(int id) {
+    public List<Class> getAllClassesBy(long id) {
         List<Class> allClasses = new ArrayList<>();
-        Student s = modelManager.getStudentManager().getStudentByID(id);
         for(Class c : classes){
-            if(c.getStudents().contains(s)){
+            if(c.containsStudent(id)){
                 allClasses.add(c);
             }
         }
         return allClasses;
     }
 
+    public List<Class> getAllClassesByInMonth(long id, int month) {
+        List<Class> allClasses = new ArrayList<>();
+        for(Class c : classes){
+            if(c.containsStudent(id)){
+                if(month == c.getDate().getMonthValue()) {
+                    allClasses.add(c);
+                }
+            }
+        }
+        return allClasses;
+    }
 }

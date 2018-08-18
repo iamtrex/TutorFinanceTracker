@@ -13,6 +13,11 @@ public abstract class BaseController {
         this.sceneModel = sm;
     }
 
+    /**
+     * Run when the screen is loaded.
+     */
+    public void sceneLoaded(){}
+
 
 
 

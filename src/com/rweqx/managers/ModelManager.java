@@ -83,10 +83,16 @@ public class ModelManager {
     }
 
     public List<Event> getAllEventsByStudent(Student currentStudent) {
-        return new ArrayList<>();
+        List<Event> events = new ArrayList<>();
+        events.addAll(classManager.getAllClassesBy(currentStudent.getID()));
+        events.addAll(paymentManager.getAllPaymentsBy(currentStudent.getID()));
+        return events;
     }
 
     public List<Event> getAllEventsByStudentInMonth(Student currentStudent, int month) {
+        List<Event> events = new ArrayList<>();
+        events.addAll(classManager.getAllClassesByInMonth(currentStudent.getID(), month));
+        events.addAll(paymentManager.getAllPaymentsByInMonth(currentStudent.getID(), month));
         return new ArrayList<>();
     }
 

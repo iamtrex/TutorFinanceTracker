@@ -1,9 +1,14 @@
 package com.rweqx.controller;
 
+import com.rweqx.components.EventItemController;
+import com.rweqx.model.Class;
 import com.rweqx.model.Event;
+import com.rweqx.model.Payment;
 import com.rweqx.model.Student;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -48,34 +54,31 @@ public class StudentProfileController extends BaseController implements Initiali
     @FXML
     private VBox eventBox;
 
+    @FXML
+    private AnchorPane root;
 
 
-
-    private IntegerProperty studentID;
+    private LongProperty studentID;
     private Student currentStudent;
 
 
-    public StudentProfileController(){
-        studentID = new SimpleIntegerProperty();
+    public StudentProfileController() {
+        studentID = new SimpleLongProperty();
         currentDisplayMode = DISPLAY_ALL;
 
-    }
 
-
-    public void setStudent(int studentID) {
-        this.studentID.set(studentID);
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //lName.textProperty().bind(studentName);
-        studentID.addListener((obs, oldVal, newVal)->{
-            if(oldVal == newVal){
+        studentID.addListener((obs, oldVal, newVal) -> {
+            if (oldVal == newVal) {
                 return;
             }
             int ID = newVal.intValue();
-            if(ID == -1){
+            if (ID == -1) {
                 reset();
             }
 
@@ -88,14 +91,21 @@ public class StudentProfileController extends BaseController implements Initiali
 
         eventScroll.setFitToWidth(true);
 
+    }
+
+    @Override
+    public void sceneLoaded() {
+        //Load currentStudent...
+        studentID.set(sceneModel.getCurrentStudent().getID());
 
     }
+
 
     private void refreshEventBox() {
         eventBox.getChildren().clear();
         List<Event> events;
 
-        switch(currentDisplayMode){
+        switch (currentDisplayMode) {
             case DISPLAY_ALL:
                 events = modelManager.getAllEventsByStudent(currentStudent);
                 break;
@@ -113,21 +123,28 @@ public class StudentProfileController extends BaseController implements Initiali
 
         for (Event e : events) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/rweqx/components/EventItem.fxml"));
+                FXMLLoader loader = null;
+                if (e instanceof Class) {
+                    loader = new FXMLLoader(getClass().getResource("/com/rweqx/components/studnet-profile-class-item.fxml"));
+                } else if (e instanceof Payment) {
+                    loader = new FXMLLoader(getClass().getResource("/com/rweqx/components/studnet-profile-payment-item.fxml"));
+                }
+
                 loader.setRoot(new HBox());
                 HBox eventItem = loader.load();
-
                 eventBox.getChildren().add(eventItem);
-                StudentEventController sec = loader.getController();
-                sec.setEvent(e);
-                sec.initModel(modelManager, sceneModel);
+
+                StudentEventItemController seic = loader.getController();
+                seic.setEvent(e);
+                seic.initModel(modelManager, sceneModel);
+                seic.setStudent(currentStudent);
 
 
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
-        if(events.size() == 0){
+        if (events.size() == 0) {
             eventBox.getChildren().add(new Label("No Events on this Day"));
         }
     }
@@ -139,16 +156,19 @@ public class StudentProfileController extends BaseController implements Initiali
 
     }
 
-    public void showAllClicked(ActionEvent e){
+    public void showAllClicked(ActionEvent e) {
 
     }
-    public void showOutstandingClicked(ActionEvent e){
+
+    public void showOutstandingClicked(ActionEvent e) {
 
     }
-    public void showMonthClicked(ActionEvent e){
+
+    public void showMonthClicked(ActionEvent e) {
 
     }
-    public void backClicked(ActionEvent e){
+
+    public void backClicked(ActionEvent e) {
 
     }
 }

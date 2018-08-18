@@ -12,7 +12,7 @@ public class DateUtil {
         return a.getYear() == b.getYear() && a.getDayOfYear() == b.getDayOfYear();
     }
 
-    public static String getYearMonthDayFromDate(Date d){
+    public static String getYearMonthDayFromDate(LocalDate d){
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy");
         return (sdf.format(d));
     }

@@ -2,14 +2,12 @@ package com.rweqx.managers;
 
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
+import com.rweqx.model.Event;
 import com.rweqx.model.Payment;
 import com.rweqx.util.DateUtil;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PaymentManager {
 
@@ -64,7 +62,7 @@ public class PaymentManager {
     }
 
 
-    public List<Payment> getAllPaymentsBy(int id) {
+    public List<Payment> getAllPaymentsBy(long id) {
         List<Payment> allPayments = new ArrayList<>();
         for(Payment p : payments){
             if(p.getStudentID() == id){
@@ -74,4 +72,15 @@ public class PaymentManager {
         return allPayments;
     }
 
+    public List<Payment> getAllPaymentsByInMonth(long id, int month) {
+        List<Payment> allPayments = new ArrayList<>();
+        for(Payment p : payments){
+            if(p.getStudentID() == id){
+                if(month == p.getDate().getMonthValue()) {
+                    allPayments.add(p);
+                }
+            }
+        }
+        return allPayments;
+    }
 }

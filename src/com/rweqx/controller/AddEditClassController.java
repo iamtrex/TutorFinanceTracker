@@ -3,20 +3,23 @@ package com.rweqx.controller;
 import com.rweqx.components.ChosenStudent;
 import com.rweqx.components.DurationItem;
 import com.rweqx.components.PaidItem;
+import com.rweqx.model.Class;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 
-
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
-public class AddEditClassController extends BaseController {
+public class AddEditClassController extends BaseController implements Initializable {
 
     //TODO MAKE THIS CHANGE BUTTON LOOKS...
     public static final int ADD_MODE = 1;
@@ -71,10 +74,39 @@ public class AddEditClassController extends BaseController {
     @FXML
     private Button bCancel;
 
-    public void selectMode(int i){
-        //Selects mode.
-        current_mode = i;
+    private Class currentlyEditingClass;
+
+    @Override
+    public void sceneLoaded(){
+        Class c = sceneModel.getCurrentClass();
+        if(c == null){
+            //regular add mode.
+            currentlyEditingClass = null;
+            current_mode = ADD_MODE;
+        }else{
+            //Load class mode
+            currentlyEditingClass = c;
+            current_mode = EDIT_MODE;
+        }
     }
 
+    public void reset(){
+        chosenStudents.clear();
+        chosenStudentsLabels.clear();
+        searchMatchNames.clear();
+        classTypes.clear();
+        durationMap.clear();
+        paidMap.clear();
+    }
 
+    public AddEditClassController(){
+
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        //Setup.
+
+
+    }
 }
