@@ -50,4 +50,7 @@ public class StudentManager {
     }
 
 
+    public List<Student> getStudents() {
+        return students;
+    }
 }

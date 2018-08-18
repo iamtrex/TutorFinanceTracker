@@ -3,11 +3,8 @@ package com.rweqx.managers;
 import com.rweqx.constants.Constants;
 import com.rweqx.io.JSONReader;
 import com.rweqx.io.JSONWriter;
+import com.rweqx.model.*;
 import com.rweqx.model.Class;
-import com.rweqx.model.ClassTypes;
-import com.rweqx.model.Payment;
-import com.rweqx.model.PaymentTypes;
-import com.rweqx.model.Student;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -24,7 +21,7 @@ public class ModelManager {
     private JSONReader saveReader;
     private JSONWriter saveWriter;
 
-    public ModelManager(){
+    public ModelManager() {
         saveReader = new JSONReader();
         saveWriter = new JSONWriter();
         classTypes = new ClassTypes();
@@ -67,39 +64,33 @@ public class ModelManager {
         return classTypes;
     }
 
-    public void setClassTypes(ClassTypes classTypes) {
-        this.classTypes = classTypes;
-    }
-
     public PaymentTypes getPaymentTypes() {
         return paymentTypes;
     }
 
-    public void setPaymentTypes(PaymentTypes paymentTypes) {
-        this.paymentTypes = paymentTypes;
-    }
 
     public StudentManager getStudentManager() {
         return studentManager;
     }
 
-    public void setStudentManager(StudentManager studentManager) {
-        this.studentManager = studentManager;
-    }
 
     public ClassManager getClassManager() {
         return classManager;
-    }
-
-    public void setClassManager(ClassManager classManager) {
-        this.classManager = classManager;
     }
 
     public PaymentManager getPaymentManager() {
         return paymentManager;
     }
 
-    public void setPaymentManager(PaymentManager paymentManager) {
-        this.paymentManager = paymentManager;
+    public List<Event> getAllEventsByStudent(Student currentStudent) {
+        return new ArrayList<>();
+    }
+
+    public List<Event> getAllEventsByStudentInMonth(Student currentStudent, int month) {
+        return new ArrayList<>();
+    }
+
+    public double getAllEventsByStudentOutstanding(Student currentStudent) {
+        return 0.0;
     }
 }

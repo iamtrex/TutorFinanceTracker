@@ -15,8 +15,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Stack;
 
-public class RootController extends BaseController implements Initializable {
+public class RootController extends BaseController{
 
     private Map<String, Pane> subSceneMap;
 
@@ -29,26 +30,17 @@ public class RootController extends BaseController implements Initializable {
     @FXML
     private StackPane paneHolder;
 
+    private Stack<Pane> history;
+
     public RootController(){
         subSceneMap = new HashMap<>();
-
-        //Add:
-        try {
-            addPaneAndController(AddEditClassController.class.getSimpleName(), "/com/rweqx/ui/add-class.fxml");
-
-
-        }catch(IOException e){
-            e.printStackTrace();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        history = new Stack<>();
 
     }
 
     private void addPaneAndController(String name, String file) throws Exception{
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource(file));
-
         Pane pane = loader.load();
 
         BaseController bc = loader.getController();
@@ -60,7 +52,10 @@ public class RootController extends BaseController implements Initializable {
     private void switchSceneTo(String sceneName) {
         Pane p = subSceneMap.get(sceneName);
         if(p != null){
-            paneHolder.getChildren().add(p);
+            if(paneHolder.getChildren().size() > 0)
+                history.add((Pane) paneHolder.getChildren().get(0));
+
+            paneHolder.getChildren().setAll(p);
         }
 
     }
@@ -75,7 +70,13 @@ public class RootController extends BaseController implements Initializable {
             }
         });
 
+        //Add:
         try {
+            addPaneAndController(AddEditClassController.class.getSimpleName(), "/com/rweqx/ui/add-edit-class.fxml");
+            addPaneAndController(AddEditPaymentController.class.getSimpleName(), "/com/rweqx/ui/add-edit-payment.fxml");
+            addPaneAndController(StudentProfilesListController.class.getSimpleName(), "/com/rweqx/ui/student-profiles-list.fxml");
+
+            //SETUP LEFT PANE.
             FXMLLoader leftPaneLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/left-pane.fxml"));
             Pane leftPane = leftPaneLoader.load();
             LeftPaneController lpc = leftPaneLoader.getController();
@@ -84,16 +85,12 @@ public class RootController extends BaseController implements Initializable {
             rootGrid.getChildren().add(leftPane);
             GridPane.setRowIndex(leftPane, 0);
             GridPane.setColumnIndex(leftPane, 0);
-
             System.out.println(rootGrid.getChildren());
-
+        }catch(IOException e){
+            e.printStackTrace();
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-    }
 }
