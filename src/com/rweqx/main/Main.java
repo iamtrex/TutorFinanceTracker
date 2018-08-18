@@ -1,15 +1,15 @@
 package com.rweqx.main;
 
 import com.rweqx.controller.RootController;
-import com.rweqx.controller.ViewNavigator;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
-import com.rweqx.model.DataModel;
+import com.rweqx.managers.ModelManager;
+import com.rweqx.model.SceneModel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -18,16 +18,19 @@ public class Main extends Application {
 
     private Stage primaryStage;
     private Logger logger;
-    private Parent root;
-    private DataModel model;
+    private Pane root;
+
+    private ModelManager modelManager;
+    private SceneModel sceneModel;
+
 
     @Override
     public void start(Stage primaryStage){
         this.primaryStage = primaryStage;
         logger = Logger.getInstance();
 
+        loadProgram();
         initRootLayout();
-
 
         primaryStage.setTitle("Tutor Student Finance Tracker");
         primaryStage.setScene(new Scene(root, 1200, 675));
@@ -45,10 +48,17 @@ public class Main extends Application {
 
     }
 
+    private void loadProgram() {
+        modelManager = new ModelManager();
+        sceneModel = new SceneModel();
+
+        logger.log("Done Loading Model", LogLevel.D);
+    }
+
     @Override
     public void stop() throws Exception {
         super.stop();
-        model.saveAll();
+        modelManager.saveAll();
 
         System.out.println("Terminated program!");
     }
@@ -56,10 +66,13 @@ public class Main extends Application {
 
     private void initRootLayout(){
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/root.fxml"));
-            root = loader.load();
-            model = ((RootController)loader.getController()).getModel();
-            ViewNavigator.setRootController(loader.getController());
+            FXMLLoader rootLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/root.fxml"));
+            root = rootLoader.load();
+
+            RootController rc = rootLoader.getController();
+            rc.initModel(modelManager, sceneModel);
+
+
 
         }catch(IOException e){
             e.printStackTrace();
