@@ -1,17 +1,15 @@
 package com.rweqx.components;
 
+import com.rweqx.model.Student;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.*;
+import javafx.scene.text.Text;
 
 
 public class ChosenStudent extends AnchorPane {
@@ -20,14 +18,14 @@ public class ChosenStudent extends AnchorPane {
     }
 
 
-
+    private Student student;
     private String name;
 
-    public ChosenStudent(String name){
+    public ChosenStudent(Student student){
         super();
 
-        this.name = name;
-
+        this.student = student;
+        this.name = student.getName();
         Text tName = new Text(name);
 
 

@@ -5,10 +5,13 @@ import com.rweqx.components.DurationItem;
 import com.rweqx.components.PaidItem;
 import com.rweqx.model.Class;
 import com.rweqx.model.Student;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -38,8 +41,8 @@ public class AddEditClassController extends BaseController implements Initializa
     private ObservableList<String> classTypes;
 
 
-    private Map<String, DurationItem> durationMap;
-    private Map<String, PaidItem> paidMap;
+    private Map<Student, DurationItem> durationMap;
+    private Map<Student, PaidItem> paidMap;
 
     @FXML
     private HBox selectedStudentsBox;
@@ -121,9 +124,19 @@ public class AddEditClassController extends BaseController implements Initializa
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //Setup.
+        //Basic setup.
+        datePicker.setValue(LocalDate.now()); //TODO REMOVE?
         scrollDuration.setFitToWidth(true);
         scrollPaid.setFitToWidth(true);
+        sameDurationCheck.selectedProperty().addListener((obs, oldVal, newVal)->{
+            if(sameDurationCheck.isSelected()) {
+                durationBox.setVisible(false);
+                tSingleDuration.setVisible(true);
+            }else{
+                durationBox.setVisible(true);
+                tSingleDuration.setVisible(false);
+            }
+        });
 
         //Setup list to properly display students being searched.
         studentsListView.setItems(searchMatchNames);
@@ -160,7 +173,6 @@ public class AddEditClassController extends BaseController implements Initializa
             }
         });
         currentSearch.addListener((obs, oldVal, newVal) ->{
-
             String search = newVal;
             search = search.trim().toLowerCase();
 
@@ -170,8 +182,7 @@ public class AddEditClassController extends BaseController implements Initializa
                 studentsListView.getItems().clear();
 
             }else{
-                String finalSearch = search;
-
+                String finalSearch = search; //cuz apparently it has to be final :/?
                 searchMatchNames.setAll(
                         modelManager.getStudentManager().getStudents()
                         .stream()
@@ -179,19 +190,63 @@ public class AddEditClassController extends BaseController implements Initializa
                         .collect(Collectors.toList()));
 
             }
-
             studentsListView.refresh();
         });
 
+
+        //Bind Paid and Duration Boxes to watch chosenStudents
+        chosenStudents.addListener((ListChangeListener<Student>) c -> {
+            if(c.next()) {
+                if (c.wasPermutated() || c.wasUpdated()) {
+                    System.out.println(c);
+                } else {
+                    //Fixed (BUG)- BUG IF SAME NAME.
+                    for (Student remItm : c.getRemoved()) {
+                        DurationItem di = durationMap.get(remItm);
+                        if(di != null){
+                            durationBox.getChildren().remove(di);
+                        }
+                        PaidItem pi = paidMap.get(remItm);
+                        if(pi != null){
+                            paidBox.getChildren().remove(pi);
+                        }
+                    }
+
+                    for (Student addItm : c.getAddedSubList()) {
+                        DurationItem di = new DurationItem(addItm);
+                        PaidItem pi = new PaidItem(addItm);
+                        durationMap.put(addItm, di);
+                        paidMap.put(addItm, pi);
+                        durationBox.getChildren().add(di);
+                        paidBox.getChildren().add(pi);
+                    }
+                }
+            }
+
+        });
     }
 
-    private void saveClicked(){
+    public void saveClicked(){
 
     }
-    private void cancelClicked(){
+    public void cancelClicked(){
 
     }
+    private void removeStudent(ActionEvent e){
+        ChosenStudent source = (ChosenStudent)e.getSource();
+    }
+
     private void addStudent(Student selected) {
+        chosenStudents.add(selected);
+        ChosenStudent cs = new ChosenStudent(selected);
+        cs.setOnAction(this::removeStudent);
+        chosenStudentsLabels.add(cs);
+
+        Platform.runLater(()->{
+            selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
+
+            studentSearchBar.setText("");
+        });
 
     }
 }

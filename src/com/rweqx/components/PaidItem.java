@@ -1,10 +1,9 @@
 package com.rweqx.components;
 
 import com.rweqx.constants.Constants;
+import com.rweqx.model.Student;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -20,16 +19,16 @@ public class PaidItem extends HBox {
     private TextField tPaid;
     private Label lName;
     private DoubleProperty paid;
-    private String name;
+    private Student student;
 
-    public PaidItem(String name) {
+    public PaidItem(Student student) {
         super();
-        this.name = name;
+        this.student = student;
         paid = new SimpleDoubleProperty(0.0);
         tPaid = new TextField("");
         tPaid.setPromptText("$ Paid");
 
-        lName = new Label(name);
+        lName = new Label(student.getName());
         Pane spacer = new Pane();
 
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -56,8 +55,8 @@ public class PaidItem extends HBox {
 
     }
 
-    public String getName() {
-        return name;
+    public Student getStudent(){
+        return student;
     }
 
     public Double getPaid() {
