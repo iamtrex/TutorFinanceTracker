@@ -11,6 +11,12 @@ public class ClassTypes {
     public ClassTypes(){
         types = FXCollections.observableArrayList();
 
+        //TODO DEFAULT
+        types.add("1 on 1");
+        types.add("Group");
+        types.add("1 on 2");
+        types.add("1 on 3");
+
     }
     public void addType(String s){
         types.add(s);

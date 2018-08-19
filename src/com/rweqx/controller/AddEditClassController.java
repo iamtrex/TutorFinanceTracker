@@ -3,7 +3,13 @@ package com.rweqx.controller;
 import com.rweqx.components.ChosenStudent;
 import com.rweqx.components.DurationItem;
 import com.rweqx.components.PaidItem;
+import com.rweqx.components.WarningPopUp;
+import com.rweqx.logger.LogLevel;
+import com.rweqx.logger.Logger;
+import com.rweqx.managers.ModelManager;
 import com.rweqx.model.Class;
+import com.rweqx.model.SceneModel;
+import com.rweqx.model.StuDurPaid;
 import com.rweqx.model.Student;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -121,6 +127,11 @@ public class AddEditClassController extends BaseController implements Initializa
         bSave.setText("Add Class");
     }
 
+    @Override
+    public void initModel(ModelManager modelManager, SceneModel scene){
+        super.initModel(modelManager, scene);
+        classTypeChoices.setItems(modelManager.getClassTypes().getTypesList());
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -128,6 +139,7 @@ public class AddEditClassController extends BaseController implements Initializa
         datePicker.setValue(LocalDate.now()); //TODO REMOVE?
         scrollDuration.setFitToWidth(true);
         scrollPaid.setFitToWidth(true);
+
         sameDurationCheck.selectedProperty().addListener((obs, oldVal, newVal)->{
             if(sameDurationCheck.isSelected()) {
                 durationBox.setVisible(false);
@@ -152,6 +164,7 @@ public class AddEditClassController extends BaseController implements Initializa
 
             }
         });
+
         studentsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         studentsListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) ->{
             Student selected = newVal;
@@ -227,13 +240,121 @@ public class AddEditClassController extends BaseController implements Initializa
     }
 
     public void saveClicked(){
-
+        if(runChecks()){
+            saveCurrentClass();
+        }
+        
     }
+
+    private boolean runChecks() {
+        String classType = classTypeChoices.getValue();
+        LocalDate localDate = datePicker.getValue();
+        boolean sameDuration = sameDurationCheck.isSelected();
+        double singleDurationLength;
+
+        if(localDate == null){
+            new WarningPopUp("No Date Picked!");
+            return false;
+        }else if(classType == null){
+            new WarningPopUp("No Type Picked!");
+            return false;
+        }else if(chosenStudents.size() == 0){
+            new WarningPopUp("No Students Picked!");
+            return false;
+        }else if(sameDuration){
+            try {
+                singleDurationLength = Double.parseDouble(tSingleDuration.getText());
+            }catch(NumberFormatException nfe) {
+                //Ignore
+                singleDurationLength = 0;
+            }
+            if(singleDurationLength <= 0){
+                new WarningPopUp("Duration is 0 or malformed");
+                return false;
+            }
+        }else{
+            for(Student student: chosenStudents){
+                DurationItem di = durationMap.get(student);
+                if(di == null){
+                    Logger.getInstance().log("Duration item could not be found for " + student, LogLevel.S);
+                    return false;
+                }else if(di.getDuration() <= 0){
+                    new WarningPopUp("Duration for " + student + " is 0 or malformed");
+                    return false;
+                }
+
+                PaidItem pi = paidMap.get(student);
+                if(pi.getPaid() != 0) {
+                    if(pi.getPaidType() == null){
+                        new WarningPopUp("Paid type for " + student.getName() + " is not chosen");
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private void saveCurrentClass() {
+        LocalDate date = datePicker.getValue();
+        String classType = classTypeChoices.getValue();
+        boolean sameDuration = sameDurationCheck.isSelected();
+
+        double singleDurationLength = 0;
+        if(sameDuration){
+            singleDurationLength = Double.parseDouble(tSingleDuration.getText());
+        }
+
+        List<StuDurPaid> sdp = new ArrayList<>();
+
+        for(Student student : chosenStudents){
+            double duration, paid;
+
+            if(sameDuration){
+                duration = singleDurationLength;
+            }else{
+                DurationItem di = durationMap.get(student);
+                duration = di.getDuration();
+            }
+            paid = paidMap.get(student).getPaid();
+            String paymentType = paidMap.get(student).getPaidType();
+
+            if(paid > 0) {
+                long pid = modelManager.addPayment(student, date, paymentType, paid);
+                sdp.add(new StuDurPaid(student.getID(), duration, pid));
+            }else{
+                sdp.add(new StuDurPaid(student.getID(), duration, -1));
+            }
+        }
+
+        if(current_mode == EDIT_MODE){ //delete and replace the class.
+            modelManager.getClassManager().deleteClass(currentlyEditingClass.getID());
+        }
+
+        long cid = modelManager.createAndAddClass(date, classType, sdp);
+
+
+        sceneModel.setCurrentClass(modelManager.getClassManager().getClassByID(cid));
+        sceneModel.setScene(ViewClassController.class.getSimpleName());
+    }
+
     public void cancelClicked(){
+        if(current_mode == ADD_MODE){
+            reset();
+        }else {
+            //Class back = currentlyEditingClass;
+            currentlyEditingClass = null;
+            sceneModel.backClicked();
+        }
 
     }
+
     private void removeStudent(ActionEvent e){
         ChosenStudent source = (ChosenStudent)e.getSource();
+        chosenStudentsLabels.remove(source);
+        Platform.runLater(()->{
+            selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
+        });
     }
 
     private void addStudent(Student selected) {

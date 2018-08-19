@@ -22,6 +22,20 @@ public class Class extends Event{
 
     }
 
+    public Class(Class copy) {
+        super(copy.getID(), copy.getDate());
+        this.classType = copy.classType;
+        studentsInfoSet = new HashSet<>();
+        for(StuDurPaid sdp : copy.getAllData()){
+            studentsInfoSet.add(new StuDurPaid(sdp.getStuID(), sdp.getDuration(), sdp.getPaidID()));
+        }
+        // Full Deep copy of class.
+    }
+
+    public Set<StuDurPaid> getAllData(){
+        return studentsInfoSet;
+    }
+
     public Set<Long> getStudents(){
         Set<Long> students = new HashSet<>();
         for(StuDurPaid sdp : studentsInfoSet){
@@ -30,6 +44,14 @@ public class Class extends Event{
         return students;
     }
 
+    public void addStudent(StuDurPaid sdp){
+        if(studentsInfoSet.stream()
+                .anyMatch(e -> e.getStuID() == sdp.getStuID())){
+            Logger.getInstance().log("Actually overwrote student data -_-", LogLevel.W);
+        }
+        this.studentsInfoSet.add(sdp);
+
+    }
     /**
      * Add student without payment.
      * @param stuID

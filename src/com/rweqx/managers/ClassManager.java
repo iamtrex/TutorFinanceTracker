@@ -91,4 +91,7 @@ public class ClassManager {
         }
         return allClasses;
     }
+
+    public void overwriteClass(Class currentlyEditingClass, Class currentClass) {
+    }
 }

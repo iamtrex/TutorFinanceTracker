@@ -5,6 +5,8 @@ import java.time.LocalDate;
 public class Payment extends Event{
 
     private long studentID;
+    private String paymentType;
+    private double paymentAmount;
 
     public long getStudentID() {
         return studentID;
@@ -30,11 +32,13 @@ public class Payment extends Event{
         this.paymentAmount = paymentAmount;
     }
 
-    private String paymentType;
-    private double paymentAmount;
 
     public Payment(long eventID, long studentID, LocalDate date, String paymentType, double paymentAmount) {
         super(eventID, date);
+        this.studentID = studentID;
+        this.paymentAmount = paymentAmount;
+        this.paymentType = paymentType;
+
     }
 
 }

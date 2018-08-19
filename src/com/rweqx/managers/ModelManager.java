@@ -7,10 +7,14 @@ import com.rweqx.model.*;
 import com.rweqx.model.Class;
 import javafx.util.Pair;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ModelManager {
+
+    private Random idGenerator;
 
     private ClassTypes classTypes;
     private PaymentTypes paymentTypes;
@@ -30,6 +34,7 @@ public class ModelManager {
         classManager = new ClassManager(this);
         paymentManager = new PaymentManager();
 
+        idGenerator = new Random();
         loadSavedData();
 
     }
@@ -55,7 +60,9 @@ public class ModelManager {
      * Saves all data on program close.
      */
     public void saveAll() {
-
+        saveWriter.writeClassesToFile(classManager.getAllClasses(), Constants.CLASS_SAVE_FILE);
+        saveWriter.writePaymentToFile(paymentManager.getAllPayments(), Constants.PAYMENT_SAVE_FILE);
+        saveWriter.writeStudentsToFile(studentManager.getStudents(), Constants.STUDENT_SAVE_FILE);
 
     }
 
@@ -98,5 +105,35 @@ public class ModelManager {
 
     public double getAllEventsByStudentOutstanding(Student currentStudent) {
         return 0.0;
+    }
+
+    public long createAndAddClass(LocalDate date, String classType, List<StuDurPaid> sdp) {
+        Class c = new Class(getNewID(), date, classType);
+
+        sdp.forEach(s->{
+           c.addStudent(s);
+        });
+
+        classManager.addClass(c);
+        return c.getID();
+    }
+
+    private long getNewID() {
+        long l = idGenerator.nextLong();
+
+        while(classManager.getAllClasses().contains(new Class(l, null, null))
+                || paymentManager.getAllPayments().contains(new Payment(l, -1, null, "", 0))
+                || l == -1){ //If ID is already used.
+            l = idGenerator.nextLong();
+        }
+
+        return l;
+    }
+
+    public long addPayment(Student student, LocalDate date, String paymentType, double paid) {
+        long id = getNewID();
+        Payment p = new Payment(id, student.getID(), date, paymentType, paid);
+        paymentManager.addPayment(p);
+        return id;
     }
 }

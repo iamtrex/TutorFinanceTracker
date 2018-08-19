@@ -4,6 +4,9 @@ import com.rweqx.constants.Constants;
 import com.rweqx.model.Student;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -15,11 +18,13 @@ import java.util.regex.Pattern;
 
 public class PaidItem extends HBox {
 
-
     private TextField tPaid;
     private Label lName;
     private DoubleProperty paid;
     private Student student;
+
+    private ComboBox<String> choosePaymentType;
+
 
     public PaidItem(Student student) {
         super();
@@ -31,9 +36,14 @@ public class PaidItem extends HBox {
         lName = new Label(student.getName());
         Pane spacer = new Pane();
 
+        ObservableList<String> paymentTypes = FXCollections.observableArrayList();
+        paymentTypes.addAll("Cash", "Cheque");
+
+        choosePaymentType = new ComboBox<>();
+        choosePaymentType.setItems(paymentTypes);
         HBox.setHgrow(spacer, Priority.ALWAYS);
         this.setSpacing(10);
-        this.getChildren().setAll(lName, spacer, tPaid);
+        this.getChildren().setAll(lName, spacer, tPaid, choosePaymentType);
 
 
         tPaid.textProperty().addListener((obs, oldVal, newVal) -> {
@@ -69,4 +79,7 @@ public class PaidItem extends HBox {
     }
 
 
+    public String getPaidType() {
+        return choosePaymentType.getSelectionModel().getSelectedItem();
+    }
 }

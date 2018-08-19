@@ -1,5 +1,7 @@
 package com.rweqx.controller;
 
+import com.rweqx.logger.LogLevel;
+import com.rweqx.logger.Logger;
 import com.rweqx.managers.ModelManager;
 import com.rweqx.model.SceneModel;
 import javafx.fxml.FXML;
@@ -54,6 +56,19 @@ public class RootController extends BaseController{
         subSceneControllerMap.put(name, bc);
     }
 
+    private void switchSceneBack() {
+        Pane p = history.pop();
+        if(p == null){
+            Logger.getInstance().log("Tried to back without history pane, doing nothing", LogLevel.W);
+            return;
+        }
+        //TODO, shoudl tell controller that scene is loaded, but cna't because don't know the name lmfao... maybe change
+            //TODO - the bc map to be from pane to controller?
+
+        paneHolder.getChildren().setAll(p);
+
+    }
+
     private void switchSceneTo(String sceneName) {
         Pane p = subSceneMap.get(sceneName);
         if(p != null){
@@ -67,9 +82,7 @@ public class RootController extends BaseController{
             paneHolder.getChildren().setAll(p);
 
             if(paneHolder.getChildren().size() > 0)
-                history.add((Pane) paneHolder.getChildren().get(0));
-
-
+                history.push((Pane) paneHolder.getChildren().get(0));
 
         }
 
@@ -85,6 +98,13 @@ public class RootController extends BaseController{
             }
         });
 
+        sceneModel.getBackProperty().addListener((obs, oldVal, newVal)->{
+            if(newVal){
+                switchSceneBack();
+                sceneModel.getBackProperty().setValue(false);
+            }
+        });
+
         //Add:
         try {
             addPaneAndController(AddEditClassController.class.getSimpleName(), "/com/rweqx/ui/add-edit-class.fxml");
@@ -92,7 +112,7 @@ public class RootController extends BaseController{
             addPaneAndController(StudentProfilesListController.class.getSimpleName(), "/com/rweqx/ui/student-profiles-list.fxml");
 
             addPaneAndController(StudentProfileController.class.getSimpleName(), "/com/rweqx/ui/student-profile.fxml");
-
+            addPaneAndController(ViewClassController.class.getSimpleName(), "/com/rweqx/ui/view-class.fxml");
             //SETUP LEFT PANE.
             FXMLLoader leftPaneLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/left-pane.fxml"));
             Pane leftPane = leftPaneLoader.load();
@@ -110,5 +130,6 @@ public class RootController extends BaseController{
             e.printStackTrace();
         }
     }
+
 
 }

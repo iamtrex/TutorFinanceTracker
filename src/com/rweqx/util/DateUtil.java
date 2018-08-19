@@ -1,9 +1,11 @@
 package com.rweqx.util;
 
+import javax.swing.text.DateFormatter;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,8 +15,8 @@ public class DateUtil {
     }
 
     public static String getYearMonthDayFromDate(LocalDate d){
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy");
-        return (sdf.format(d));
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("EEE MMM dd yyyy");
+        return d.format(df);
     }
 
 

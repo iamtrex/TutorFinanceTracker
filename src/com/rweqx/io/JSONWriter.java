@@ -36,7 +36,7 @@ public class JSONWriter {
         write(fileName, json);
     }
 
-    public void writePaymentToFile(Set<Payment> paymentList, String paymentFile){
+    public void writePaymentToFile(List<Payment> paymentList, String paymentFile){
         System.out.println("Writing payments" + paymentList);
 
         String fileName = Constants.SAVE_FOLDER + paymentFile;
@@ -61,7 +61,7 @@ public class JSONWriter {
     }
 
 
-    public void writeClassesToFile(Set<Class> classList, String classFile){
+    public void writeClassesToFile(List<Class> classList, String classFile){
         System.out.println("Writing class " + classList);
 
         String fileName = Constants.SAVE_FOLDER + classFile;
