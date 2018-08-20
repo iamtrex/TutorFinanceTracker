@@ -105,11 +105,15 @@ public class AddEditClassController extends BaseController implements Initializa
             currentlyEditingClass = null;
             current_mode = ADD_MODE;
 
+            System.out.println("Current mode - adding");
+
         }else{
             //Load class mode
             currentlyEditingClass = c;
             current_mode = EDIT_MODE;
+            //TODO LOAD THE CLASS...
 
+            System.out.println("Current mode - editing");
         }
     }
 
@@ -122,6 +126,7 @@ public class AddEditClassController extends BaseController implements Initializa
         paidMap.clear();
         tSingleDuration.setText("");
         sameDurationCheck.setSelected(false);
+        classTypeChoices.getSelectionModel().clearSelection();
         datePicker.setValue(LocalDate.now());
 
         bSave.setText("Add Class");

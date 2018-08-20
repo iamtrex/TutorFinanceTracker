@@ -44,8 +44,11 @@ public class LeftPaneController extends BaseController implements Initializable 
 
     public void switchScene(ActionEvent e){
         Button b = (Button) e.getSource();
-        System.out.println(b);
-        System.out.println(clickMap.get(b));
+        if(b == bAddClass){
+            sceneModel.setCurrentClass(null);
+        }else if(b == bAddPayment){
+            sceneModel.setCurrentPayment(null);
+        }
         sceneModel.setScene(clickMap.get(b));
     }
 

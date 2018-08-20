@@ -83,4 +83,9 @@ public class PaymentManager {
         }
         return allPayments;
     }
+
+    public void removePaymentByID(long pid) {
+        Payment p = paymentMap.get(pid);
+
+    }
 }

@@ -72,11 +72,13 @@ public class RootController extends BaseController{
     private void switchSceneTo(String sceneName) {
         Pane p = subSceneMap.get(sceneName);
         if(p != null){
+
             //TELL SCENE IT'S BEING LOADED FIRST.
             BaseController bc = subSceneControllerMap.get(sceneName);
             if(bc == null)
                 throw new IllegalStateException();
             bc.sceneLoaded();
+
 
 
             paneHolder.getChildren().setAll(p);

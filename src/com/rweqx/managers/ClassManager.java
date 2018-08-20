@@ -7,6 +7,7 @@ import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 import com.rweqx.model.Class;
 import com.rweqx.model.Event;
+import com.rweqx.model.StuDurPaid;
 import com.rweqx.model.Student;
 import com.rweqx.util.DateUtil;
 
@@ -39,6 +40,12 @@ public class ClassManager {
         }
         classes.remove(c);
         classMap.remove(c);
+
+
+        for(StuDurPaid sdp : c.getAllData()){
+            long pid = sdp.getPaidID();
+            modelManager.getPaymentManager().removePaymentByID(pid);
+        }
     }
 
     public void addClasses(List<Class> newClasses){
