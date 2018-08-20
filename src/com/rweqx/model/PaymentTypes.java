@@ -9,6 +9,8 @@ public class PaymentTypes {
     public PaymentTypes(){
         types = FXCollections.observableArrayList();
 
+        //TODO remove.
+        types.addAll("Cash", "Cheque");
     }
     public void addType(String s){
         types.add(s);

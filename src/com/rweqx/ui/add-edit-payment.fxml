@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -22,6 +23,7 @@
                   <TextField fx:id="tStudent" prefWidth="175.0" />
                </children>
             </HBox>
+            <ListView fx:id="studentsListView" />
             <HBox>
                <children>
                   <Label styleClass="viewing-label" stylesheets="@../styles/style.css" text="Date" HBox.hgrow="ALWAYS" />
@@ -48,13 +50,13 @@
                <children>
                   <AnchorPane>
                      <children>
-                        <Button fx:id="bCancel" mnemonicParsing="false" prefWidth="100.0" text="Cancel" AnchorPane.bottomAnchor="0.0" />
+                        <Button fx:id="bCancel" mnemonicParsing="false" onAction="#cancelClicked" prefWidth="100.0" text="Cancel" AnchorPane.bottomAnchor="0.0" />
                      </children>
                   </AnchorPane>
                   <Pane HBox.hgrow="ALWAYS" />
                   <AnchorPane>
                      <children>
-                        <Button fx:id="bSave" mnemonicParsing="false" prefWidth="100.0" text="Save" AnchorPane.bottomAnchor="0.0" />
+                        <Button fx:id="bSave" mnemonicParsing="false" onAction="#saveClicked" prefWidth="100.0" text="Save" AnchorPane.bottomAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </children>

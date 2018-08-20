@@ -22,7 +22,7 @@ import java.util.Stack;
 public class RootController extends BaseController{
 
     private Map<String, Pane> subSceneMap;
-    private Map<String, BaseController> subSceneControllerMap;
+    private Map<Pane, BaseController> subSceneControllerMap;
 
 
     @FXML
@@ -53,20 +53,30 @@ public class RootController extends BaseController{
         bc.initModel(this.modelManager, this.sceneModel);
 
         subSceneMap.put(name, pane);
-        subSceneControllerMap.put(name, bc);
+        subSceneControllerMap.put(pane, bc);
     }
 
     private void switchSceneBack() {
+        System.out.println("Root Controller attempting to swap scene back");
         Pane p = history.pop();
         if(p == null){
             Logger.getInstance().log("Tried to back without history pane, doing nothing", LogLevel.W);
             return;
         }
+
+        System.out.println(p);
+        //TELL SCENE IT'S BEING LOADED FIRST.
+        BaseController bc = subSceneControllerMap.get(p);
+        if(bc == null)
+            throw new IllegalStateException();
+        bc.sceneLoaded();
+
+        System.out.println(bc.getClass().getSimpleName());
+
         //TODO, shoudl tell controller that scene is loaded, but cna't because don't know the name lmfao... maybe change
             //TODO - the bc map to be from pane to controller?
 
         paneHolder.getChildren().setAll(p);
-
     }
 
     private void switchSceneTo(String sceneName) {
@@ -74,17 +84,17 @@ public class RootController extends BaseController{
         if(p != null){
 
             //TELL SCENE IT'S BEING LOADED FIRST.
-            BaseController bc = subSceneControllerMap.get(sceneName);
+            BaseController bc = subSceneControllerMap.get(p);
             if(bc == null)
                 throw new IllegalStateException();
             bc.sceneLoaded();
 
 
+            if(paneHolder.getChildren().size() > 0)
+                history.push((Pane) paneHolder.getChildren().get(0));
 
             paneHolder.getChildren().setAll(p);
 
-            if(paneHolder.getChildren().size() > 0)
-                history.push((Pane) paneHolder.getChildren().get(0));
 
         }
 
@@ -101,17 +111,20 @@ public class RootController extends BaseController{
         });
 
         sceneModel.getBackProperty().addListener((obs, oldVal, newVal)->{
+            System.out.println("Back property is now " + newVal);
             if(newVal){
                 switchSceneBack();
-                sceneModel.getBackProperty().setValue(false);
+                sceneModel.getBackProperty().set(false);
             }
         });
 
         //Add:
         try {
+            addPaneAndController(OverviewController.class.getSimpleName(), "/com/rweqx/ui/overview.fxml");
             addPaneAndController(AddEditClassController.class.getSimpleName(), "/com/rweqx/ui/add-edit-class.fxml");
             addPaneAndController(AddEditPaymentController.class.getSimpleName(), "/com/rweqx/ui/add-edit-payment.fxml");
             addPaneAndController(StudentProfilesListController.class.getSimpleName(), "/com/rweqx/ui/student-profiles-list.fxml");
+            addPaneAndController(DayViewController.class.getSimpleName(), "/com/rweqx/ui/day-view.fxml");
 
             addPaneAndController(StudentProfileController.class.getSimpleName(), "/com/rweqx/ui/student-profile.fxml");
             addPaneAndController(ViewClassController.class.getSimpleName(), "/com/rweqx/ui/view-class.fxml");

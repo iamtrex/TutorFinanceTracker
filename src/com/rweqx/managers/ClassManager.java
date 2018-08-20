@@ -99,6 +99,13 @@ public class ClassManager {
         return allClasses;
     }
 
-    public void overwriteClass(Class currentlyEditingClass, Class currentClass) {
+    public List<Class> getAllClassesOnDate(LocalDate date) {
+        List<Class> allClasses = new ArrayList<>();
+        for(Class c : classes){
+            if(DateUtil.sameDate(c.getDate(), date)){
+                allClasses.add(c);
+            }
+        }
+        return allClasses;
     }
 }

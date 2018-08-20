@@ -6,12 +6,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rweqx.controller.StudentProfileClassItemController">
+<HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rweqx.controller.StudentProfilePaymentItemController">
    <children>
-      <Label fx:id="lEventType" text="Class" />
+      <Label fx:id="lEventType" text="Payment" />
       <Label fx:id="lDate" text="Label" />
-      <Label fx:id="lDuration" text="Label" />
-      <Label fx:id="lClassType" text="Label" />
+      <Label fx:id="lAmount" text="Label" />
+      <Label fx:id="lPaymentType" text="Label" />
       <Pane HBox.hgrow="ALWAYS" />
       <Button fx:id="bEdit" mnemonicParsing="false" onAction="#editClicked" text="Edit" />
    </children>

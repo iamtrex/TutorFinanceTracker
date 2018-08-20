@@ -1,4 +1,4 @@
-package com.rweqx.components;
+package com.rweqx.controller;
 
 import com.rweqx.controller.AddEditClassController;
 import com.rweqx.controller.AddEditPaymentController;

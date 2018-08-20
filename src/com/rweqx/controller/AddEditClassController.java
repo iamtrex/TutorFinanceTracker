@@ -120,6 +120,7 @@ public class AddEditClassController extends BaseController implements Initializa
     public void reset(){
         chosenStudents.clear();
         chosenStudentsLabels.clear();
+        selectedStudentsBox.getChildren().clear();
         searchMatchNames.clear();
         classTypes.clear();
         durationMap.clear();
@@ -341,6 +342,7 @@ public class AddEditClassController extends BaseController implements Initializa
 
         sceneModel.setCurrentClass(modelManager.getClassManager().getClassByID(cid));
         sceneModel.setScene(ViewClassController.class.getSimpleName());
+        reset();
     }
 
     public void cancelClicked(){
@@ -349,7 +351,9 @@ public class AddEditClassController extends BaseController implements Initializa
         }else {
             //Class back = currentlyEditingClass;
             currentlyEditingClass = null;
+            sceneModel.setCurrentClass(null);
             sceneModel.backClicked();
+            reset();
         }
 
     }

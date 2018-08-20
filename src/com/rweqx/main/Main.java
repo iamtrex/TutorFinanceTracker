@@ -1,5 +1,6 @@
 package com.rweqx.main;
 
+import com.rweqx.controller.OverviewController;
 import com.rweqx.controller.RootController;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
@@ -72,6 +73,7 @@ public class Main extends Application {
             RootController rc = rootLoader.getController();
             rc.initModel(modelManager, sceneModel);
 
+            sceneModel.setScene(OverviewController.class.getSimpleName());
 
 
         }catch(IOException e){

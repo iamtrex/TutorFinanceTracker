@@ -88,4 +88,14 @@ public class PaymentManager {
         Payment p = paymentMap.get(pid);
 
     }
+
+    public List<Payment> getAllPaymentsOnDate(LocalDate date) {
+        List<Payment> allPayments = new ArrayList<>();
+        for(Payment p : payments){
+            if(DateUtil.sameDate(date, p.getDate())){
+               allPayments.add(p);
+            }
+        }
+        return allPayments;
+    }
 }

@@ -100,9 +100,15 @@ public class ModelManager {
         List<Event> events = new ArrayList<>();
         events.addAll(classManager.getAllClassesByInMonth(currentStudent.getID(), month));
         events.addAll(paymentManager.getAllPaymentsByInMonth(currentStudent.getID(), month));
-        return new ArrayList<>();
+        return events;
     }
 
+    public List<Event> getAllEventsOnDate(LocalDate date) {
+        List<Event> events = new ArrayList<>();
+        events.addAll(classManager.getAllClassesOnDate(date));
+        events.addAll(paymentManager.getAllPaymentsOnDate(date));
+        return events;
+    }
     public double getAllEventsByStudentOutstanding(Student currentStudent) {
         return 0.0;
     }
@@ -136,4 +142,5 @@ public class ModelManager {
         paymentManager.addPayment(p);
         return id;
     }
+
 }

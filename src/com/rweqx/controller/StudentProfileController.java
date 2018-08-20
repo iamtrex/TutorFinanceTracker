@@ -1,13 +1,10 @@
 package com.rweqx.controller;
 
-import com.rweqx.components.EventItemController;
 import com.rweqx.model.Class;
 import com.rweqx.model.Event;
 import com.rweqx.model.Payment;
 import com.rweqx.model.Student;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -125,19 +122,19 @@ public class StudentProfileController extends BaseController implements Initiali
             try {
                 FXMLLoader loader = null;
                 if (e instanceof Class) {
-                    loader = new FXMLLoader(getClass().getResource("/com/rweqx/components/studnet-profile-class-item.fxml"));
+                    loader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/student-profile-class-item.fxml"));
                 } else if (e instanceof Payment) {
-                    loader = new FXMLLoader(getClass().getResource("/com/rweqx/components/studnet-profile-payment-item.fxml"));
+                    loader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/student-profile-payment-item.fxml"));
                 }
 
-                loader.setRoot(new HBox());
+                //loader.setRoot(new HBox());
                 HBox eventItem = loader.load();
                 eventBox.getChildren().add(eventItem);
 
                 StudentEventItemController seic = loader.getController();
+                seic.setStudent(currentStudent);
                 seic.setEvent(e);
                 seic.initModel(modelManager, sceneModel);
-                seic.setStudent(currentStudent);
 
 
             } catch (Exception ex) {

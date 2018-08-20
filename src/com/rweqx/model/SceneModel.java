@@ -6,6 +6,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 
+import java.time.LocalDate;
+
 public class SceneModel {
     public Class getCurrentClass() {
         return currentClass;
@@ -39,6 +41,7 @@ public class SceneModel {
     private Class currentClass;
     private Payment currentPayment;
     private Student currentStudent;
+    private LocalDate currentDate;
     private BooleanProperty backProperty;
 
     public void setScene(String sceneName){
@@ -47,7 +50,7 @@ public class SceneModel {
 
     public SceneModel(){
         sceneNameProperty = new SimpleStringProperty();
-        backProperty = new SimpleBooleanProperty();
+        backProperty = new SimpleBooleanProperty(false);
     }
 
     public BooleanProperty getBackProperty(){
@@ -56,7 +59,14 @@ public class SceneModel {
 
 
     public void backClicked() {
+        System.out.println("Scene Model says go back!");
         backProperty.set(true);
+    }
 
+    public LocalDate getCurrentDate(){
+        return currentDate;
+    }
+    public void setCurrentDate(LocalDate date) {
+        currentDate = date;
     }
 }
