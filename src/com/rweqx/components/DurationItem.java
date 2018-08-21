@@ -1,16 +1,14 @@
 package com.rweqx.components;
 
+import com.rweqx.model.Student;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,16 +18,16 @@ public class DurationItem extends HBox{
     private TextField tDuration;
     private Label lName;
     private DoubleProperty duration;
-    private String name;
+    private Student student;
 
-    public DurationItem(String name){
+    public DurationItem(Student student){
         super();
-        this.name = name;
+        this.student = student;
         duration = new SimpleDoubleProperty(0);
         tDuration = new TextField("");
         tDuration.setPromptText("Hours");
 
-        lName = new Label(name);
+        lName = new Label(student.getName());
         Pane spacer = new Pane();
 
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -55,14 +53,18 @@ public class DurationItem extends HBox{
         });
     }
 
+    public Student getStudent(){
+        return student;
+    }
     public Double getDuration(){
         return duration.getValue();
     }
     public String getName() {
-        return name;
+        return student.getName();
     }
 
     public void setDuration(Double dur) {
         duration.set(dur);
+        tDuration.setText(String.valueOf(dur));
     }
 }

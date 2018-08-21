@@ -31,7 +31,7 @@
          </graphic></Label>
       <ScrollPane fx:id="eventScroll" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
          <content>
-            <VBox fx:id="classesBox" prefHeight="200.0" prefWidth="100.0" spacing="2.0">
+            <VBox fx:id="eventsBox" prefHeight="200.0" prefWidth="100.0" spacing="2.0">
                <padding>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </padding>

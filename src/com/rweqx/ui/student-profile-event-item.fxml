@@ -7,13 +7,13 @@
 <?import javafx.scene.layout.Pane?>
 
 
-<HBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rweqx.controller.StudentProfileEventItemController">
+<HBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rweqx.controller.StudentEventItemController">
    <children>
       <Label fx:id="lType" styleClass="smaller-viewing-label" stylesheets="@../styles/style.css" />
       <Label fx:id="lDuration" styleClass="smaller-viewing-label" stylesheets="@../styles/style.css" />
       <Label fx:id="lPaid" styleClass="smaller-viewing-label" stylesheets="@../styles/style.css" />
       <Pane HBox.hgrow="ALWAYS" />
-      <Button fx:id="bEdit" mnemonicParsing="false" styleClass="clean-button" stylesheets="@../styles/style.css" text="Edit" />
+      <Button fx:id="bEdit" onAction="#editClicked" mnemonicParsing="false" styleClass="clean-button" stylesheets="@../styles/style.css" text="Edit" />
    </children>
    <padding>
       <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

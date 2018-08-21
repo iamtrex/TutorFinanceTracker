@@ -1,82 +1,34 @@
 package com.rweqx.controller;
 
-import com.rweqx.logger.LogLevel;
-import com.rweqx.model.*;
+import com.rweqx.controller.AddEditClassController;
+import com.rweqx.controller.AddEditPaymentController;
+import com.rweqx.controller.BaseController;
+
 import com.rweqx.model.Class;
 import com.rweqx.model.Event;
-import com.rweqx.util.DateUtil;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import com.rweqx.model.Payment;
+import javafx.scene.layout.HBox;
 
+public class EventItemController extends BaseController {
+    protected Event event;
 
-import javafx.scene.layout.Pane;
-import java.io.IOException;
-
-public class EventItemController {
-
-    @FXML
-    private Label lStudents;
-
-    @FXML
-    private Label lType;
-
-    @FXML
-    private Label lPaid;
-
-    @FXML
-    private Label lDuration;
-
-    @FXML
-    private Button bEdit;
-
-    private DataModel model;
-
-    public void setEvent(Event event){
-        //lDate.setText(DateUtil.getYearMonthDayFromDate(event.getDate()));
-
-        if(event instanceof Class){
-            lType.setText("Class");
-            Class c = (Class) event;
-            String students = "";
-            for(Student s : c.getStudents()){
-                students += s.getName() + ", ";
-            }
-            students = students.substring(0, students.length() - 2);
-            lStudents.setText(students);
-
-
-        }else if(event instanceof Payment){
-            lType.setText("Payment");
-            Payment p = (Payment) event;
-            lStudents.setText(p.getStudent().getName());
-            lPaid.setText(String.valueOf(p.getValue()));
-
-        }
-        bEdit.setOnAction(actionEvent ->{
-            if(event instanceof Class){
-                Class c = (Class) event;
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/add-class.fxml"));
-                try{
-                    /*
-                    Pane p = loader.load();
-                    AddClass addClass = loader.getController();
-                    addClass.initModel(model);
-                    addClass.selectMode(AddClass.EDIT_MODE);
-                    addClass.loadClass(c);
-
-                    ViewNavigator.loadScene(p);
-                    */
-                    //TODO for now, don't do anything...
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    public Event getEvent(){
+        return event;
     }
 
-    public void initModel(DataModel dataModel) {
-        this.model = dataModel;
+    public void setEvent(Event e){
+        event = e;
+    }
+
+    public void editClicked(){
+        if(event instanceof Payment){
+            sceneModel.setCurrentPayment((Payment)event);
+            sceneModel.setScene(AddEditPaymentController.class.getSimpleName());
+        }else if(event instanceof Class){
+            sceneModel.setCurrentClass((Class)event);
+            sceneModel.setScene(AddEditClassController.class.getSimpleName());
+        }else{
+            throw new IllegalStateException();
+        }
     }
 }

@@ -1,9 +1,8 @@
 package com.rweqx.controller;
 
 import com.rweqx.components.StudentButton;
-import com.rweqx.logger.LogLevel;
-import com.rweqx.logger.Logger;
-import com.rweqx.model.DataModel;
+import com.rweqx.managers.ModelManager;
+import com.rweqx.model.SceneModel;
 import com.rweqx.model.Student;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,18 +10,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
+import org.controlsfx.glyphfont.INamedCharacter;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class ShowStudents implements Initializable {
-
-    private DataModel dataModel;
+/**
+ * TODO - Add flag for when Student is added/deleted to refresh buttons on interface. (in sceneModel)
+ *
+ *
+ */
+public class StudentProfilesListController extends BaseController implements Initializable {
 
     @FXML
     private FlowPane studentsPane;
@@ -34,7 +35,7 @@ public class ShowStudents implements Initializable {
     private List<StudentButton> studentButtons;
     private String currSearch;
 
-    public ShowStudents(){
+    public StudentProfilesListController(){
         studentButtons = new ArrayList<>();
     }
 
@@ -54,18 +55,20 @@ public class ShowStudents implements Initializable {
             //Blank string, restore all.
             studentsPane.getChildren().setAll(studentButtons);
         }else{
-            studentsPane.getChildren().setAll(studentButtons.stream()
+            studentsPane.getChildren().setAll(
+                    studentButtons.stream()
                     .filter(b -> b.getStudentName().toLowerCase().contains(s))
                     .collect(Collectors.toList()));
 
         }
     }
 
+    @Override
+    public void initModel(ModelManager modelManager, SceneModel sceneModel) {
+        super.initModel(modelManager, sceneModel);
 
-    public void initModel(DataModel dataModel) {
-        this.dataModel = dataModel;
 
-        List<Student> students = dataModel.getStudentsModel().getStudents();
+        List<Student> students = modelManager.getStudentManager().getStudents();
 
         for(Student s : students){
             StudentButton sb = new StudentButton(s.getID(), s.getName());
@@ -81,18 +84,8 @@ public class ShowStudents implements Initializable {
     private void handleStudentButton(ActionEvent e){
         StudentButton sb = (StudentButton)e.getSource();
 
-        //Open student profile.
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/student-profile.fxml"));
-            Pane p = loader.load();
-            StudentProfileController spc = loader.getController();
-            spc.initModel(dataModel);
-            spc.setStudent(sb.getStudentID());
-            ViewNavigator.loadScene(p);
-        }catch(IOException io){
-            io.printStackTrace();
-            Logger.getInstance().log("Cannot load Student " + sb.getStudentName(), LogLevel.S);
-        }
+        sceneModel.setCurrentStudent(modelManager.getStudentManager().getStudentByID(sb.getStudentID()));
+        sceneModel.setScene(StudentProfileController.class.getSimpleName());
 
     }
 }

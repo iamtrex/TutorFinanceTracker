@@ -4,11 +4,10 @@ import javafx.scene.control.Button;
 
 public class StudentButton extends Button {
     private String studentName;
-    private int studentID;
+    private long studentID;
 
-    public StudentButton(int studentID, String studentName){
+    public StudentButton(long studentID, String studentName){
         super();
-
         this.studentID = studentID;
         this.studentName = studentName;
 
@@ -19,11 +18,11 @@ public class StudentButton extends Button {
         this.setPrefWidth(100);
     }
 
-    public String getStudentName(){
-        return this.studentName;
+    public long getStudentID() {
+        return this.studentID;
     }
 
-    public int getStudentID() {
-        return this.studentID;
+    public String getStudentName() {
+        return studentName;
     }
 }

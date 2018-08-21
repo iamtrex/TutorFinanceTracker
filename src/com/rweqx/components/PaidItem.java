@@ -1,10 +1,12 @@
 package com.rweqx.components;
 
 import com.rweqx.constants.Constants;
+import com.rweqx.model.Student;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -16,25 +18,32 @@ import java.util.regex.Pattern;
 
 public class PaidItem extends HBox {
 
-
     private TextField tPaid;
     private Label lName;
     private DoubleProperty paid;
-    private String name;
+    private Student student;
 
-    public PaidItem(String name) {
+    private ComboBox<String> choosePaymentType;
+
+
+    public PaidItem(Student student) {
         super();
-        this.name = name;
+        this.student = student;
         paid = new SimpleDoubleProperty(0.0);
         tPaid = new TextField("");
         tPaid.setPromptText("$ Paid");
 
-        lName = new Label(name);
+        lName = new Label(student.getName());
         Pane spacer = new Pane();
 
+        ObservableList<String> paymentTypes = FXCollections.observableArrayList();
+        paymentTypes.addAll("Cash", "Cheque");
+
+        choosePaymentType = new ComboBox<>();
+        choosePaymentType.setItems(paymentTypes);
         HBox.setHgrow(spacer, Priority.ALWAYS);
         this.setSpacing(10);
-        this.getChildren().setAll(lName, spacer, tPaid);
+        this.getChildren().setAll(lName, spacer, tPaid, choosePaymentType);
 
 
         tPaid.textProperty().addListener((obs, oldVal, newVal) -> {
@@ -56,8 +65,8 @@ public class PaidItem extends HBox {
 
     }
 
-    public String getName() {
-        return name;
+    public Student getStudent(){
+        return student;
     }
 
     public Double getPaid() {
@@ -67,7 +76,15 @@ public class PaidItem extends HBox {
 
     public void setPaid(Double d){
         paid.set(d);
+        tPaid.setText(String.valueOf(d));
     }
 
 
+    public String getPaidType() {
+        return choosePaymentType.getSelectionModel().getSelectedItem();
+    }
+
+    public void setPayType(String paymentType) {
+        choosePaymentType.setValue(paymentType);
+    }
 }

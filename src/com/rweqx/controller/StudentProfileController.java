@@ -1,10 +1,11 @@
 package com.rweqx.controller;
 
-import com.rweqx.model.DataModel;
+import com.rweqx.model.Class;
 import com.rweqx.model.Event;
+import com.rweqx.model.Payment;
 import com.rweqx.model.Student;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -21,7 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class StudentProfileController implements Initializable {
+
+public class StudentProfileController extends BaseController implements Initializable {
 
     private final int DISPLAY_ALL = 0;
     private final int DISPLAY_MONTH = 1;
@@ -48,46 +51,35 @@ public class StudentProfileController implements Initializable {
     @FXML
     private VBox eventBox;
 
+    @FXML
+    private AnchorPane root;
 
 
-
-    private IntegerProperty studentID;
+    private LongProperty studentID;
     private Student currentStudent;
 
 
-    private DataModel dataModel;
-
-
-    public StudentProfileController(){
-        studentID = new SimpleIntegerProperty();
+    public StudentProfileController() {
+        studentID = new SimpleLongProperty();
         currentDisplayMode = DISPLAY_ALL;
 
-    }
 
-
-    public void initModel(DataModel dataModel){
-        this.dataModel = dataModel;
-
-
-    }
-
-    public void setStudent(int studentID) {
-        this.studentID.set(studentID);
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //lName.textProperty().bind(studentName);
-        studentID.addListener((obs, oldVal, newVal)->{
-            if(oldVal == newVal){
+        studentID.addListener((obs, oldVal, newVal) -> {
+            if (oldVal == newVal) {
                 return;
             }
             int ID = newVal.intValue();
-            if(ID == -1){
+            if (ID == -1) {
                 reset();
             }
-            currentStudent = dataModel.getStudentsModel().getStudentByID(ID);
+
+            currentStudent = modelManager.getStudentManager().getStudentByID(ID);
             lName.setText(currentStudent.getName());
 
             refreshEventBox();
@@ -96,45 +88,60 @@ public class StudentProfileController implements Initializable {
 
         eventScroll.setFitToWidth(true);
 
+    }
+
+    @Override
+    public void sceneLoaded() {
+        //Load currentStudent...
+        studentID.set(sceneModel.getCurrentStudent().getID());
 
     }
+
 
     private void refreshEventBox() {
         eventBox.getChildren().clear();
         List<Event> events;
 
-        switch(currentDisplayMode){
+        switch (currentDisplayMode) {
             case DISPLAY_ALL:
-                events = dataModel.getAllEventsByStudent(currentStudent);
+                events = modelManager.getAllEventsByStudent(currentStudent);
                 break;
             case DISPLAY_MONTH:
                 int month = LocalDate.now().getMonthValue();
-                events = dataModel.getAllEventsByStudentInMonth(currentStudent, month);
+                events = modelManager.getAllEventsByStudentInMonth(currentStudent, month);
                 break;
             default:
                 events = new ArrayList<>();
                 break;
         }
 
-        double outstanding = dataModel.getAllEventsByStudentOutstanding(currentStudent);
+        double outstanding = modelManager.getAllEventsByStudentOutstanding(currentStudent);
         lOutstanding.setText("Amount outstanding " + outstanding);
 
         for (Event e : events) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/rweqx/components/EventItem.fxml"));
-                loader.setRoot(new HBox());
-                HBox eventItem = loader.load();
+                FXMLLoader loader = null;
+                if (e instanceof Class) {
+                    loader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/student-profile-class-item.fxml"));
+                } else if (e instanceof Payment) {
+                    loader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/student-profile-payment-item.fxml"));
+                }
 
+                //loader.setRoot(new HBox());
+                HBox eventItem = loader.load();
                 eventBox.getChildren().add(eventItem);
-                EventItemController eic = loader.getController();
-                eic.initModel(dataModel);
-                eic.setEvent(e);
+
+                StudentEventItemController seic = loader.getController();
+                seic.setStudent(currentStudent);
+                seic.setEvent(e);
+                seic.initModel(modelManager, sceneModel);
+
 
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
-        if(events.size() == 0){
+        if (events.size() == 0) {
             eventBox.getChildren().add(new Label("No Events on this Day"));
         }
     }
@@ -146,16 +153,19 @@ public class StudentProfileController implements Initializable {
 
     }
 
-    public void showAllClicked(ActionEvent e){
+    public void showAllClicked(ActionEvent e) {
 
     }
-    public void showOutstandingClicked(ActionEvent e){
+
+    public void showOutstandingClicked(ActionEvent e) {
 
     }
-    public void showMonthClicked(ActionEvent e){
+
+    public void showMonthClicked(ActionEvent e) {
 
     }
-    public void backClicked(ActionEvent e){
+
+    public void backClicked(ActionEvent e) {
 
     }
 }

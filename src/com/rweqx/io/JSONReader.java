@@ -1,4 +1,4 @@
-package com.rweqx.model;
+package com.rweqx.io;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.rweqx.model.Class;
+import com.rweqx.model.Payment;
 import org.hildan.fxgson.FxGson;
 
 
@@ -27,23 +29,23 @@ public class JSONReader {
 
     }
 
-    public Set<Payment> readPaymentFromJson(String fileName){
+    public List<Payment> readPaymentFromJson(String fileName){
         File f = new File(fileName);
         if(!f.exists()){
             Logger.getInstance().log("Payment Save File does not exist, will be created later...", LogLevel.W);
-            return new HashSet<>();
+            return new ArrayList<>();
         }
         try {
 
             String json = new String(Files.readAllBytes(Paths.get(fileName)), "UTF-8");
             if(json.trim().equals("")){
                 Logger.getInstance().log("Empty Payment Save File...", LogLevel.W);
-                return new HashSet<>();
+                return new ArrayList<>();
             }
 
-            Type listType = new TypeToken<HashSet<Payment>>(){}.getType();
+            Type listType = new TypeToken<ArrayList<Payment>>(){}.getType();
 
-            Set<Payment> listOfPayments = gson.fromJson(json, listType);
+            List<Payment> listOfPayments = gson.fromJson(json, listType);
             System.out.println("Payments Found " + listOfPayments.size());
             System.out.println(listOfPayments);
             return listOfPayments;
@@ -57,27 +59,27 @@ public class JSONReader {
         }catch(Exception e){
             e.printStackTrace();
         }
-        return new HashSet<>();
+        return new ArrayList<>();
     }
 
-    public Set<Class> readClassFromJson(String fileName){
+    public List<Class> readClassFromJson(String fileName){
         File f = new File(fileName);
         if(!f.exists()){
             Logger.getInstance().log("Classes Save File does not exist, will be created later...", LogLevel.W);
 
-            return new HashSet<>();
+            return new ArrayList<>();
         }
         try {
 
             String json = new String(Files.readAllBytes(Paths.get(fileName)), "UTF-8");
             if(json.trim().equals("")){
                 Logger.getInstance().log("Empty Classes Save File...", LogLevel.W);
-                return new HashSet<>();
+                return new ArrayList<>();
             }
 
-            Type listType = new TypeToken<HashSet<Class>>(){}.getType();
+            Type listType = new TypeToken<ArrayList<Class>>(){}.getType();
 
-            Set<Class> listOfClases = gson.fromJson(json, listType);
+            List<Class> listOfClases = gson.fromJson(json, listType);
             System.out.println("Classes Found " + listOfClases.size());
             System.out.println(listOfClases);
             return listOfClases;
@@ -91,6 +93,6 @@ public class JSONReader {
         }catch(Exception e){
             e.printStackTrace();
         }
-        return new HashSet<>();
+        return new ArrayList<>();
     }
 }

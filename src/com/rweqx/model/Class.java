@@ -1,60 +1,137 @@
 package com.rweqx.model;
 
+import com.rweqx.controller.StudentEventItemController;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 
-import java.util.*;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-/**
- * While saving student name is redundant, it makes it easier for someone to read logs in cases where that is needed. Thus we are keeping it.
- *
- */
 public class Class extends Event{
 
-
+    private Set<StuDurPaid> studentsInfoSet;
     private String classType;
-    private Map<Integer, Double> durationMap;
-    private Map<Integer, Long> paymentMap;
-
-    private Set<Student> students;
 
 
-    public Class(long eventID, String classType, Date date){
+    public Class(long eventID, LocalDate date, String classType) {
         super(eventID, date);
         this.classType = classType;
-        students = new HashSet<>();
-        durationMap = new HashMap<>();
-        paymentMap = new HashMap<>();
+        studentsInfoSet = new HashSet<>();
+
 
     }
 
-    public void addPayment(Student s, long pid){
-        if(!students.contains(s)){
-            Logger.getInstance().log("Student " + s + " tried to pay, but wasn't in this class", LogLevel.W);
-        }else{
-            paymentMap.put(s.getID(), pid);
+    public Class(Class copy) {
+        super(copy.getID(), copy.getDate());
+        this.classType = copy.classType;
+        studentsInfoSet = new HashSet<>();
+        for(StuDurPaid sdp : copy.getAllData()){
+            studentsInfoSet.add(new StuDurPaid(sdp.getStuID(), sdp.getDuration(), sdp.getPaidID()));
         }
+        // Full Deep copy of class.
     }
 
-    public void addStudent(Student s, double duration){
-        students.add(s);
-        durationMap.put(s.getID(), duration);
+    public Set<StuDurPaid> getAllData(){
+        return studentsInfoSet;
     }
 
-    public Set<Student> getStudents() {
+    public Set<Long> getStudents(){
+        Set<Long> students = new HashSet<>();
+        for(StuDurPaid sdp : studentsInfoSet){
+            students.add(sdp.getStuID());
+        }
         return students;
     }
 
-    public Double getDurationFromStudent(int sid){
-        return durationMap.get(sid);
+    public void addStudent(StuDurPaid sdp){
+        if(studentsInfoSet.stream()
+                .anyMatch(e -> e.getStuID() == sdp.getStuID())){
+            Logger.getInstance().log("Actually overwrote student data -_-", LogLevel.W);
+        }
+        this.studentsInfoSet.add(sdp);
+
+    }
+    /**
+     * Add student without payment.
+     * @param stuID
+     * @param duration
+     */
+    public void addStudent(long stuID, double duration){
+        addStudent(stuID, duration, -1);
     }
 
-    public long getPaidIDFromStudent(int sid){
-        return paymentMap.get(sid) == null ? -1 : paymentMap.get(sid);
+    /**
+     * Add student with payment.
+     * @param stuID
+     * @param duration
+     * @param paymentID
+     */
+    public void addStudent(long stuID, double duration, long paymentID){
+        if(containsStudent(stuID)){
+            Logger.getInstance().log("Already has this student, will overwrite data... ", LogLevel.W);
+        }
+        studentsInfoSet.add(new StuDurPaid(stuID, duration, paymentID));
     }
 
-    public String getClassType(){
+    public boolean containsStudent(long stuID) {
+        return studentsInfoSet.stream()
+                .filter(s-> s.getStuID() == stuID)
+                .findFirst()
+                .isPresent();
+
+    }
+
+    //TOOD can we make this a stream?
+    public long getPaidIDOfStudent(long stuID){
+        for(StuDurPaid sdp : studentsInfoSet){
+            if(sdp.getStuID() == stuID){
+                return sdp.getPaidID();
+            }
+        }
+        Logger.getInstance().log("Cannot find student in class, should not happen... ", LogLevel.S);
+        return -1;
+    }
+
+    public Double getDurationOfStudent(long stuID) {
+        for(StuDurPaid sdp : studentsInfoSet){
+            if(sdp.getStuID() == stuID){
+                return sdp.getDuration();
+            }
+        }
+        Logger.getInstance().log("Cannot find student in class, should not happen... ", LogLevel.S);
+        return 0.0;
+    }
+
+    public String getClassType() {
         return classType;
     }
 
+    public String getDurationRange() {
+        //If only one student, return his/her duration.
+        if(studentsInfoSet.size() == 1){
+            StuDurPaid sdp = studentsInfoSet.iterator().next();
+            return sdp.getDuration() + " hrs";
+
+        }
+
+        //Otherwise find the range of durations from shortest to longest.
+        double small = Double.MAX_VALUE;
+        double large = Double.MIN_VALUE;
+        for(StuDurPaid sdp : studentsInfoSet){
+            if(sdp.getDuration() > large) {
+                large = sdp.getDuration();
+            }
+            if(sdp.getDuration() < small){
+                small = sdp.getDuration();
+            }
+        }
+        if(small == large){
+            return small + " hrs";
+        }
+        return small + " - " + large + " hrs";
+
+
+    }
 }

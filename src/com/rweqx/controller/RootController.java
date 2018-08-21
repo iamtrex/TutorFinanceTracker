@@ -1,149 +1,150 @@
 package com.rweqx.controller;
 
-import com.rweqx.constants.Constants;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
-import com.rweqx.model.DataModel;
-import javafx.event.ActionEvent;
+import com.rweqx.managers.ModelManager;
+import com.rweqx.model.SceneModel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Stack;
 
-public class RootController implements Initializable {
+public class RootController extends BaseController{
 
-    @FXML
-    private GridPane root;
+    private Map<String, Pane> subSceneMap;
+    private Map<Pane, BaseController> subSceneControllerMap;
 
-    @FXML
-    private Button bOverview;
-    @FXML
-    private Button bAddClass;
-    @FXML
-    private Button bAddPayment;
-    @FXML
-    private Button bStudents;
-    @FXML
-    private Button bPrintJobs;
-    @FXML
-    private Button bCalendar;
-    @FXML
-    private Button bStats;
-    @FXML
-    private Button bBackupAndRestore;
-    @FXML
-    private Button bSettings;
 
     @FXML
-    private StackPane content;
+    private GridPane rootGrid;
 
     @FXML
-    private Label lVersion;
+    private HBox toolBar; //TODO Implement better navigation. .
 
-    private Map<Button, Pane> clickMap;
+    @FXML
+    private StackPane paneHolder;
 
-    private DataModel dataModel;
+    private Stack<Pane> history;
 
-    private Logger logger;
     public RootController(){
-        dataModel = new DataModel();
-        logger = Logger.getInstance();
-        /**
-         * Load shit.
-         */
+        subSceneMap = new HashMap<>();
+        subSceneControllerMap = new HashMap<>();
+
+        history = new Stack<>();
+
+    }
+
+    private void addPaneAndController(String name, String file) throws Exception{
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(file));
+        Pane pane = loader.load();
+
+        BaseController bc = loader.getController();
+        bc.initModel(this.modelManager, this.sceneModel);
+
+        subSceneMap.put(name, pane);
+        subSceneControllerMap.put(pane, bc);
+    }
+
+    private void switchSceneBack() {
+        System.out.println("Root Controller attempting to swap scene back");
+        Pane p = history.pop();
+        if(p == null){
+            Logger.getInstance().log("Tried to back without history pane, doing nothing", LogLevel.W);
+            return;
+        }
+
+        System.out.println(p);
+        //TELL SCENE IT'S BEING LOADED FIRST.
+        BaseController bc = subSceneControllerMap.get(p);
+        if(bc == null)
+            throw new IllegalStateException();
+        bc.sceneLoaded();
+
+        System.out.println(bc.getClass().getSimpleName());
+
+        //TODO, shoudl tell controller that scene is loaded, but cna't because don't know the name lmfao... maybe change
+            //TODO - the bc map to be from pane to controller?
+
+        paneHolder.getChildren().setAll(p);
+    }
+
+    private void switchSceneTo(String sceneName) {
+        Pane p = subSceneMap.get(sceneName);
+        if(p != null){
+
+            //TELL SCENE IT'S BEING LOADED FIRST.
+            BaseController bc = subSceneControllerMap.get(p);
+            if(bc == null)
+                throw new IllegalStateException();
+            bc.sceneLoaded();
+
+
+            if(paneHolder.getChildren().size() > 0)
+                history.push((Pane) paneHolder.getChildren().get(0));
+
+            paneHolder.getChildren().setAll(p);
+
+
+        }
 
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initModel(ModelManager modelManager, SceneModel sceneModel){
+        super.initModel(modelManager, sceneModel);
 
-        lVersion.setText("Version - " + Constants.VERSION);
-        clickMap = new HashMap<>();
-        try {
-            FXMLLoader addClassLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/add-class.fxml"));
-            FXMLLoader studentsLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/show-students.fxml"));
-            FXMLLoader dayViewLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/day-view.fxml"));
-            FXMLLoader addPaymentLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/add-payment.fxml"));
-
-            //Load and put into map.
-            clickMap.put(bAddClass, addClassLoader.load());
-            clickMap.put(bStudents, studentsLoader.load());
-            clickMap.put(bCalendar, dayViewLoader.load());
-            clickMap.put(bAddPayment, addPaymentLoader.load());
-
-            //Init models.
-            AddClass addClassController = addClassLoader.getController();
-            addClassController.initModel(dataModel);
-
-            ShowStudents showStudentsController = studentsLoader.getController();
-            showStudentsController.initModel(dataModel);
-
-            DayViewController dvc = dayViewLoader.getController();
-            dvc.initModel(dataModel);
-            dvc.setDate(Calendar.getInstance().getTime()); //default view is today.
-
-            AddPaymentController apc = addPaymentLoader.getController();
-            apc.initModel(dataModel);
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void switchScene(ActionEvent e){
-        Object source = e.getSource();
-        clickMap.forEach((b, p) -> {
-            if(b == source){
-                content.getChildren().setAll(p);
+        sceneModel.getSceneNameProperty().addListener((obs, oldVal, newVal) ->{
+            if(newVal != null){
+                switchSceneTo(newVal);
             }
         });
 
-    }
+        sceneModel.getBackProperty().addListener((obs, oldVal, newVal)->{
+            System.out.println("Back property is now " + newVal);
+            if(newVal){
+                switchSceneBack();
+                sceneModel.getBackProperty().set(false);
+            }
+        });
 
-    public FXMLLoader loadSceneAndGetLoader(String fxml){
+        //Add:
+        try {
+            addPaneAndController(OverviewController.class.getSimpleName(), "/com/rweqx/ui/overview.fxml");
+            addPaneAndController(AddEditClassController.class.getSimpleName(), "/com/rweqx/ui/add-edit-class.fxml");
+            addPaneAndController(AddEditPaymentController.class.getSimpleName(), "/com/rweqx/ui/add-edit-payment.fxml");
+            addPaneAndController(StudentProfilesListController.class.getSimpleName(), "/com/rweqx/ui/student-profiles-list.fxml");
+            addPaneAndController(DayViewController.class.getSimpleName(), "/com/rweqx/ui/day-view.fxml");
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            addPaneAndController(StudentProfileController.class.getSimpleName(), "/com/rweqx/ui/student-profile.fxml");
+            addPaneAndController(ViewClassController.class.getSimpleName(), "/com/rweqx/ui/view-class.fxml");
+            //SETUP LEFT PANE.
+            FXMLLoader leftPaneLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/left-pane.fxml"));
+            Pane leftPane = leftPaneLoader.load();
+            LeftPaneController lpc = leftPaneLoader.getController();
+            lpc.initModel(modelManager, sceneModel);
 
-        try{
-            Pane p = loader.load();
-            content.getChildren().setAll(p);
+            rootGrid.getChildren().add(leftPane);
+            GridPane.setRowIndex(leftPane, 0);
+            GridPane.setColumnIndex(leftPane, 0);
+            System.out.println(rootGrid.getChildren());
+
         }catch(IOException e){
-            //Don't load.
-            logger.log("Cannot load " + fxml, LogLevel.S);
-        }
-
-        return loader;
-    }
-
-    public void loadScene(Pane p){
-        content.getChildren().setAll(p);
-    }
-    public void loadScene(String fxml) {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-
-        try{
-            Pane p = loader.load();
-            content.getChildren().setAll(p);
-        }catch(IOException e){
-            //Don't load.
-            logger.log("Cannot load " + fxml, LogLevel.S);
+            e.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 
-    public DataModel getModel() {
-        return dataModel;
-    }
+
 }

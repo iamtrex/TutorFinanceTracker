@@ -1,34 +1,43 @@
 package com.rweqx.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-/**
- * While saving student name is redundant, it makes it easier for someone to read logs in cases where that is needed. Thus we are keeping it.
- *
- */
 public class Payment extends Event{
 
-    private double value;
+    private long studentID;
+    private String paymentType;
+    private double paymentAmount;
 
-    public Student getStudent() {
-        return student;
+    public long getStudentID() {
+        return studentID;
     }
 
-    private Student student;
-
-    public double getValue() {
-        return value;
+    public void setStudentID(long studentID) {
+        this.studentID = studentID;
     }
 
-    public void setValue(double value) {
-        this.value = value;
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public double getPaymentAmount() {
+        return paymentAmount;
+    }
+
+    public void setPaymentAmount(double paymentAmount) {
+        this.paymentAmount = paymentAmount;
     }
 
 
-    public Payment(long eventID, Student student, double value, Date date){
+    public Payment(long eventID, long studentID, LocalDate date, String paymentType, double paymentAmount) {
         super(eventID, date);
-        this.value = value;
-        this.student = student;
+        this.studentID = studentID;
+        this.paymentAmount = paymentAmount;
+        this.paymentType = paymentType;
 
     }
 

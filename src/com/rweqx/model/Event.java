@@ -1,45 +1,26 @@
 package com.rweqx.model;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.time.LocalDate;
 
-/**
- *
- * Classes and Payments are events...
- */
-public class Event {
-
-
+public abstract class Event {
     private long eventID;
-    private Date date;
+    private LocalDate date;
 
-    public Event(long eventID, Date date){
+    public Event(long eventID, LocalDate date) {
         this.eventID = eventID;
         this.date = date;
     }
 
-    public long getEventID() {
-        return eventID;
-    }
-
-    public Date getDate() {
+    public LocalDate getDate(){
         return date;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
-        return eventID == event.eventID;
+    public long getID(){
+        return eventID;
     }
 
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(eventID);
+    public void setDate(LocalDate date){
+        this.date = date;
     }
+
 }
