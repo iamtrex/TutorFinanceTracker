@@ -1,9 +1,11 @@
 package com.rweqx.controller;
 
+import com.rweqx.constants.Constants;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -37,6 +39,9 @@ public class LeftPaneController extends BaseController implements Initializable 
 
     private Map<Button, String> clickMap;
 
+    @FXML
+    private Label lVersion;
+
     public LeftPaneController(){
         clickMap = new HashMap<>();
     }
@@ -68,6 +73,7 @@ public class LeftPaneController extends BaseController implements Initializable 
         clickMap.put(bBackupAndRestore, BackupRestoreController.class.getSimpleName());
         clickMap.put(bSettings, SettingsController.class.getSimpleName());
 
+        lVersion.setText("Version - " + Constants.VERSION);
         leftPaneBox.setFillWidth(true);
 
     }
