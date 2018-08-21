@@ -13,5 +13,4 @@ public class StudentEventItemController extends EventItemController {
     public void setStudent(Student s){
         this.student = s;
     }
-
 }

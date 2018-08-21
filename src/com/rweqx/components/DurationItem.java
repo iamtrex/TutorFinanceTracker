@@ -65,5 +65,6 @@ public class DurationItem extends HBox{
 
     public void setDuration(Double dur) {
         duration.set(dur);
+        tDuration.setText(String.valueOf(dur));
     }
 }

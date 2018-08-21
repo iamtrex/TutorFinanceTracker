@@ -39,8 +39,7 @@ public class ClassManager {
             return;
         }
         classes.remove(c);
-        classMap.remove(c);
-
+        classMap.remove(classID);
 
         for(StuDurPaid sdp : c.getAllData()){
             long pid = sdp.getPaidID();

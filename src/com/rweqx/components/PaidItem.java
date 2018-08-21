@@ -76,10 +76,15 @@ public class PaidItem extends HBox {
 
     public void setPaid(Double d){
         paid.set(d);
+        tPaid.setText(String.valueOf(d));
     }
 
 
     public String getPaidType() {
         return choosePaymentType.getSelectionModel().getSelectedItem();
+    }
+
+    public void setPayType(String paymentType) {
+        choosePaymentType.setValue(paymentType);
     }
 }

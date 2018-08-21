@@ -86,7 +86,8 @@ public class PaymentManager {
 
     public void removePaymentByID(long pid) {
         Payment p = paymentMap.get(pid);
-
+        payments.remove(p);
+        paymentMap.remove(pid);
     }
 
     public List<Payment> getAllPaymentsOnDate(LocalDate date) {

@@ -83,6 +83,10 @@ public class AddEditPaymentController extends BaseController implements Initiali
             currentlyEditingPayment = p;
             current_mode = EDIT_MODE;
 
+            selectStudent(modelManager.getStudentManager().getStudentByID(p.getStudentID()));
+            tPaid.setText(String.valueOf(p.getPaymentAmount()));
+            paymentType.setValue(p.getPaymentType());
+            datePicker.setValue(p.getDate());
             System.out.println("Current mode - editing");
         }
     }

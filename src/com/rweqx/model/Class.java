@@ -6,6 +6,7 @@ import com.rweqx.logger.Logger;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Class extends Event{
@@ -107,4 +108,30 @@ public class Class extends Event{
         return classType;
     }
 
+    public String getDurationRange() {
+        //If only one student, return his/her duration.
+        if(studentsInfoSet.size() == 1){
+            StuDurPaid sdp = studentsInfoSet.iterator().next();
+            return sdp.getDuration() + " hrs";
+
+        }
+
+        //Otherwise find the range of durations from shortest to longest.
+        double small = Double.MAX_VALUE;
+        double large = Double.MIN_VALUE;
+        for(StuDurPaid sdp : studentsInfoSet){
+            if(sdp.getDuration() > large) {
+                large = sdp.getDuration();
+            }
+            if(sdp.getDuration() < small){
+                small = sdp.getDuration();
+            }
+        }
+        if(small == large){
+            return small + " hrs";
+        }
+        return small + " - " + large + " hrs";
+
+
+    }
 }

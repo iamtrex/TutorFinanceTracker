@@ -3,6 +3,7 @@ package com.rweqx.controller;
 import com.rweqx.model.Event;
 import com.rweqx.model.Class;
 
+import com.rweqx.model.Payment;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -62,21 +63,30 @@ public class DayViewController extends BaseController implements Initializable {
         List<Event> events = modelManager.getAllEventsOnDate(date);
         for (Event e : events) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/rweqx/components/EventItem.fxml"));
-                loader.setRoot(new HBox());
-                HBox eventItem = loader.load();
+                FXMLLoader loader;
+                HBox item;
+                if(e instanceof Class){
+                    Class c = (Class) e;
+                    loader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/day-view-class-item.fxml"));
+                    item = loader.load();
+                }else{
+                    Payment p = (Payment) e;
+                    loader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/day-view-payment-item.fxml"));
+                    item = loader.load();
 
-                eventsBox.getChildren().add(eventItem);
+                }
+
+                eventsBox.getChildren().add(item);
                 EventItemController eic = loader.getController();
                 eic.initModel(modelManager, sceneModel);
                 eic.setEvent(e);
-
 
                 if(e instanceof Class){
                     //TODO FILL IN LHOURS AND LINCOME
                     lHours.setText("TBD");
                     lIncome.setText("TBD");
                 }
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

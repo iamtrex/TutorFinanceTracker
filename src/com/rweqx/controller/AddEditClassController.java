@@ -7,10 +7,8 @@ import com.rweqx.components.WarningPopUp;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 import com.rweqx.managers.ModelManager;
+import com.rweqx.model.*;
 import com.rweqx.model.Class;
-import com.rweqx.model.SceneModel;
-import com.rweqx.model.StuDurPaid;
-import com.rweqx.model.Student;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -112,6 +110,23 @@ public class AddEditClassController extends BaseController implements Initializa
             currentlyEditingClass = c;
             current_mode = EDIT_MODE;
             //TODO LOAD THE CLASS...
+
+            Set<StuDurPaid> data = c.getAllData();
+            for(StuDurPaid sdp : data){
+                Student s = modelManager.getStudentManager().getStudentByID(sdp.getStuID());
+                addStudent(s);
+                DurationItem di = durationMap.get(s);
+                di.setDuration(sdp.getDuration());
+
+                if(sdp.getPaidID() != -1) {
+                    PaidItem pi = paidMap.get(s);
+                    Payment pay = modelManager.getPaymentManager().getPaymentByID(sdp.getPaidID());
+                    pi.setPaid(pay.getPaymentAmount());
+                    pi.setPayType(pay.getPaymentType());
+                }
+            }
+            classTypeChoices.setValue(c.getClassType());
+            datePicker.setValue(c.getDate());
 
             System.out.println("Current mode - editing");
         }
