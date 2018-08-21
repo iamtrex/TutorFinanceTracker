@@ -53,6 +53,9 @@ public class ChosenStudent extends AnchorPane {
 
     }
 
+    public Student getStudent(){
+        return student;
+    }
     public final ObjectProperty<EventHandler<ActionEvent>> onActionProperty() { return onAction; }
 
     public final void setOnAction(EventHandler<ActionEvent> value) { onActionProperty().set(value); }

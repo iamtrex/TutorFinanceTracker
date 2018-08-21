@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -54,6 +55,8 @@ public class AddEditPaymentController extends BaseController implements Initiali
 
     @FXML
     private Button bSave;
+    @FXML
+    private Button bDelete;
 
     public AddEditPaymentController(){
         currentSearch = new SimpleStringProperty();
@@ -75,6 +78,8 @@ public class AddEditPaymentController extends BaseController implements Initiali
             //regular add mode.
             currentlyEditingPayment = null;
             current_mode = ADD_MODE;
+            bDelete.setVisible(false);
+            bSave.setText("Add Payment");
 
             System.out.println("Current mode - adding");
 
@@ -87,6 +92,8 @@ public class AddEditPaymentController extends BaseController implements Initiali
             tPaid.setText(String.valueOf(p.getPaymentAmount()));
             paymentType.setValue(p.getPaymentType());
             datePicker.setValue(p.getDate());
+            bSave.setText("Save");
+            bDelete.setVisible(true);
             System.out.println("Current mode - editing");
         }
     }
@@ -106,13 +113,17 @@ public class AddEditPaymentController extends BaseController implements Initiali
     }
 
     private void saveCurrentPayment() {
+
+        long pid;
         if(current_mode == EDIT_MODE){
-            modelManager.getPaymentManager().deletePayment(currentlyEditingPayment.getID());
+            pid = modelManager.replacePayment(currentlyEditingPayment.getID(),
+                    selectedStudent, datePicker.getValue(), paymentType.getValue().toString(), Double.parseDouble(tPaid.getText().trim()));
+        }else {
+            pid = modelManager.addPayment(selectedStudent, datePicker.getValue(), paymentType.getValue().toString(), Double.parseDouble(tPaid.getText().trim()));
+
         }
 
-        long pid = modelManager.addPayment(selectedStudent, datePicker.getValue(), paymentType.getValue().toString(), Double.parseDouble(tPaid.getText().trim()));
         Payment p = modelManager.getPaymentManager().getPaymentByID(pid);
-
         sceneModel.setCurrentPayment(p);
         //sceneModel.setScene(ViewPaymentController.class.getSimpleName());
         sceneModel.setCurrentDate(datePicker.getValue());
@@ -141,6 +152,13 @@ public class AddEditPaymentController extends BaseController implements Initiali
         return true;
     }
 
+    public void deleteClicked(ActionEvent e){
+        modelManager.deletePayment(currentlyEditingPayment.getID());
+        currentlyEditingPayment = null;
+        sceneModel.setCurrentPayment(null);
+        sceneModel.backClicked();
+        reset();
+    }
     public void cancelClicked(){
         if(current_mode == ADD_MODE) {
             reset();
@@ -215,4 +233,5 @@ public class AddEditPaymentController extends BaseController implements Initiali
             studentsListView.refresh();
         });
     }
+
 }

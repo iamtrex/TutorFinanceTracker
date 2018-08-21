@@ -2,19 +2,21 @@ package com.rweqx.managers;
 
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
+import com.rweqx.model.Class;
+import com.rweqx.model.Payment;
 import com.rweqx.model.Student;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StudentManager {
     private List<Student> students;
 
     private Map<Long, Student> studentIDMap;
 
+    private Random idGenerator;
+
     public StudentManager(){
+        idGenerator = new Random();
         students = new ArrayList<>();
         studentIDMap = new HashMap<>();
 
@@ -52,5 +54,18 @@ public class StudentManager {
 
     public List<Student> getStudents() {
         return students;
+    }
+
+    public void createAndAddStudent(String name) {
+        addStudent(new Student(getNewID(), name, null));
+    }
+
+    private long getNewID() {
+        long l = idGenerator.nextLong();
+
+        while(studentIDMap.containsKey(l)){
+            l = idGenerator.nextLong();
+        }
+        return l;
     }
 }

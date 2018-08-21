@@ -134,4 +134,16 @@ public class Class extends Event{
 
 
     }
+
+    public void removePayment(long id) {
+        replacePayment(id, -1);
+    }
+
+    public void replacePayment(long replaced, long replacer) {
+        for(StuDurPaid sdp : studentsInfoSet){
+            if(sdp.getPaidID() == replaced){
+                sdp.setPaidID(replacer); //No paid ID.
+            }
+        }
+    }
 }

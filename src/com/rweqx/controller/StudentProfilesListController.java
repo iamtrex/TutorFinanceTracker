@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import org.controlsfx.glyphfont.INamedCharacter;
@@ -31,6 +32,11 @@ public class StudentProfilesListController extends BaseController implements Ini
     @FXML
     private TextField searchbar;
 
+    @FXML
+    private TextField tNewStudent;
+
+    @FXML
+    private Button bNewStudent;
 
     private List<StudentButton> studentButtons;
     private String currSearch;
@@ -88,4 +94,19 @@ public class StudentProfilesListController extends BaseController implements Ini
         sceneModel.setScene(StudentProfileController.class.getSimpleName());
 
     }
+
+    public void bNewStudentClicked(ActionEvent e){
+        tNewStudent.setVisible(true);
+    }
+
+    public void tNewStudentClicked(){
+        String name = tNewStudent.getText();
+        tNewStudent.setText("");
+        tNewStudent.setVisible(false);
+        bNewStudent.setVisible(true);
+        modelManager.getStudentManager().createAndAddStudent(name);
+
+
+    }
+
 }

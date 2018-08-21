@@ -113,6 +113,24 @@ public class ModelManager {
         return 0.0;
     }
 
+    public Class createAndAddEmptyClass(LocalDate date, String classType) {
+        Class c = new Class(getNewID(), date, classType);
+        classManager.addClass(c);
+        return c;
+    }
+
+    public void addStuDurPaidToClass(Class c, Student s, Double duration, Double paymentAmount, String paymentType){
+        StuDurPaid sdp;
+        if(paymentAmount == 0){
+            sdp = new StuDurPaid(s.getID(), duration, -1);
+        }else {
+            Payment p = new Payment(getNewID(), s.getID(), c.getDate(), paymentType, paymentAmount, c);
+            paymentManager.addPayment(p);
+            sdp = new StuDurPaid(s.getID(), duration, p.getID());
+        }
+        c.addStudent(sdp);
+    }
+
     public long createAndAddClass(LocalDate date, String classType, List<StuDurPaid> sdp) {
         Class c = new Class(getNewID(), date, classType);
 
@@ -136,6 +154,22 @@ public class ModelManager {
         return l;
     }
 
+    public long replacePayment(long replaced, Student student, LocalDate date, String paymentType, double paid){
+        long id = getNewID();
+
+        Class c = paymentManager.getPaymentByID(replaced).getLinkedClass();
+        if(c != null) {
+            Payment p = new Payment(id, student.getID(), date, paymentType, paid, c);
+            paymentManager.addPayment(p);
+            paymentManager.deletePayment(replaced);
+            c.replacePayment(replaced, id);
+        }else{
+            Payment p = new Payment(id, student.getID(), date, paymentType, paid);
+            paymentManager.addPayment(p);
+        }
+        return id;
+    }
+
     public long addPayment(Student student, LocalDate date, String paymentType, double paid) {
         long id = getNewID();
         Payment p = new Payment(id, student.getID(), date, paymentType, paid);
@@ -143,4 +177,13 @@ public class ModelManager {
         return id;
     }
 
+    public void deletePayment(long id) {
+        Payment p = paymentManager.getPaymentByID(id);
+        Class c = p.getLinkedClass();
+        if(c != null){
+            c.removePayment(p.getID());
+        }
+
+        paymentManager.deletePayment(id);
+    }
 }

@@ -81,6 +81,8 @@ public class AddEditClassController extends BaseController implements Initializa
 
     @FXML
     private Button bCancel;
+    @FXML
+    private Button bDelete;
 
     private Class currentlyEditingClass;
 
@@ -102,6 +104,10 @@ public class AddEditClassController extends BaseController implements Initializa
             //regular add mode.
             currentlyEditingClass = null;
             current_mode = ADD_MODE;
+
+            bDelete.setVisible(false);
+            bSave.setText("Add Class");
+
 
             System.out.println("Current mode - adding");
 
@@ -128,6 +134,8 @@ public class AddEditClassController extends BaseController implements Initializa
             classTypeChoices.setValue(c.getClassType());
             datePicker.setValue(c.getDate());
 
+            bDelete.setVisible(true);
+            bSave.setText("Save");
             System.out.println("Current mode - editing");
         }
     }
@@ -316,6 +324,13 @@ public class AddEditClassController extends BaseController implements Initializa
         return true;
     }
 
+    public void deleteClicked(ActionEvent e){
+        modelManager.getClassManager().deleteClass(currentlyEditingClass.getID());
+        sceneModel.setCurrentClass(null);
+        sceneModel.setScene(DayViewController.class.getSimpleName());
+
+        reset();
+    }
     private void saveCurrentClass() {
         LocalDate date = datePicker.getValue();
         String classType = classTypeChoices.getValue();
@@ -326,7 +341,11 @@ public class AddEditClassController extends BaseController implements Initializa
             singleDurationLength = Double.parseDouble(tSingleDuration.getText());
         }
 
-        List<StuDurPaid> sdp = new ArrayList<>();
+        if(current_mode == EDIT_MODE){ //delete and replace the class.
+            modelManager.getClassManager().deleteClass(currentlyEditingClass.getID());
+        }
+
+        Class c = modelManager.createAndAddEmptyClass(date, classType);
 
         for(Student student : chosenStudents){
             double duration, paid;
@@ -341,21 +360,13 @@ public class AddEditClassController extends BaseController implements Initializa
             String paymentType = paidMap.get(student).getPaidType();
 
             if(paid > 0) {
-                long pid = modelManager.addPayment(student, date, paymentType, paid);
-                sdp.add(new StuDurPaid(student.getID(), duration, pid));
+                modelManager.addStuDurPaidToClass(c, student, duration, paid, paymentType);
             }else{
-                sdp.add(new StuDurPaid(student.getID(), duration, -1));
+                modelManager.addStuDurPaidToClass(c, student, duration, 0.0, "");
             }
         }
 
-        if(current_mode == EDIT_MODE){ //delete and replace the class.
-            modelManager.getClassManager().deleteClass(currentlyEditingClass.getID());
-        }
-
-        long cid = modelManager.createAndAddClass(date, classType, sdp);
-
-
-        sceneModel.setCurrentClass(modelManager.getClassManager().getClassByID(cid));
+        sceneModel.setCurrentClass(modelManager.getClassManager().getClassByID(c.getID()));
         sceneModel.setScene(ViewClassController.class.getSimpleName());
         reset();
     }
@@ -376,6 +387,7 @@ public class AddEditClassController extends BaseController implements Initializa
     private void removeStudent(ActionEvent e){
         ChosenStudent source = (ChosenStudent)e.getSource();
         chosenStudentsLabels.remove(source);
+        chosenStudents.remove(source.getStudent());
         Platform.runLater(()->{
             selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
         });
@@ -394,4 +406,5 @@ public class AddEditClassController extends BaseController implements Initializa
         });
 
     }
+
 }
