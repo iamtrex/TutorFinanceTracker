@@ -128,6 +128,8 @@ public class RootController extends BaseController{
 
             addPaneAndController(StudentProfileController.class.getSimpleName(), "/com/rweqx/ui/student-profile.fxml");
             addPaneAndController(ViewClassController.class.getSimpleName(), "/com/rweqx/ui/view-class.fxml");
+            addPaneAndController(AddEditStudentController.class.getSimpleName(), "/com/rweqx/ui/add-edit-student.fxml");
+
             //SETUP LEFT PANE.
             FXMLLoader leftPaneLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/left-pane.fxml"));
             Pane leftPane = leftPaneLoader.load();
