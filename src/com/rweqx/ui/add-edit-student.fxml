@@ -30,12 +30,12 @@
                   <TextField fx:id="tStudentName" />
                </children>
             </HBox>
-            <ScrollPane hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+            <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                <content>
-                  <VBox fx:id="paymentRatesBox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" />
+                  <VBox fx:id="paymentRatesBox" spacing="5.0" />
                </content>
                <VBox.margin>
-                  <Insets />
+                  <Insets bottom="100.0" left="100.0" right="100.0" top="100.0" />
                </VBox.margin>
             </ScrollPane>
             <HBox>

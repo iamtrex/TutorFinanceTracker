@@ -121,10 +121,12 @@ public class RootController extends BaseController{
         //Add:
         try {
             addPaneAndController(OverviewController.class.getSimpleName(), "/com/rweqx/ui/overview.fxml");
-            addPaneAndController(AddEditClassController.class.getSimpleName(), "/com/rweqx/ui/add-edit-class.fxml");
+            addPaneAndController(AddEditClassController.class.getSimpleName(), "/com/rweqx/ui/add-edit-class-2.fxml");
             addPaneAndController(AddEditPaymentController.class.getSimpleName(), "/com/rweqx/ui/add-edit-payment.fxml");
             addPaneAndController(StudentProfilesListController.class.getSimpleName(), "/com/rweqx/ui/student-profiles-list.fxml");
             addPaneAndController(DayViewController.class.getSimpleName(), "/com/rweqx/ui/day-view.fxml");
+
+
 
             addPaneAndController(StudentProfileController.class.getSimpleName(), "/com/rweqx/ui/student-profile.fxml");
             addPaneAndController(ViewClassController.class.getSimpleName(), "/com/rweqx/ui/view-class.fxml");

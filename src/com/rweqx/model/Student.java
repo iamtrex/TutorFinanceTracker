@@ -1,15 +1,18 @@
 package com.rweqx.model;
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 public class Student {
-    public long getID() {
-        return studentID;
-    }
 
-    public void setID(long studentID) {
-        this.studentID = studentID;
-    }
+
+
+    private long studentID;
+    private String name;
+    private List<PaymentRatesAtTime> paymentRates;
 
     public String getName() {
         return name;
@@ -19,26 +22,40 @@ public class Student {
         this.name = name;
     }
 
-    public Map getClassRates() {
-        return classRates;
+    public long getID() {
+        return studentID;
     }
 
-    public void setClassRates(Map classRates) {
-        this.classRates = classRates;
+    public void setID(long studentID) {
+        this.studentID = studentID;
     }
 
-    public void addClassRate(String classType, double rate){
-        classRates.put(classType, rate);
+    public PaymentRatesAtTime getLatestPaymentRates(){
+        Collections.sort(paymentRates, Comparator.comparing(PaymentRatesAtTime::getDate));
+        return paymentRates.get(paymentRates.size()-1); //Return latest.
+
+    }
+    public void modifyPaymentRate(LocalDate date, String paymentType, double rate){
+        PaymentRatesAtTime newRates = new PaymentRatesAtTime(getLatestPaymentRates());
+        newRates.addChangePayment(paymentType, rate);
+        newRates.setDate(date);
+        paymentRates.add(newRates);
+
     }
 
-    private long studentID;
-    private String name;
-    private Map classRates;
 
-    public Student(long studentID, String name, Map<String, Double> classRates){
+    public List<PaymentRatesAtTime> getPaymentRates() {
+        return paymentRates;
+    }
+
+    public void setPaymentRates(List<PaymentRatesAtTime> paymentRates) {
+        this.paymentRates = paymentRates;
+    }
+
+    public Student(long studentID, String name, List<PaymentRatesAtTime> paymentRates){
         this.studentID = studentID;
         this.name = name;
-        this.classRates = classRates;
+        this.paymentRates = paymentRates;
     }
 
 

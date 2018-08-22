@@ -1,17 +1,19 @@
 package com.rweqx.controller;
 
 import com.rweqx.components.PaymentRateItem;
+import com.rweqx.model.PaymentRatesAtTime;
 import com.rweqx.model.Student;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.time.LocalDate;
+import java.util.*;
 
 public class AddEditStudentController extends BaseController implements Initializable {
 
@@ -31,7 +33,6 @@ public class AddEditStudentController extends BaseController implements Initiali
     @FXML
     private TextField tStudentName;
 
-    @FXML
     private List<PaymentRateItem> paymentRateItems;
 
     @FXML
@@ -40,35 +41,72 @@ public class AddEditStudentController extends BaseController implements Initiali
     @FXML
     private ScrollPane scrollPane;
 
+    public AddEditStudentController(){
+        paymentRateItems = new ArrayList<>();
+    }
+    private void reset() {
+        tStudentName.setText("");
+        paymentRateItems.clear();
+        paymentRatesBox.getChildren().clear();
+    }
     @Override
-    public void sceneLoaded(){
+    public void sceneLoaded() {
         Student s = sceneModel.getCurrentStudent();
-        if(s == null){
+        if (s == null) {
             bDelete.setVisible(false);
             bSave.setText("Add Student");
-        }else{
+        } else {
             bDelete.setVisible(true);
             bSave.setText("Save Student");
         }
+
+        paymentRatesBox.getChildren().removeAll();
+
+        List<String> types = new ArrayList<>(modelManager.getPaymentTypes().getTypesList());
+
+        types.forEach(type -> {
+            PaymentRateItem pri = new PaymentRateItem(type);
+            paymentRatesBox.getChildren().add(pri);
+            paymentRateItems.add(pri);
+        });
+
 
     }
 
 
     //TODO IMPLEMENT THESE METHODS.
-    public void saveClicked(){
+    public void saveClicked() {
 
+        Map<String, Double> rates = new HashMap<>();
+        paymentRateItems.forEach(pri->{
+            rates.put(pri.getType(), pri.getRate());
+        });
+        PaymentRatesAtTime prat = new PaymentRatesAtTime(LocalDate.now(), rates);
+
+        String studentName = tStudentName.getText();
+
+        modelManager.createAndAddStudent(studentName, prat);
+        //Jump back.
+        reset();
+        sceneModel.getBackProperty().set(true);
     }
 
-    public void cancelClicked(){
-
+    public void cancelClicked() {
+        reset();
+        sceneModel.getBackProperty().set(true);
     }
 
-    public void deleteClicked(){
+
+    public void deleteClicked() {
 
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        scrollPane.setFitToWidth(true);
+        paymentRatesBox.setFillWidth(true);
+        //paymentRatesBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+
 
     }
 }

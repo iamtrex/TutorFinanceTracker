@@ -186,4 +186,8 @@ public class ModelManager {
 
         paymentManager.deletePayment(id);
     }
+
+    public void createAndAddStudent(String studentName, PaymentRatesAtTime prat) {
+        studentManager.createAndAddStudent(studentName, prat);
+    }
 }

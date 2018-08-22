@@ -4,8 +4,10 @@ import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 import com.rweqx.model.Class;
 import com.rweqx.model.Payment;
+import com.rweqx.model.PaymentRatesAtTime;
 import com.rweqx.model.Student;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class StudentManager {
@@ -20,17 +22,17 @@ public class StudentManager {
         students = new ArrayList<>();
         studentIDMap = new HashMap<>();
 
-        Map<String, Double> classRates = new HashMap<>();
-
         //TEMP CODE, REMOVE LATER.
+        Map<String, Double> classRates = new HashMap<>();
+        List<PaymentRatesAtTime> prat = List.of(new PaymentRatesAtTime(LocalDate.now(), classRates));
         List<Student> students = new ArrayList<>();
-        students.add(new Student(1, "Rex", classRates));
-        students.add(new Student(2, "Howard Lin", classRates));
-        students.add(new Student(3, "Sammy", classRates));
-        students.add(new Student(4, "Joshua Pak", classRates));
-        students.add(new Student(20, "Howard Lin", classRates));
-        students.add(new Student(10, "Rex v2", classRates));
-        students.add(new Student(300, "Sammy is a pig", classRates));
+        students.add(new Student(1, "Rex", prat));
+        students.add(new Student(2, "Howard Lin", prat));
+        students.add(new Student(3, "Sammy", prat));
+        students.add(new Student(4, "Joshua Pak", prat));
+        students.add(new Student(20, "Howard Lin", prat));
+        students.add(new Student(10, "Rex v2", prat));
+        students.add(new Student(300, "Sammy is a pig", prat));
         addStudents(students);
     }
 
@@ -41,7 +43,7 @@ public class StudentManager {
     public void addStudent(Student newStudent){
         students.add(newStudent);
         studentIDMap.put(newStudent.getID(), newStudent);
-
+        System.out.println("Created new student " + newStudent.getID() + ": " + newStudent.getName());
     }
     public Student getStudentByID(long id) {
         if(studentIDMap.get(id) != null){
@@ -56,8 +58,8 @@ public class StudentManager {
         return students;
     }
 
-    public void createAndAddStudent(String name) {
-        addStudent(new Student(getNewID(), name, null));
+    public void createAndAddStudent(String name, PaymentRatesAtTime rates) {
+        addStudent(new Student(getNewID(), name, List.of(rates)));
     }
 
     private long getNewID() {

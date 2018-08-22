@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rweqx.controller.AddEditClassController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rweqx.controller.AddEditClassController2">
     <children>
         <VBox layoutY="-8.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -25,12 +25,21 @@
                 </VBox>
             <ScrollPane fx:id="classScroll" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0">
               <content>
-                  <VBox fx:id="classesBox" spacing="10.0">
+                  <VBox spacing="10.0">
                      <children>
-                        <Button fx:id="plusClass" mnemonicParsing="false" text="Add Another Class with Same Students" />
+                        <VBox fx:id="classesBox" spacing="2.0" VBox.vgrow="ALWAYS" />
+                        <HBox>
+                           <children>
+                              <Button fx:id="bPlusClass" mnemonicParsing="false" onAction="#plusClassClicked" text="Add Another Class with Same Students" />
+                              <Button fx:id="bMinusClass" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#minusClassClicked" text="Delete Last Class" />
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
               </content>
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
             </ScrollPane>
                 <HBox>
                     <children>

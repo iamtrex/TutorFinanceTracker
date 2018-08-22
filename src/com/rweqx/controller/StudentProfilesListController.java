@@ -33,9 +33,6 @@ public class StudentProfilesListController extends BaseController implements Ini
     private TextField searchbar;
 
     @FXML
-    private TextField tNewStudent;
-
-    @FXML
     private Button bNewStudent;
 
     private List<StudentButton> studentButtons;
@@ -70,43 +67,31 @@ public class StudentProfilesListController extends BaseController implements Ini
     }
 
     @Override
-    public void initModel(ModelManager modelManager, SceneModel sceneModel) {
-        super.initModel(modelManager, sceneModel);
-
-
+    public void sceneLoaded(){
+        studentButtons.clear();
         List<Student> students = modelManager.getStudentManager().getStudents();
-
         for(Student s : students){
             StudentButton sb = new StudentButton(s.getID(), s.getName());
             studentButtons.add(sb);
             sb.setOnAction(this::handleStudentButton);
 
         }
-
         studentsPane.getChildren().setAll(studentButtons);
-
     }
+
 
     private void handleStudentButton(ActionEvent e){
         StudentButton sb = (StudentButton)e.getSource();
 
         sceneModel.setCurrentStudent(modelManager.getStudentManager().getStudentByID(sb.getStudentID()));
+
         sceneModel.setScene(StudentProfileController.class.getSimpleName());
 
     }
 
-    public void bNewStudentClicked(ActionEvent e){
-        tNewStudent.setVisible(true);
+    public void newStudentClicked(ActionEvent e){
+        sceneModel.setScene(AddEditStudentController.class.getSimpleName());
     }
 
-    public void tNewStudentClicked(){
-        String name = tNewStudent.getText();
-        tNewStudent.setText("");
-        tNewStudent.setVisible(false);
-        bNewStudent.setVisible(true);
-        modelManager.getStudentManager().createAndAddStudent(name);
-
-
-    }
 
 }

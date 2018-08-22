@@ -2,13 +2,18 @@ package com.rweqx.components;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 public class PaymentRateItem extends HBox {
     private TextField tRate;
     private Label lType;
+    private String type;
 
+
+    public String getType(){
+        return type;
+    }
     public Double getRate(){
         try {
             Double d = Double.parseDouble(tRate.getText());
@@ -20,10 +25,16 @@ public class PaymentRateItem extends HBox {
 
     public PaymentRateItem(String rateType){
 
+        type = rateType;
         tRate = new TextField();
         lType = new Label(rateType);
 
         this.setSpacing(10);
-        this.getChildren().setAll(lType, new Pane(), tRate);
+        Pane p = new Pane();
+
+        HBox.setHgrow(p, Priority.ALWAYS);
+
+        this.getChildren().setAll(lType, p, tRate);
+
     }
 }

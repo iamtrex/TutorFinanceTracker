@@ -74,7 +74,7 @@ public class StudentProfileController extends BaseController implements Initiali
             if (oldVal == newVal) {
                 return;
             }
-            int ID = newVal.intValue();
+            long ID = newVal.longValue();
             if (ID == -1) {
                 reset();
             }
