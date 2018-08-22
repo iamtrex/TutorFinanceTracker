@@ -1,6 +1,7 @@
 package com.rweqx.managers;
 
 import com.rweqx.constants.Constants;
+import com.rweqx.io.FileBackup;
 import com.rweqx.io.JSONReader;
 import com.rweqx.io.JSONWriter;
 import com.rweqx.model.*;
@@ -40,6 +41,11 @@ public class ModelManager {
     }
 
     private void loadSavedData() {
+        //Before loading, always back up if latest file today...
+        FileBackup.backupFile(Constants.SAVE_FOLDER + Constants.CLASS_SAVE_FILE);
+        FileBackup.backupFile(Constants.SAVE_FOLDER + Constants.PAYMENT_SAVE_FILE);
+        FileBackup.backupFile(Constants.SAVE_FOLDER + Constants.STUDENT_SAVE_FILE);
+
         List<Class> classes = saveReader.readClassFromJson(Constants.SAVE_FOLDER + Constants.CLASS_SAVE_FILE);
         classManager.addClasses(classes);
 
