@@ -17,6 +17,7 @@ import java.util.Set;
 
 import com.rweqx.model.Class;
 import com.rweqx.model.Payment;
+import com.rweqx.model.Student;
 import org.hildan.fxgson.FxGson;
 
 
@@ -83,6 +84,40 @@ public class JSONReader {
             System.out.println("Classes Found " + listOfClases.size());
             System.out.println(listOfClases);
             return listOfClases;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    public List<Student> readStudentFromJson(String fileName) {
+        File f = new File(fileName);
+        if(!f.exists()){
+            Logger.getInstance().log("Students Save File does not exist, will be created later...", LogLevel.W);
+
+            return new ArrayList<>();
+        }
+        try {
+
+            String json = new String(Files.readAllBytes(Paths.get(fileName)), "UTF-8");
+            if(json.trim().equals("")){
+                Logger.getInstance().log("Empty Students Save File...", LogLevel.W);
+                return new ArrayList<>();
+            }
+
+            Type listType = new TypeToken<ArrayList<Student>>(){}.getType();
+
+            List<Student> listOfStudents = gson.fromJson(json, listType);
+            System.out.println("Students Found " + listOfStudents.size());
+            System.out.println(listOfStudents);
+            return listOfStudents;
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

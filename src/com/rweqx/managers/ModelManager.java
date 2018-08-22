@@ -46,13 +46,8 @@ public class ModelManager {
         List<Payment> payments = saveReader.readPaymentFromJson(Constants.SAVE_FOLDER + Constants.PAYMENT_SAVE_FILE);
         paymentManager.addPayments(payments);
 
-        //Read students...  //TODO REMOVE TEMP CODE.
-        Pair<String, Double> a = new Pair<>("1 on 1", 75.0);
-        Pair<String, Double> b = new Pair<>("Group", 25.0);
-        Pair<String, Double> c = new Pair<>("1 on 2", 75.0);
-        Pair<String, Double> d = new Pair<>("1 on 3", 75.0);
-        List<Pair<String, Double>> list = new ArrayList<>(List.of(a, b, c, d));
-
+        List<Student> students = saveReader.readStudentFromJson(Constants.SAVE_FOLDER + Constants.STUDENT_SAVE_FILE);
+        studentManager.addStudents(students);
 
     }
 

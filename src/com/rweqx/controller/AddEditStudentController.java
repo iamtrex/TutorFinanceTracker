@@ -62,7 +62,7 @@ public class AddEditStudentController extends BaseController implements Initiali
 
         paymentRatesBox.getChildren().removeAll();
 
-        List<String> types = new ArrayList<>(modelManager.getPaymentTypes().getTypesList());
+        List<String> types = new ArrayList<>(modelManager.getClassTypes().getTypesList());
 
         types.forEach(type -> {
             PaymentRateItem pri = new PaymentRateItem(type);
@@ -76,7 +76,7 @@ public class AddEditStudentController extends BaseController implements Initiali
 
     //TODO IMPLEMENT THESE METHODS.
     public void saveClicked() {
-
+        //TODO - Check validity.
         Map<String, Double> rates = new HashMap<>();
         paymentRateItems.forEach(pri->{
             rates.put(pri.getType(), pri.getRate());

@@ -22,8 +22,14 @@ public class StudentManager {
         students = new ArrayList<>();
         studentIDMap = new HashMap<>();
 
+        /*
         //TEMP CODE, REMOVE LATER.
         Map<String, Double> classRates = new HashMap<>();
+        classRates.put("1 on 1", 75.0);
+        classRates.put("1 on 2", 35.0);
+        classRates.put("1 on 3", 30.0);
+        classRates.put("Group", 25.0);
+
         List<PaymentRatesAtTime> prat = List.of(new PaymentRatesAtTime(LocalDate.now(), classRates));
         List<Student> students = new ArrayList<>();
         students.add(new Student(1, "Rex", prat));
@@ -33,7 +39,7 @@ public class StudentManager {
         students.add(new Student(20, "Howard Lin", prat));
         students.add(new Student(10, "Rex v2", prat));
         students.add(new Student(300, "Sammy is a pig", prat));
-        addStudents(students);
+        addStudents(students);*/
     }
 
     public void addStudents(List<Student> newStudents){
