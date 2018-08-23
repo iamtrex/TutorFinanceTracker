@@ -10,8 +10,13 @@ import javafx.stage.Popup;
 import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 
-public class WarningPopUp{
+
+public class WarningPopUp {
+    public static boolean isShown = false;
     public WarningPopUp(String s) {
+        if(isShown){ //Dont' show if shown.
+            return;
+        }
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("WARNING!");
@@ -28,8 +33,12 @@ public class WarningPopUp{
         layout.setAlignment(Pos.CENTER);
         Scene scene = new Scene(layout, 300, 200);
         window.setScene(scene);
-
+        isShown = true;
         window.show();
+
+        window.setOnHidden(e->{
+            isShown = false;
+        });
 
     }
 }

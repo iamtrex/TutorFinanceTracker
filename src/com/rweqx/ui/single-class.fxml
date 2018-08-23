@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -10,62 +11,95 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" minHeight="100.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rweqx.controller.SingleClassController">
+<AnchorPane fx:id="pane" minHeight="100.0" prefWidth="800.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rweqx.controller.SingleClassController">
    <children>
-      <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="internals" spacing="2.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <GridPane fx:id="titleGrid">
                <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints percentWidth="33" />
+                  <ColumnConstraints percentWidth="33" />
+                  <ColumnConstraints percentWidth="33" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="24.0" spacing="10.0">
                      <children>
-                        <Label text="ClassType" />
-                        <DatePicker />
+                        <Label text="Date">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+                        <DatePicker fx:id="datePicker" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1">
+                  <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="10.0" GridPane.columnIndex="1">
                      <children>
-                        <Label text="ClassType" />
-                        <ComboBox prefWidth="150.0" />
+                        <Label text="Class Type">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+                        <ComboBox fx:id="classTypeChoices" prefWidth="150.0" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_RIGHT" layoutX="277.0" layoutY="10.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2">
+                  <HBox alignment="CENTER_RIGHT" layoutX="277.0" layoutY="10.0" spacing="10.0" GridPane.columnIndex="2">
                      <children>
-                        <Label text="Same Duration" />
-                        <CheckBox mnemonicParsing="false" />
+                        <Label text="Same Class Length">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+                        <CheckBox fx:id="sameDuration" mnemonicParsing="false" />
                      </children>
                   </HBox>
                </children>
             </GridPane>
-            <GridPane fx:id="classDetailsGrid" alignment="CENTER">
+            <GridPane fx:id="classDetailsGrid" alignment="CENTER" hgap="5.0" vgap="5.0">
                <columnConstraints>
-                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                   <ColumnConstraints percentWidth="20" />
+                   <ColumnConstraints percentWidth="20" />
+                   <ColumnConstraints percentWidth="20" />
+                   <ColumnConstraints percentWidth="20" />
+                   <ColumnConstraints percentWidth="20" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Label text="Name" />
-                  <Label text="Duration" GridPane.columnIndex="1" />
-                  <Label text="Rate" GridPane.columnIndex="2" />
-                  <Label text="Paid" GridPane.columnIndex="3" />
-                  <Label text="Payment Type" GridPane.columnIndex="4" />
+                  <Label text="Name">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
+                  <Label text="Duration" GridPane.columnIndex="1">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
+                  <Label text="Rate" GridPane.columnIndex="2">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
+                  <Label text="Paid" GridPane.columnIndex="3">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
+                  <Label text="Payment Type" GridPane.columnIndex="4">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
                </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
             </GridPane>
          </children>
+         <padding>
+            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+         </padding>
       </VBox>
    </children>
 </AnchorPane>

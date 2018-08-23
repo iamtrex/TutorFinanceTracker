@@ -40,4 +40,8 @@ public class PaymentRatesAtTime {
     public void addChangePayment(String paymentType, double rate) {
         rates.put(paymentType, rate); //Overwrites or adds entry for the corresponding payment type.
     }
+
+    public Double getRateByType(String newVal) {
+        return rates.get(newVal);
+    }
 }
