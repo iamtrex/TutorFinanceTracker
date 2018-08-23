@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -27,12 +28,13 @@
                               <TextField fx:id="studentSearchBar" promptText="Students" />
                           </children>
                       </VBox>
-                  <ScrollPane fx:id="classScroll" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0">
+                  <ScrollPane fx:id="classScroll" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: orange;" VBox.vgrow="ALWAYS">
                     <content>
-                        <VBox spacing="10.0">
+                        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" style="-fx-border-color: black;">
                            <children>
-                              <VBox fx:id="classesBox" spacing="2.0" VBox.vgrow="ALWAYS" />
-                              <HBox>
+                              <VBox fx:id="classesBox" spacing="2.0" style="-fx-border-color: red;" />
+                              <Pane style="-fx-border-color: blue;" VBox.vgrow="ALWAYS" />
+                              <HBox alignment="BOTTOM_CENTER" maxWidth="1.7976931348623157E308" spacing="50.0">
                                  <children>
                                     <Button fx:id="bPlusClass" mnemonicParsing="false" onAction="#plusClassClicked" text="Add Another Class with Same Students" />
                                     <Button fx:id="bMinusClass" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#minusClassClicked" text="Delete Last Class" />

@@ -36,6 +36,7 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
     private List<SingleClassController> classes;
     private Map<Student, SingleClassController> studentSingleClassControllerMap;
+    private Map<Student, Pane> studentSingleClassPaneMap;
 
     private StringProperty currentSearch;
 
@@ -77,6 +78,7 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
     public AddEditClassController2() {
         studentSingleClassControllerMap = new HashMap<>();
+        studentSingleClassPaneMap = new HashMap<>();
         classes = new ArrayList<>();
 
         currentSearch = new SimpleStringProperty();
@@ -90,7 +92,7 @@ public class AddEditClassController2 extends BaseController implements Initializ
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         classScroll.setFitToWidth(true);
-
+        classScroll.setFitToHeight(true);
         searchScroll.setFitToWidth(true);
         //Setup list to properly display students being searched.
         searchListView.setItems(searchMatchNames);
@@ -106,6 +108,8 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
             }
         });
+        classesBox.heightProperty().addListener(observable -> classScroll.setVvalue(1D));
+
 
         searchListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         searchListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) ->{
@@ -164,10 +168,16 @@ public class AddEditClassController2 extends BaseController implements Initializ
                     System.out.println(c);
                 } else {
                     for (Student remItm : c.getRemoved()) {
-
+                        for(SingleClassController scc : classes){
+                            scc.removeStudent(remItm);
+                        }
                     }
 
                     for (Student addItm : c.getAddedSubList()) {
+                        for(SingleClassController scc : classes){
+                            scc.addStudent(addItm);
+                        }
+
 
                     }
                 }
@@ -211,6 +221,7 @@ public class AddEditClassController2 extends BaseController implements Initializ
             bSave.setText("Save Class");
             currentMode = EDIT_MODE;
         }else{
+            plusClassClicked(null);
             bSave.setText("Add Class");
             bDelete.setVisible(false);
             currentMode = ADD_MODE;
@@ -223,6 +234,7 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
         try {
             Pane p = singleClassLoader.load();
+            //TODO REGISTER MAPS?
             classesBox.getChildren().add(p);
             classes.add(scc);
         }catch(IOException e){
