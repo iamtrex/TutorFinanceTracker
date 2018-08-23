@@ -17,6 +17,9 @@ public class FileBackup {
         File back = new File(backupName);
 
         try {
+            if(back.exists()){
+                back.delete();
+            }
             Files.copy(og.toPath(), back.toPath());
 
         } catch (IOException e) {

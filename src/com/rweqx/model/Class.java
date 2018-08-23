@@ -14,7 +14,6 @@ public class Class extends Event{
     private Set<StuDurPaid> studentsInfoSet;
     private String classType;
 
-
     public Class(long eventID, LocalDate date, String classType) {
         super(eventID, date);
         this.classType = classType;

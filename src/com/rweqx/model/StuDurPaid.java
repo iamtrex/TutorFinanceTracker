@@ -28,11 +28,21 @@ public class StuDurPaid {
     private long stuID;
     private double duration;
     private long paidID;
+    private double customRate;
+
 
     public StuDurPaid(long stuID, double duration, long paidID){
         this.stuID = stuID;
         this.duration = duration;
         this.paidID = paidID;
+        this.customRate = -1;
+
+    }
+    public StuDurPaid(long stuID, double duration, long paidID, double customRate){
+        this.stuID = stuID;
+        this.duration = duration;
+        this.paidID = paidID;
+        this.customRate = customRate;
 
     }
 

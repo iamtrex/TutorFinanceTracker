@@ -2,65 +2,80 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rweqx.controller.AddEditClassController2">
-    <children>
-        <VBox layoutY="-8.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <children>
-                <VBox>
-                    <children>
-                        <HBox fx:id="selectedStudentsBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="30.0" spacing="10.0">
-                            <padding>
-                                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                            </padding>
-                        </HBox>
-                        <TextField fx:id="studentSearchBar" promptText="Students" />
-                    </children>
-                </VBox>
-            <ScrollPane fx:id="classScroll" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0">
-              <content>
-                  <VBox spacing="10.0">
-                     <children>
-                        <VBox fx:id="classesBox" spacing="2.0" VBox.vgrow="ALWAYS" />
-                        <HBox>
+<StackPane fx:id="pane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rweqx.controller.AddEditClassController2">
+   <children>
+      <AnchorPane prefHeight="400.0" prefWidth="600.0">
+          <children>
+              <VBox layoutY="-8.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <children>
+                      <VBox>
+                          <children>
+                              <HBox fx:id="selectedStudentsBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="30.0" spacing="10.0">
+                                  <padding>
+                                      <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                  </padding>
+                              </HBox>
+                              <TextField fx:id="studentSearchBar" promptText="Students" />
+                          </children>
+                      </VBox>
+                  <ScrollPane fx:id="classScroll" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0">
+                    <content>
+                        <VBox spacing="10.0">
                            <children>
-                              <Button fx:id="bPlusClass" mnemonicParsing="false" onAction="#plusClassClicked" text="Add Another Class with Same Students" />
-                              <Button fx:id="bMinusClass" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#minusClassClicked" text="Delete Last Class" />
+                              <VBox fx:id="classesBox" spacing="2.0" VBox.vgrow="ALWAYS" />
+                              <HBox>
+                                 <children>
+                                    <Button fx:id="bPlusClass" mnemonicParsing="false" onAction="#plusClassClicked" text="Add Another Class with Same Students" />
+                                    <Button fx:id="bMinusClass" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#minusClassClicked" text="Delete Last Class" />
+                                 </children>
+                              </HBox>
                            </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-              </content>
-               <padding>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </padding>
+                        </VBox>
+                    </content>
+                     <padding>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </padding>
+                  </ScrollPane>
+                      <HBox>
+                          <children>
+                        <BorderPane HBox.hgrow="ALWAYS">
+                           <left>
+                                      <Button fx:id="bCancel" mnemonicParsing="false" onAction="#cancelClicked" prefWidth="100.0" text="Cancel" />
+                           </left>
+                           <right>
+                                      <Button fx:id="bSave" mnemonicParsing="false" onAction="#saveClicked" prefWidth="100.0" text="Save" />
+                           </right>
+                           <center>
+                              <Button fx:id="bDelete" mnemonicParsing="false" onAction="#deleteClicked" prefWidth="100.0" text="Delete Class" BorderPane.alignment="CENTER" />
+                           </center>
+                        </BorderPane>
+                          </children>
+                      </HBox>
+                  </children>
+              </VBox>
+          </children>
+      
+      </AnchorPane>
+      <AnchorPane fx:id="upperLayer" prefHeight="200.0" prefWidth="200.0" visible="false">
+         <children>
+            <ScrollPane fx:id="searchScroll" hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <content>
+                  <ListView fx:id="searchListView" onMouseDragExited="#loseFocus" onMouseExited="#loseFocus" prefHeight="200.0" prefWidth="200.0" />
+               </content>
             </ScrollPane>
-                <HBox>
-                    <children>
-                  <BorderPane HBox.hgrow="ALWAYS">
-                     <left>
-                                <Button fx:id="bCancel" mnemonicParsing="false" onAction="#cancelClicked" prefWidth="100.0" text="Cancel" />
-                     </left>
-                     <right>
-                                <Button fx:id="bSave" mnemonicParsing="false" onAction="#saveClicked" prefWidth="100.0" text="Save" />
-                     </right>
-                     <center>
-                        <Button fx:id="bDelete" mnemonicParsing="false" onAction="#deleteClicked" prefWidth="100.0" text="Delete Class" BorderPane.alignment="CENTER" />
-                     </center>
-                  </BorderPane>
-                    </children>
-                </HBox>
-            </children>
-            <padding>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </padding>
-        </VBox>
-    </children>
-
-</AnchorPane>
+         </children>
+      </AnchorPane>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</StackPane>
