@@ -46,6 +46,8 @@ public class AddEditClassController2 extends BaseController implements Initializ
     private ObservableList<Student> searchMatchNames;
     private ObservableList<String> classTypes;
 
+
+
     @FXML
     private VBox classesBox;
 
@@ -162,22 +164,16 @@ public class AddEditClassController2 extends BaseController implements Initializ
             searchListView.refresh();
         });
 
+        //TODO REMOVE THIS.
         chosenStudents.addListener((ListChangeListener<Student>) c -> {
             if(c.next()) {
                 if (c.wasPermutated() || c.wasUpdated()) {
                     System.out.println(c);
                 } else {
                     for (Student remItm : c.getRemoved()) {
-                        for(SingleClassController scc : classes){
-                            scc.removeStudent(remItm);
-                        }
                     }
 
                     for (Student addItm : c.getAddedSubList()) {
-                        for(SingleClassController scc : classes){
-                            scc.addStudent(addItm);
-                        }
-
 
                     }
                 }
@@ -230,10 +226,14 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
     public void plusClassClicked(ActionEvent event){
         FXMLLoader singleClassLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/single-class.fxml"));
-        SingleClassController scc = singleClassLoader.getController();
+
 
         try {
             Pane p = singleClassLoader.load();
+            SingleClassController scc = singleClassLoader.getController();
+            scc.initModel(modelManager, sceneModel);
+            scc.setChosenStudents(chosenStudents);
+
             //TODO REGISTER MAPS?
             classesBox.getChildren().add(p);
             classes.add(scc);

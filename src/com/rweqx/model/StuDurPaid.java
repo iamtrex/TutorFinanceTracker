@@ -25,11 +25,18 @@ public class StuDurPaid {
         this.paidID = paidID;
     }
 
+    public double getCustomRate() {
+        return customRate;
+    }
+
+    public void setCustomRate(double customRate) {
+        this.customRate = customRate;
+    }
+
     private long stuID;
     private double duration;
     private long paidID;
     private double customRate;
-
 
     public StuDurPaid(long stuID, double duration, long paidID){
         this.stuID = stuID;
