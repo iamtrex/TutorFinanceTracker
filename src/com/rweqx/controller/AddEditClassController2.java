@@ -1,6 +1,7 @@
 package com.rweqx.controller;
 
 import com.rweqx.components.ChosenStudent;
+import com.rweqx.components.WarningPopUp;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 import com.rweqx.model.Class;
@@ -89,7 +90,7 @@ public class AddEditClassController2 extends BaseController implements Initializ
         searchListView.refresh();
 
         selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
-        //TODO - Add back one class
+        plusClassClicked(null);
 
 
     }
@@ -187,7 +188,7 @@ public class AddEditClassController2 extends BaseController implements Initializ
         });
     }
     private void addStudent(Student selected) {
-        System.out.println("Woudl add student " + selected.getName());
+        System.out.println("Would add student " + selected.getName());
 
         chosenStudents.add(selected);
         ChosenStudent cs = new ChosenStudent(selected);
@@ -202,7 +203,7 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
         studentSearchBar.setText("");
         searchListView.refresh();
-        loseFocus();
+        //loseFocus();
     }
 
     @Override
@@ -256,7 +257,10 @@ public class AddEditClassController2 extends BaseController implements Initializ
             Logger.getInstance().log("Different size of classes detected! Possible loss of data!", LogLevel.S);
         }
 
-
+        if(chosenStudents.size() == 0 || classes.size() == 0){
+            new WarningPopUp("No students/class to add.");
+            return; //Don't add.
+        }
         for(SingleClassController scc : classes){
             boolean checks = scc.isValidInput();
             if(!checks){
@@ -270,12 +274,18 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
         }
 
+        //TODO CONSIDER TRANSITIONS -> MOVE TO END SCREEN?
+        //Have another "save and add another class with new students" button.
         reset();
     }
     public void minusClassClicked(ActionEvent e){
         //Remove last.
         classes.remove(classes.size()-1);
         classesBox.getChildren().remove(classesBox.getChildren().size()-1);
+
+        if(classes.size() == 0){
+            plusClassClicked(null); //Just add the class back, so essentially reset the class.
+        }
     }
 
     @FXML

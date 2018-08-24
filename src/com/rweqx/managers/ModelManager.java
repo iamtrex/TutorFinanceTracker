@@ -120,19 +120,25 @@ public class ModelManager {
         return c;
     }
 
-    public void addStuDurPaidToClass(Class c, Student s, Double duration, Double paymentAmount, String paymentType){
+    public void addStuDurPaidToClass(Class c, Student s, Double duration, Double paymentAmount, String paymentType, double customRate){
         StuDurPaid sdp;
         if(paymentAmount == 0){
-            sdp = new StuDurPaid(s.getID(), duration, -1);
+            sdp = new StuDurPaid(s.getID(), duration, -1, customRate);
         }else {
             Payment p = new Payment(getNewID(), s.getID(), c.getDate(), paymentType, paymentAmount, c);
             paymentManager.addPayment(p);
-            sdp = new StuDurPaid(s.getID(), duration, p.getID());
+            sdp = new StuDurPaid(s.getID(), duration, p.getID(), customRate);
         }
         c.addStudent(sdp);
     }
+    public void addStuDurPaidToClass(Class c, Student s, Double duration, Double paymentAmount, String paymentType){
+        addStuDurPaidToClass(c, s, duration, paymentAmount, paymentType, -1);
+    }
 
+    /*
     public long createAndAddClass(LocalDate date, String classType, List<StuDurPaid> sdp) {
+        //OBSOLETE.
+        System.out.println("OLD SHIT");
         Class c = new Class(getNewID(), date, classType);
 
         sdp.forEach(s->{
@@ -141,7 +147,7 @@ public class ModelManager {
 
         classManager.addClass(c);
         return c.getID();
-    }
+    }*/
 
     private long getNewID() {
         long l = idGenerator.nextLong();
