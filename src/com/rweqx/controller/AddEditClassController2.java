@@ -1,16 +1,12 @@
 package com.rweqx.controller;
 
-import com.rweqx.components.*;
-import com.rweqx.logger.LogLevel;
-import com.rweqx.logger.Logger;
-import com.rweqx.managers.ModelManager;
+import com.rweqx.components.ChosenStudent;
 import com.rweqx.model.Class;
-import com.rweqx.model.*;
+import com.rweqx.model.Student;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,7 +18,6 @@ import javafx.scene.layout.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,8 +30,7 @@ public class AddEditClassController2 extends BaseController implements Initializ
     private int currentMode = ADD_MODE; //Default is addClass.
 
     private List<SingleClassController> classes;
-    private Map<Student, SingleClassController> studentSingleClassControllerMap;
-    private Map<Student, Pane> studentSingleClassPaneMap;
+
 
     private StringProperty currentSearch;
 
@@ -78,9 +72,23 @@ public class AddEditClassController2 extends BaseController implements Initializ
     private Class currentlyEditingClass;
 
 
+    private void reset() {
+        classes.clear();
+        classesBox.getChildren().clear();
+
+        currentSearch.set("");
+
+        chosenStudents.clear();
+        chosenStudentsLabels.clear();
+
+        searchMatchNames.clear();
+        searchListView.refresh();
+
+        selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
+
+
+    }
     public AddEditClassController2() {
-        studentSingleClassControllerMap = new HashMap<>();
-        studentSingleClassPaneMap = new HashMap<>();
         classes = new ArrayList<>();
 
         currentSearch = new SimpleStringProperty();
@@ -112,7 +120,6 @@ public class AddEditClassController2 extends BaseController implements Initializ
         });
         classesBox.heightProperty().addListener(observable -> classScroll.setVvalue(1D));
 
-
         searchListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         searchListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) ->{
             Student selected = newVal;
@@ -130,8 +137,9 @@ public class AddEditClassController2 extends BaseController implements Initializ
                 AnchorPane.setTopAnchor(searchScroll,studentSearchBar.getLayoutY() + studentSearchBar.getHeight());
                 AnchorPane.setRightAnchor(searchScroll, (upperLayer.getWidth() - studentSearchBar.getLayoutX() - studentSearchBar.getWidth()));
                 AnchorPane.setBottomAnchor(searchScroll, (upperLayer.getHeight() - 205 - studentSearchBar.getLayoutY() - studentSearchBar.getHeight()));
-
-                upperLayer.setVisible(true);
+                if(!studentSearchBar.getText().trim().equals("")){
+                    upperLayer.setVisible(true);
+                }
             }else{
                 upperLayer.setVisible(false);
             }
@@ -150,7 +158,7 @@ public class AddEditClassController2 extends BaseController implements Initializ
             if (search.equals("")){
                 searchMatchNames.clear();
                 searchListView.getSelectionModel().clearSelection();
-
+                upperLayer.setVisible(false);
 
             }else{
                 String finalSearch = search; //cuz apparently it has to be final :/?
@@ -159,26 +167,9 @@ public class AddEditClassController2 extends BaseController implements Initializ
                                 .stream()
                                 .filter(s -> s.getName().toLowerCase().contains(finalSearch))
                                 .collect(Collectors.toList()));
-
+                upperLayer.setVisible(true);
             }
             searchListView.refresh();
-        });
-
-        //TODO REMOVE THIS.
-        chosenStudents.addListener((ListChangeListener<Student>) c -> {
-            if(c.next()) {
-                if (c.wasPermutated() || c.wasUpdated()) {
-                    System.out.println(c);
-                } else {
-                    for (Student remItm : c.getRemoved()) {
-                    }
-
-                    for (Student addItm : c.getAddedSubList()) {
-
-                    }
-                }
-            }
-
         });
     }
 
@@ -206,7 +197,7 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
         studentSearchBar.setText("");
         searchListView.refresh();
-        //loseFocus();
+        loseFocus();
     }
 
     @Override
@@ -226,15 +217,12 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
     public void plusClassClicked(ActionEvent event){
         FXMLLoader singleClassLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/single-class.fxml"));
-
-
         try {
             Pane p = singleClassLoader.load();
             SingleClassController scc = singleClassLoader.getController();
             scc.initModel(modelManager, sceneModel);
             scc.setChosenStudents(chosenStudents);
 
-            //TODO REGISTER MAPS?
             classesBox.getChildren().add(p);
             classes.add(scc);
         }catch(IOException e){
@@ -247,13 +235,18 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
     public void deleteClicked(ActionEvent e){
         System.out.println("Delete editing class. ");
+        reset();
     }
 
     public void cancelClicked(ActionEvent e){
         System.out.println("Try to cancel");
+        reset();
     }
+
+
     public void saveClicked(ActionEvent e){
         System.out.println("Try to save");
+        reset();
     }
     public void minusClassClicked(ActionEvent e){
         //Remove last.
