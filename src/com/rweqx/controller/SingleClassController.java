@@ -1,27 +1,23 @@
 package com.rweqx.controller;
 
 import com.rweqx.components.ClickEditTextField;
+import com.rweqx.components.WarningPopUp;
 import com.rweqx.managers.ModelManager;
 import com.rweqx.model.SceneModel;
 import com.rweqx.model.Student;
+import com.rweqx.util.StringUtil;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
-import java.net.URL;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -180,4 +176,26 @@ public class SingleClassController extends BaseController{
         });
     }
 
+    public long buildAndAddClass() {
+
+
+        return -1;
+    }
+
+    public boolean isValidInput() {
+        if(datePicker.getValue() == null){
+            new WarningPopUp("No date selected");
+            return false;
+        }
+        for(Student s : chosenStudents){
+            if(!StringUtil.isPositiveNumber(durationMap.get(s).getText())){
+                new WarningPopUp("Invalid Duration for student " + s.getName());
+                return false;
+            }else if(!StringUtil.isPositiveNumber(paidMap.get(s).getText())){
+
+                //MIGHT JUST BE BLANK... TODO.
+            }
+        }
+        return true;
+    }
 }

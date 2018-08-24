@@ -1,6 +1,8 @@
 package com.rweqx.controller;
 
 import com.rweqx.components.ChosenStudent;
+import com.rweqx.logger.LogLevel;
+import com.rweqx.logger.Logger;
 import com.rweqx.model.Class;
 import com.rweqx.model.Student;
 import javafx.application.Platform;
@@ -18,7 +20,9 @@ import javafx.scene.layout.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class AddEditClassController2 extends BaseController implements Initializable {
@@ -85,6 +89,7 @@ public class AddEditClassController2 extends BaseController implements Initializ
         searchListView.refresh();
 
         selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
+        //TODO - Add back one class
 
 
     }
@@ -246,6 +251,25 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
     public void saveClicked(ActionEvent e){
         System.out.println("Try to save");
+
+        if(classes.size() != classesBox.getChildren().size()){
+            Logger.getInstance().log("Different size of classes detected! Possible loss of data!", LogLevel.S);
+        }
+
+
+        for(SingleClassController scc : classes){
+            boolean checks = scc.isValidInput();
+            if(!checks){
+                return;
+            }
+        }
+
+        //All valid, building classes.
+        for(SingleClassController scc : classes){
+            long cid = scc.buildAndAddClass();
+
+        }
+
         reset();
     }
     public void minusClassClicked(ActionEvent e){
