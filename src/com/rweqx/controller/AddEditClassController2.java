@@ -21,6 +21,7 @@ import javafx.scene.layout.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -91,8 +92,27 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
         selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
         plusClassClicked(null);
+    }
 
+    @Override
+    public void sceneLoaded(){
+        reset(); //TODO -> Do I need this?
+        if(sceneModel.getCurrentClass() != null){
+            currentlyEditingClass = sceneModel.getCurrentClass();
+            bDelete.setVisible(true);
+            bSave.setText("Save Class");
+            currentMode = EDIT_MODE;
 
+            //TODO LOAD THE CLASS TO EDIT.
+            for(long sid : currentlyEditingClass.getStudents()){
+                addStudent(modelManager.getStudentManager().getStudentByID(sid));
+            }
+            classes.get(0).loadClass(currentlyEditingClass);
+        }else{
+            bSave.setText("Add Class");
+            bDelete.setVisible(false);
+            currentMode = ADD_MODE;
+        }
     }
     public AddEditClassController2() {
         classes = new ArrayList<>();
@@ -206,20 +226,6 @@ public class AddEditClassController2 extends BaseController implements Initializ
         //loseFocus();
     }
 
-    @Override
-    public void sceneLoaded(){
-        if(sceneModel.getCurrentClass() != null){
-            currentlyEditingClass = sceneModel.getCurrentClass();
-            bDelete.setVisible(true);
-            bSave.setText("Save Class");
-            currentMode = EDIT_MODE;
-        }else{
-            plusClassClicked(null);
-            bSave.setText("Add Class");
-            bDelete.setVisible(false);
-            currentMode = ADD_MODE;
-        }
-    }
 
     public void plusClassClicked(ActionEvent event){
         FXMLLoader singleClassLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/single-class.fxml"));
@@ -241,12 +247,22 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
     public void deleteClicked(ActionEvent e){
         System.out.println("Delete editing class. ");
+        modelManager.deleteClass(currentlyEditingClass.getID());
         reset();
+
+        //Go back.
+        currentlyEditingClass = null;
+        sceneModel.setCurrentPayment(null);
+        sceneModel.backClicked();
+
     }
 
     public void cancelClicked(ActionEvent e){
         System.out.println("Try to cancel");
         reset();
+        currentlyEditingClass = null;
+        sceneModel.setCurrentPayment(null);
+        sceneModel.backClicked();
     }
 
 
@@ -274,9 +290,19 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
         }
 
+        //Successfully saved... Delete the previous class:
+        if(currentlyEditingClass != null){
+            modelManager.deleteClass(currentlyEditingClass.getID());
+            currentlyEditingClass = null;
+        }
         //TODO CONSIDER TRANSITIONS -> MOVE TO END SCREEN?
-        //Have another "save and add another class with new students" button.
+        //Have another "save and add another class with new students" button
         reset();
+        //TODO MAKE THIS TRANSITION BETTER...
+        sceneModel.setCurrentClass(null);
+        sceneModel.setCurrentDate(LocalDate.now());
+        sceneModel.setScene(DayViewController.class.getSimpleName());
+
     }
     public void minusClassClicked(ActionEvent e){
         //Remove last.
@@ -285,6 +311,20 @@ public class AddEditClassController2 extends BaseController implements Initializ
 
         if(classes.size() == 0){
             plusClassClicked(null); //Just add the class back, so essentially reset the class.
+        }
+        if(classes.size() == 1){
+            if(currentMode == ADD_MODE){
+                bSave.setText("Add class");
+            }else {
+                bSave.setText("Save class");
+            }
+        }else{
+            if(currentMode == ADD_MODE){
+                bSave.setText("Add classes");
+            }else{
+                bSave.setText("Save changes");
+            }
+
         }
     }
 

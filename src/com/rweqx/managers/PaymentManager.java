@@ -72,11 +72,11 @@ public class PaymentManager {
         return allPayments;
     }
 
-    public List<Payment> getAllPaymentsByInMonth(long id, int month) {
+    public List<Payment> getAllPaymentsByInYearMonth(long id, int year, int month) {
         List<Payment> allPayments = new ArrayList<>();
         for(Payment p : payments){
             if(p.getStudentID() == id){
-                if(month == p.getDate().getMonthValue()) {
+                if(month == p.getDate().getMonthValue() && year == p.getDate().getYear()) {
                     allPayments.add(p);
                 }
             }

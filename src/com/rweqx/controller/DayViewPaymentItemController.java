@@ -32,9 +32,5 @@ public class DayViewPaymentItemController extends EventItemController {
         lStudent.setText(modelManager.getStudentManager().getStudentByID(p.getStudentID()).getName());
     }
 
-    public void editClicked(){
-        sceneModel.setCurrentPayment((Payment) event);
-        sceneModel.setScene(AddEditPaymentController.class.getSimpleName());
-    }
 
 }

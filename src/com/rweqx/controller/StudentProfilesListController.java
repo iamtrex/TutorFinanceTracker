@@ -82,9 +82,9 @@ public class StudentProfilesListController extends BaseController implements Ini
 
     private void handleStudentButton(ActionEvent e){
         StudentButton sb = (StudentButton)e.getSource();
-
+        System.out.println(sb.getStudentName() + " button in student profile clicked");
+        System.out.println(modelManager.getStudentManager().getStudentByID(sb.getStudentID()));
         sceneModel.setCurrentStudent(modelManager.getStudentManager().getStudentByID(sb.getStudentID()));
-
         sceneModel.setScene(StudentProfileController.class.getSimpleName());
 
     }

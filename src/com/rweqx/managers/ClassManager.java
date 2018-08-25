@@ -86,11 +86,11 @@ public class ClassManager {
         return allClasses;
     }
 
-    public List<Class> getAllClassesByInMonth(long id, int month) {
+    public List<Class> getAllClassesByInYearMonth(long id, int year, int month) {
         List<Class> allClasses = new ArrayList<>();
         for(Class c : classes){
             if(c.containsStudent(id)){
-                if(month == c.getDate().getMonthValue()) {
+                if(month == c.getDate().getMonthValue() && year == c.getDate().getYear()) {
                     allClasses.add(c);
                 }
             }

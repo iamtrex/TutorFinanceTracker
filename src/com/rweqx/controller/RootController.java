@@ -34,7 +34,9 @@ public class RootController extends BaseController{
     @FXML
     private StackPane paneHolder;
 
-    private Stack<Pane> history;
+    //private Stack<Pane> history;
+    private Stack<String> history;
+
 
     public RootController(){
         subSceneMap = new HashMap<>();
@@ -57,6 +59,7 @@ public class RootController extends BaseController{
     }
 
     private void switchSceneBack() {
+        /*
         System.out.println("Root Controller attempting to swap scene back");
         Pane p = history.pop();
         if(p == null){
@@ -72,11 +75,10 @@ public class RootController extends BaseController{
         bc.sceneLoaded();
 
         System.out.println(bc.getClass().getSimpleName());
-
-        //TODO, shoudl tell controller that scene is loaded, but cna't because don't know the name lmfao... maybe change
-            //TODO - the bc map to be from pane to controller?
-
         paneHolder.getChildren().setAll(p);
+        */
+        history.pop();
+        sceneModel.setScene(history.pop());
     }
 
     private void switchSceneTo(String sceneName) {
@@ -90,12 +92,12 @@ public class RootController extends BaseController{
             bc.sceneLoaded();
 
 
-            if(paneHolder.getChildren().size() > 0)
-                history.push((Pane) paneHolder.getChildren().get(0));
+            if(paneHolder.getChildren().size() > 0) {
+                //history.push((Pane) paneHolder.getChildren().get(0));
+                history.push(sceneName);
+            }
 
             paneHolder.getChildren().setAll(p);
-
-
         }
 
     }

@@ -65,7 +65,10 @@ public class StudentManager {
     }
 
     public void createAndAddStudent(String name, PaymentRatesAtTime rates) {
-        addStudent(new Student(getNewID(), name, List.of(rates)));
+        //addStudent(new Student(getNewID(), name, List.of(rates)));
+        List<PaymentRatesAtTime> list = new ArrayList<>();
+        list.add(rates);
+        addStudent(new Student(getNewID(), name, list));
     }
 
     private long getNewID() {

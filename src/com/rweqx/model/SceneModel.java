@@ -60,6 +60,7 @@ public class SceneModel {
 
     public void backClicked() {
         System.out.println("Scene Model says go back!");
+        sceneNameProperty.set(null); //Erase last.
         backProperty.set(true);
     }
 

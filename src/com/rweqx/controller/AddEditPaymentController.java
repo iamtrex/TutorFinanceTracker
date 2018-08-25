@@ -125,7 +125,6 @@ public class AddEditPaymentController extends BaseController implements Initiali
 
         Payment p = modelManager.getPaymentManager().getPaymentByID(pid);
         sceneModel.setCurrentPayment(p);
-        //sceneModel.setScene(ViewPaymentController.class.getSimpleName());
         sceneModel.setCurrentDate(datePicker.getValue());
         sceneModel.setScene(DayViewController.class.getSimpleName());
         reset();

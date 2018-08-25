@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
@@ -19,6 +20,7 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -54,6 +56,10 @@ public class StudentProfileController extends BaseController implements Initiali
     @FXML
     private AnchorPane root;
 
+    @FXML
+    private DatePicker datePicker;
+    private LocalDate currentDate;
+
 
     private LongProperty studentID;
     private Student currentStudent;
@@ -70,10 +76,20 @@ public class StudentProfileController extends BaseController implements Initiali
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //lName.textProperty().bind(studentName);
-        studentID.addListener((obs, oldVal, newVal) -> {
-            if (oldVal == newVal) {
-                return;
+        currentDate = LocalDate.now();
+
+        datePicker.valueProperty().addListener((obs, oldVal, newVal)->{
+            currentDisplayMode = DISPLAY_MONTH;
+            if (currentDate.getMonthValue() != newVal.getMonthValue() || currentDate.getYear() != newVal.getYear()) {
+                currentDate = newVal;
+                refreshEventBox();
             }
+        });
+
+        studentID.addListener((obs, oldVal, newVal) -> {
+            /*if (oldVal == newVal) {
+                return;
+            }*/ //Sometimes updated even tho name not changed (ie deleted a payment)
             long ID = newVal.longValue();
             if (ID == -1) {
                 reset();
@@ -93,22 +109,26 @@ public class StudentProfileController extends BaseController implements Initiali
     @Override
     public void sceneLoaded() {
         //Load currentStudent...
+        super.sceneLoaded();
+        System.out.println("Loading Student Profile Scene");
+        System.out.println("Student " + sceneModel.getCurrentStudent().getName());
         studentID.set(sceneModel.getCurrentStudent().getID());
-
     }
 
 
     private void refreshEventBox() {
+        System.out.println("Refreshing box");
+
         eventBox.getChildren().clear();
         List<Event> events;
 
+        datePicker.setValue(currentDate);
         switch (currentDisplayMode) {
             case DISPLAY_ALL:
                 events = modelManager.getAllEventsByStudent(currentStudent);
                 break;
             case DISPLAY_MONTH:
-                int month = LocalDate.now().getMonthValue();
-                events = modelManager.getAllEventsByStudentInMonth(currentStudent, month);
+                events = modelManager.getAllEventsByStudentInYearMonth(currentStudent, currentDate.getYear(), currentDate.getMonthValue());
                 break;
             default:
                 events = new ArrayList<>();
@@ -142,7 +162,7 @@ public class StudentProfileController extends BaseController implements Initiali
             }
         }
         if (events.size() == 0) {
-            eventBox.getChildren().add(new Label("No Events on this Day"));
+            eventBox.getChildren().add(new Label("No Events this month."));
         }
     }
 
@@ -150,22 +170,36 @@ public class StudentProfileController extends BaseController implements Initiali
      * Resets layout.
      */
     private void reset() {
-
+        System.out.println("Will need to reset stu profile. ");
     }
 
+    public void prevMonthClicked(ActionEvent e){
+        currentDate = currentDate.minus(1, ChronoUnit.MONTHS);
+        currentDisplayMode = DISPLAY_MONTH;
+        refreshEventBox();
+    }
+    public void nextMonthClicked(ActionEvent e){
+        currentDate = currentDate.plus(1, ChronoUnit.MONTHS);
+        currentDisplayMode = DISPLAY_MONTH;
+        refreshEventBox();
+    }
     public void showAllClicked(ActionEvent e) {
-
+        currentDisplayMode = DISPLAY_ALL;
+        refreshEventBox();
     }
 
     public void showOutstandingClicked(ActionEvent e) {
-
+        //TODO.
     }
 
     public void showMonthClicked(ActionEvent e) {
-
+        currentDisplayMode = DISPLAY_MONTH;
+        currentDate = LocalDate.now();
+        refreshEventBox();
     }
 
     public void backClicked(ActionEvent e) {
-
+        reset();
+        sceneModel.backClicked();
     }
 }

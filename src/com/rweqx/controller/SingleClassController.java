@@ -3,10 +3,8 @@ package com.rweqx.controller;
 import com.rweqx.components.ClickEditTextField;
 import com.rweqx.components.WarningPopUp;
 import com.rweqx.managers.ModelManager;
+import com.rweqx.model.*;
 import com.rweqx.model.Class;
-import com.rweqx.model.SceneModel;
-import com.rweqx.model.StuDurPaid;
-import com.rweqx.model.Student;
 import com.rweqx.util.StringUtil;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -18,10 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -249,5 +244,33 @@ public class SingleClassController extends BaseController{
             //Else valid student! check others.
         }
         return true;
+    }
+
+    public void loadClass(Class c) {
+
+        datePicker.setValue(c.getDate());
+        Set<StuDurPaid> data = c.getAllData();
+        String type = c.getClassType();
+        this.classTypeChoices.setValue(type);
+        data.forEach((sdp)->{
+            Student s = modelManager.getStudentManager().getStudentByID(sdp.getStuID());
+            double duration = sdp.getDuration();
+            durationMap.get(s).setText(String.valueOf(duration));
+
+            long pid = sdp.getPaidID();
+            if(pid != -1){
+                Payment p = modelManager.getPaymentManager().getPaymentByID(pid);
+                paidMap.get(s).setText(String.valueOf(p.getPaymentAmount()));
+                paymentTypeMap.get(s).setValue(p.getPaymentType());
+            }
+
+            double rate = sdp.getCustomRate();
+            if(rate != -1){
+                rateMap.get(s).setText(String.valueOf(rate));
+            }else{
+                rateMap.get(s).setText(String.valueOf(s.getLatestPaymentRates().getRateByType(type)));
+            }
+        });
+        //Class successfully loaded.
     }
 }

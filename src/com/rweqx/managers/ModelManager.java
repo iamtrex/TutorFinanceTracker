@@ -9,9 +9,7 @@ import com.rweqx.model.Class;
 import javafx.util.Pair;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class ModelManager {
 
@@ -94,13 +92,15 @@ public class ModelManager {
         List<Event> events = new ArrayList<>();
         events.addAll(classManager.getAllClassesBy(currentStudent.getID()));
         events.addAll(paymentManager.getAllPaymentsBy(currentStudent.getID()));
+        Collections.sort(events, Comparator.comparing(Event::getDate));
         return events;
     }
 
-    public List<Event> getAllEventsByStudentInMonth(Student currentStudent, int month) {
+    public List<Event> getAllEventsByStudentInYearMonth(Student currentStudent, int year, int month) {
         List<Event> events = new ArrayList<>();
-        events.addAll(classManager.getAllClassesByInMonth(currentStudent.getID(), month));
-        events.addAll(paymentManager.getAllPaymentsByInMonth(currentStudent.getID(), month));
+        events.addAll(classManager.getAllClassesByInYearMonth(currentStudent.getID(), year, month));
+        events.addAll(paymentManager.getAllPaymentsByInYearMonth(currentStudent.getID(), year, month));
+        Collections.sort(events, Comparator.comparing(Event::getDate));
         return events;
     }
 
@@ -108,6 +108,7 @@ public class ModelManager {
         List<Event> events = new ArrayList<>();
         events.addAll(classManager.getAllClassesOnDate(date));
         events.addAll(paymentManager.getAllPaymentsOnDate(date));
+        Collections.sort(events, Comparator.comparing(Event::getDate));
         return events;
     }
     public double getAllEventsByStudentOutstanding(Student currentStudent) {
@@ -197,4 +198,9 @@ public class ModelManager {
     public void createAndAddStudent(String studentName, PaymentRatesAtTime prat) {
         studentManager.createAndAddStudent(studentName, prat);
     }
+
+    public void deleteClass(long id) {
+        classManager.deleteClass(id);
+    }
+
 }
