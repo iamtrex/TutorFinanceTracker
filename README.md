@@ -27,6 +27,6 @@ Still working on / known bugs ->
 * Adding classtypes.
 
 
-~~Currently none of this works though :) So don't use ty. ~~
+~~Currently none of this works though :) So don't use ty.~~
 
 
