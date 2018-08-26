@@ -30,12 +30,23 @@
                   <TextField fx:id="tStudentName" />
                </children>
             </HBox>
+            <HBox layoutX="15.0" layoutY="15.0" prefWidth="200.0">
+               <children>
+                  <Label text="Comment">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="tComment" />
+               </children>
+            </HBox>
             <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                <content>
                   <VBox fx:id="paymentRatesBox" spacing="5.0" />
                </content>
                <VBox.margin>
-                  <Insets bottom="100.0" left="100.0" right="100.0" top="100.0" />
+                  <Insets bottom="10.0" left="50.0" right="50.0" top="10.0" />
                </VBox.margin>
             </ScrollPane>
             <HBox>

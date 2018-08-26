@@ -33,6 +33,9 @@ public class AddEditStudentController extends BaseController implements Initiali
     @FXML
     private TextField tStudentName;
 
+    @FXML
+    private TextField tComment;
+
     private List<PaymentRateItem> paymentRateItems;
 
     @FXML
@@ -84,8 +87,9 @@ public class AddEditStudentController extends BaseController implements Initiali
         PaymentRatesAtTime prat = new PaymentRatesAtTime(LocalDate.now(), rates);
 
         String studentName = tStudentName.getText();
+        String studentComment = tComment.getText();
 
-        modelManager.createAndAddStudent(studentName, prat);
+        modelManager.createAndAddStudent(studentName, studentComment, prat);
         //Jump back.
         reset();
         sceneModel.getBackProperty().set(true);

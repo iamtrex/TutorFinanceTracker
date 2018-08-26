@@ -13,6 +13,15 @@ public class Student {
     private long studentID;
     private String name;
     private List<PaymentRatesAtTime> paymentRates;
+    private String comment;
+
+    public String getComment(){
+        return comment;
+    }
+
+    public void setComment(String comment){
+        this.comment = comment;
+    }
 
     public String getName() {
         return name;
@@ -52,7 +61,7 @@ public class Student {
         this.paymentRates = paymentRates;
     }
 
-    public Student(long studentID, String name, List<PaymentRatesAtTime> paymentRates){
+    public Student(long studentID, String name, String comment, List<PaymentRatesAtTime> paymentRates){
         this.studentID = studentID;
         this.name = name;
         this.paymentRates = paymentRates;

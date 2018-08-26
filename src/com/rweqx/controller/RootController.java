@@ -1,22 +1,17 @@
 package com.rweqx.controller;
 
-import com.rweqx.logger.LogLevel;
-import com.rweqx.logger.Logger;
 import com.rweqx.managers.ModelManager;
 import com.rweqx.model.SceneModel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Stack;
 
 public class RootController extends BaseController{
@@ -123,7 +118,7 @@ public class RootController extends BaseController{
         //Add:
         try {
             addPaneAndController(OverviewController.class.getSimpleName(), "/com/rweqx/ui/overview.fxml");
-            addPaneAndController(AddEditClassController.class.getSimpleName(), "/com/rweqx/ui/add-edit-class-2.fxml");
+            addPaneAndController(AddEditClassController.class.getSimpleName(), "/com/rweqx/ui/add-edit-class.fxml");
             addPaneAndController(AddEditPaymentController.class.getSimpleName(), "/com/rweqx/ui/add-edit-payment.fxml");
             addPaneAndController(StudentProfilesListController.class.getSimpleName(), "/com/rweqx/ui/student-profiles-list.fxml");
             addPaneAndController(DayViewController.class.getSimpleName(), "/com/rweqx/ui/day-view.fxml");

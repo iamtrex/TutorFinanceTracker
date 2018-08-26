@@ -112,7 +112,12 @@ public class StudentProfileController extends BaseController implements Initiali
         super.sceneLoaded();
         System.out.println("Loading Student Profile Scene");
         System.out.println("Student " + sceneModel.getCurrentStudent().getName());
+
+        boolean force = sceneModel.getCurrentStudent().getID() == studentID.get();
         studentID.set(sceneModel.getCurrentStudent().getID());
+        if(force)
+            refreshEventBox();
+
     }
 
 

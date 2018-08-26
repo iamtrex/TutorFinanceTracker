@@ -174,6 +174,7 @@ public class ModelManager {
         }else{
             Payment p = new Payment(id, student.getID(), date, paymentType, paid, paidComment);
             paymentManager.addPayment(p);
+            paymentManager.deletePayment(replaced);
         }
         return id;
     }
@@ -195,8 +196,8 @@ public class ModelManager {
         paymentManager.deletePayment(id);
     }
 
-    public void createAndAddStudent(String studentName, PaymentRatesAtTime prat) {
-        studentManager.createAndAddStudent(studentName, prat);
+    public void createAndAddStudent(String studentName, String comment, PaymentRatesAtTime prat) {
+        studentManager.createAndAddStudent(studentName, comment, prat);
     }
 
     public void deleteClass(long id) {

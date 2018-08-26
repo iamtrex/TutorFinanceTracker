@@ -64,11 +64,11 @@ public class StudentManager {
         return students;
     }
 
-    public void createAndAddStudent(String name, PaymentRatesAtTime rates) {
+    public void createAndAddStudent(String name, String comment, PaymentRatesAtTime rates) {
         //addStudent(new Student(getNewID(), name, List.of(rates)));
         List<PaymentRatesAtTime> list = new ArrayList<>();
         list.add(rates);
-        addStudent(new Student(getNewID(), name, list));
+        addStudent(new Student(getNewID(), name, comment, list));
     }
 
     private long getNewID() {
