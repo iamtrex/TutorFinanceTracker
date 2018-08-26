@@ -23,6 +23,7 @@ public class EventItemController extends BaseController {
             sceneModel.setCurrentPayment((Payment)event);
             sceneModel.setScene(AddEditPaymentController.class.getSimpleName());
         }else if(event instanceof Class){
+            System.out.println("Edit class clicked");
             sceneModel.setCurrentClass((Class)event);
             sceneModel.setScene(AddEditClassController.class.getSimpleName());
         }else{

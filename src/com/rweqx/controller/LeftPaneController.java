@@ -1,6 +1,8 @@
 package com.rweqx.controller;
 
 import com.rweqx.constants.Constants;
+import com.rweqx.logger.LogLevel;
+import com.rweqx.logger.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,6 +39,9 @@ public class LeftPaneController extends BaseController implements Initializable 
     @FXML
     private Button bSettings;
 
+    @FXML
+    private Button bSave;
+
     private Map<Button, String> clickMap;
 
     @FXML
@@ -49,6 +54,13 @@ public class LeftPaneController extends BaseController implements Initializable 
 
     public void switchScene(ActionEvent e){
         Button b = (Button) e.getSource();
+        if(b == bSave){ //TODO probably better if this does it in a back thread, but must fix it so that there wont' be concurrent editing issues
+            //TODO and it doesn't crash if the program is closed while it's trying to save...
+            Logger.getInstance().log("Saving all data", LogLevel.D);
+            modelManager.saveAll();
+            Logger.getInstance().log("Save complete", LogLevel.D);
+            return;
+        }
         if(b == bAddClass){
             sceneModel.setCurrentClass(null);
         }else if(b == bAddPayment){

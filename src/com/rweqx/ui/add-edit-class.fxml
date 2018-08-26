@@ -38,6 +38,7 @@
                                  <children>
                                     <Button fx:id="bPlusClass" mnemonicParsing="false" onAction="#plusClassClicked" text="Add Another Class with Same Students" />
                                     <Button fx:id="bMinusClass" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#minusClassClicked" text="Delete Last Class" />
+                                    <Button fx:id="bDuplicateClass" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#plusDuplicateClassClicked" text="Add Duplicate of Last Class" />
                                  </children>
                               </HBox>
                            </children>

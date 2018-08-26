@@ -1,5 +1,7 @@
 package com.rweqx.controller;
 
+import com.rweqx.logger.LogLevel;
+import com.rweqx.logger.Logger;
 import com.rweqx.managers.ModelManager;
 import com.rweqx.model.SceneModel;
 import javafx.fxml.FXML;
@@ -29,8 +31,8 @@ public class RootController extends BaseController{
     @FXML
     private StackPane paneHolder;
 
-    //private Stack<Pane> history;
-    private Stack<String> history;
+    private Stack<Pane> history;
+    //private Stack<String> history;
 
 
     public RootController(){
@@ -54,7 +56,7 @@ public class RootController extends BaseController{
     }
 
     private void switchSceneBack() {
-        /*
+
         System.out.println("Root Controller attempting to swap scene back");
         Pane p = history.pop();
         if(p == null){
@@ -71,9 +73,7 @@ public class RootController extends BaseController{
 
         System.out.println(bc.getClass().getSimpleName());
         paneHolder.getChildren().setAll(p);
-        */
-        history.pop();
-        sceneModel.setScene(history.pop());
+
     }
 
     private void switchSceneTo(String sceneName) {
@@ -88,8 +88,8 @@ public class RootController extends BaseController{
 
 
             if(paneHolder.getChildren().size() > 0) {
-                //history.push((Pane) paneHolder.getChildren().get(0));
-                history.push(sceneName);
+                history.push((Pane) paneHolder.getChildren().get(0));
+
             }
 
             paneHolder.getChildren().setAll(p);
