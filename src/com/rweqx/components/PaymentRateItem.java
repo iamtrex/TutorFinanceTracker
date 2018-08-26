@@ -37,4 +37,9 @@ public class PaymentRateItem extends HBox {
         this.getChildren().setAll(lType, p, tRate);
 
     }
+
+    public void setRate(Double rate) {
+        tRate.setText(String.valueOf(rate));
+
+    }
 }

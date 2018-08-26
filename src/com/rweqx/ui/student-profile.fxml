@@ -60,7 +60,7 @@
                         <HBox>
                            <children>
                               <DatePicker fx:id="datePickerStart" />
-                              <Pane prefWidth="200.0" />
+                              <Pane prefWidth="200.0" HBox.hgrow="ALWAYS" />
                               <DatePicker fx:id="datePickerEnd" />
                            </children>
                         </HBox>

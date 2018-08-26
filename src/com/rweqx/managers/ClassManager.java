@@ -10,6 +10,7 @@ import com.rweqx.model.Event;
 import com.rweqx.model.StuDurPaid;
 import com.rweqx.model.Student;
 import com.rweqx.util.DateUtil;
+import javafx.beans.property.LongProperty;
 
 public class ClassManager {
 
@@ -102,6 +103,16 @@ public class ClassManager {
         List<Class> allClasses = new ArrayList<>();
         for(Class c : classes){
             if(DateUtil.sameDate(c.getDate(), date)){
+                allClasses.add(c);
+            }
+        }
+        return allClasses;
+    }
+
+    public List<Class> getAllClassesByStudentBetween(long id, LocalDate startDate, LocalDate endDate) {
+        List<Class> allClasses = new ArrayList<>();
+        for(Class c : classes){
+            if(c.containsStudent(id) && DateUtil.isBetween(c.getDate(), startDate, endDate)){
                 allClasses.add(c);
             }
         }

@@ -32,4 +32,15 @@ public class DateUtil {
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return localDate.getMonthValue();
     }
+
+    public static boolean isBetween(LocalDate date, LocalDate startDate, LocalDate endDate) {
+        return sameOrBefore(date, endDate) && sameOrAfter(date, startDate);
+    }
+
+    public static boolean sameOrBefore(LocalDate date, LocalDate laterDate){
+        return date.isBefore(laterDate) || (date.getYear() == laterDate.getYear() && date.getDayOfYear() == laterDate.getDayOfYear());
+    }
+    public static boolean sameOrAfter(LocalDate date, LocalDate earlierDate){
+        return sameOrBefore(earlierDate, date);
+    }
 }

@@ -10,10 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -28,11 +25,6 @@ import java.util.ResourceBundle;
 
 public class StudentProfileController extends BaseController implements Initializable {
 
-    private final int DISPLAY_ALL = 0;
-    private final int DISPLAY_MONTH = 1;
-
-    private int currentDisplayMode;
-
     @FXML
     private Label lOutstanding;
 
@@ -40,7 +32,27 @@ public class StudentProfileController extends BaseController implements Initiali
     private Label lName;
 
     @FXML
+    private Label lAdded;
+
+    @FXML
+    private Label lGroup;
+
+    @FXML
+    private Label lNote;
+
+    @FXML
+    private VBox ratesBox;
+
+    @FXML
+    private ComboBox<String> filterPicker;
+
+
+
+    @FXML
     private Button bBack;
+    @FXML
+    private Button bEdit;
+
 
 
     @FXML
@@ -59,31 +71,41 @@ public class StudentProfileController extends BaseController implements Initiali
 
 
 
-    private LocalDate currentDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
+
     private LongProperty studentID;
     private Student currentStudent;
 
 
     public StudentProfileController() {
-        studentID = new SimpleLongProperty();
-        currentDisplayMode = DISPLAY_ALL;
-
+        studentID = new SimpleLongProperty(-1);
 
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //lName.textProperty().bind(studentName);
-        currentDate = LocalDate.now();
 
-        datePicker.valueProperty().addListener((obs, oldVal, newVal)->{
-            currentDisplayMode = DISPLAY_MONTH;
-            if (currentDate.getMonthValue() != newVal.getMonthValue() || currentDate.getYear() != newVal.getYear()) {
-                currentDate = newVal;
-                refreshEventBox();
-            }
+
+        datePickerStart.valueProperty().addListener((obs, oldVal, newVal)->{
+            if(oldVal == newVal)
+                return;
+
+            startDate = newVal;
+            refreshEventBox();
         });
+
+        datePickerEnd.valueProperty().addListener((obs, oldVal, newVal)->{
+            if(oldVal == newVal)
+                return;
+
+            endDate = newVal;
+            refreshEventBox();
+        });
+
+        datePickerStart.setValue(LocalDate.now());
+        datePickerEnd.setValue(LocalDate.now());
 
         studentID.addListener((obs, oldVal, newVal) -> {
             /*if (oldVal == newVal) {
@@ -113,34 +135,22 @@ public class StudentProfileController extends BaseController implements Initiali
         System.out.println("Student " + sceneModel.getCurrentStudent().getName());
 
         boolean force = sceneModel.getCurrentStudent().getID() == studentID.get();
-        studentID.set(sceneModel.getCurrentStudent().getID());
         if(force)
-            refreshEventBox();
+            studentID.set(-1); //Resets studentID, forcing refresh of student... sorta hacky but yeah...
+
+        studentID.set(sceneModel.getCurrentStudent().getID());
 
     }
 
 
     private void refreshEventBox() {
-        System.out.println("Refreshing box");
-
-        eventBox.getChildren().clear();
-        List<Event> events;
-
-        datePicker.setValue(currentDate);
-        switch (currentDisplayMode) {
-            case DISPLAY_ALL:
-                events = modelManager.getAllEventsByStudent(currentStudent);
-                break;
-            case DISPLAY_MONTH:
-                events = modelManager.getAllEventsByStudentInYearMonth(currentStudent, currentDate.getYear(), currentDate.getMonthValue());
-                break;
-            default:
-                events = new ArrayList<>();
-                break;
+        if(startDate == null || endDate == null || studentID.get() == -1){
+            return; //skip
         }
+        System.out.println("Refreshing box");
+        eventBox.getChildren().clear();
+        List<Event> events = modelManager.getAllEventsByStudentBetween(studentID.get(), startDate, endDate);
 
-        double outstanding = modelManager.getAllEventsByStudentOutstanding(currentStudent);
-        lOutstanding.setText("Amount outstanding " + outstanding);
 
         for (Event e : events) {
             try {
@@ -177,33 +187,13 @@ public class StudentProfileController extends BaseController implements Initiali
         System.out.println("Will need to reset stu profile. ");
     }
 
-    public void prevMonthClicked(ActionEvent e){
-        currentDate = currentDate.minus(1, ChronoUnit.MONTHS);
-        currentDisplayMode = DISPLAY_MONTH;
-        refreshEventBox();
-    }
-    public void nextMonthClicked(ActionEvent e){
-        currentDate = currentDate.plus(1, ChronoUnit.MONTHS);
-        currentDisplayMode = DISPLAY_MONTH;
-        refreshEventBox();
-    }
-    public void showAllClicked(ActionEvent e) {
-        currentDisplayMode = DISPLAY_ALL;
-        refreshEventBox();
-    }
-
-    public void showOutstandingClicked(ActionEvent e) {
-        //TODO.
-    }
-
-    public void showMonthClicked(ActionEvent e) {
-        currentDisplayMode = DISPLAY_MONTH;
-        currentDate = LocalDate.now();
-        refreshEventBox();
-    }
-
     public void backClicked(ActionEvent e) {
         reset();
         sceneModel.backClicked();
+    }
+
+    public void editClicked(ActionEvent e){
+        sceneModel.setCurrentStudent(currentStudent);
+        sceneModel.setScene(AddEditStudentController.class.getSimpleName());
     }
 }

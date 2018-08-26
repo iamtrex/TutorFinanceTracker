@@ -68,5 +68,7 @@ public class Student {
     }
 
 
-
+    public void addPaymentRates(PaymentRatesAtTime prat) {
+        paymentRates.add(prat);
+    }
 }

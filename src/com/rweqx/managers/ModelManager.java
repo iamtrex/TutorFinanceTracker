@@ -6,6 +6,7 @@ import com.rweqx.io.JSONReader;
 import com.rweqx.io.JSONWriter;
 import com.rweqx.model.*;
 import com.rweqx.model.Class;
+import javafx.beans.property.LongProperty;
 import javafx.util.Pair;
 
 import java.time.LocalDate;
@@ -100,6 +101,14 @@ public class ModelManager {
         List<Event> events = new ArrayList<>();
         events.addAll(classManager.getAllClassesByInYearMonth(currentStudent.getID(), year, month));
         events.addAll(paymentManager.getAllPaymentsByInYearMonth(currentStudent.getID(), year, month));
+        Collections.sort(events, Comparator.comparing(Event::getDate));
+        return events;
+    }
+
+    public List<Event> getAllEventsByStudentBetween(long studentID, LocalDate startDate, LocalDate endDate) {
+        List<Event> events = new ArrayList<>();
+        events.addAll(classManager.getAllClassesByStudentBetween(studentID, startDate, endDate));
+        events.addAll(paymentManager.getAllPaymentsByStudentBetween(studentID, startDate, endDate));
         Collections.sort(events, Comparator.comparing(Event::getDate));
         return events;
     }
@@ -204,4 +213,10 @@ public class ModelManager {
         classManager.deleteClass(id);
     }
 
+    public void updateStudent(Student s, String studentName, String studentComment, PaymentRatesAtTime prat) {
+        s.setName(studentName);
+        s.setComment(studentComment);
+        s.addPaymentRates(prat);
+
+    }
 }
