@@ -39,8 +39,8 @@ public class Payment extends Event{
 
 
 
-    public Payment(long eventID, long studentID, LocalDate date, String paymentType, double paymentAmount, Class c) {
-        super(eventID, date);
+    public Payment(long eventID, long studentID, LocalDate date, String paymentType, double paymentAmount, String comment, Class c) {
+        super(eventID, date, comment);
         this.studentID = studentID;
         this.paymentAmount = paymentAmount;
         this.paymentType = paymentType;
@@ -48,8 +48,8 @@ public class Payment extends Event{
 
     }
 
-    public Payment(long eventID, long studentID, LocalDate date, String paymentType, double paymentAmount) {
-        super(eventID, date);
+    public Payment(long eventID, long studentID, LocalDate date, String paymentType, double paymentAmount, String comment) {
+        super(eventID, date, comment);
         this.studentID = studentID;
         this.paymentAmount = paymentAmount;
         this.paymentType = paymentType;

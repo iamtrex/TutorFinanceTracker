@@ -6,6 +6,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -47,6 +48,13 @@
                </children>
             </HBox>
             <Pane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            <HBox layoutX="15.0" layoutY="333.0" spacing="5.0">
+               <children>
+                  <Label styleClass="viewing-label" stylesheets="@../styles/style.css" text="Comments" />
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <TextArea fx:id="lComment" prefHeight="200.0" prefWidth="200.0" />
+               </children>
+            </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <BorderPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">

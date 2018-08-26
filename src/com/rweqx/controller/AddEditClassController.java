@@ -1,30 +1,30 @@
 package com.rweqx.controller;
 
 import com.rweqx.components.ChosenStudent;
-import com.rweqx.components.DurationItem;
-import com.rweqx.components.PaidItem;
 import com.rweqx.components.WarningPopUp;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
-import com.rweqx.managers.ModelManager;
-import com.rweqx.model.*;
 import com.rweqx.model.Class;
+import com.rweqx.model.Student;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class AddEditClassController extends BaseController implements Initializable {
@@ -33,7 +33,9 @@ public class AddEditClassController extends BaseController implements Initializa
     public static final int ADD_MODE = 1;
     public static final int EDIT_MODE = 2;
 
-    private int current_mode = ADD_MODE; //Default is addClass.
+    private int currentMode = ADD_MODE; //Default is addClass.
+
+    private List<SingleClassController> classes;
 
 
     private StringProperty currentSearch;
@@ -45,143 +47,92 @@ public class AddEditClassController extends BaseController implements Initializa
     private ObservableList<String> classTypes;
 
 
-    private Map<Student, DurationItem> durationMap;
-    private Map<Student, PaidItem> paidMap;
+
+    @FXML
+    private VBox classesBox;
 
     @FXML
     private HBox selectedStudentsBox;
+
     @FXML
     private TextField studentSearchBar;
     @FXML
-    private ListView<Student> studentsListView;
+    private ListView<Student> searchListView;
+    @FXML
+    private AnchorPane upperLayer;
+    @FXML
+    private ScrollPane searchScroll;
 
     @FXML
-    private VBox paidBox;
-    @FXML
-    private VBox durationBox;
-
-    @FXML
-    private ScrollPane scrollDuration;
-
-    @FXML
-    private ScrollPane scrollPaid;
-
-
-    @FXML
-    private CheckBox sameDurationCheck;
-    @FXML
-    private DatePicker datePicker;
-    @FXML
-    private ChoiceBox<String> classTypeChoices;
-    @FXML
-    private TextField tSingleDuration;
+    private ScrollPane classScroll;
 
     @FXML
     private Button bSave;
-
     @FXML
     private Button bCancel;
     @FXML
     private Button bDelete;
+    @FXML
+    private Button bPlusClass;
 
     private Class currentlyEditingClass;
 
-    public AddEditClassController(){
+
+    private void reset() {
+        classes.clear();
+        classesBox.getChildren().clear();
+
+        currentSearch.set("");
+
+        chosenStudents.clear();
+        chosenStudentsLabels.clear();
+
+        searchMatchNames.clear();
+        searchListView.refresh();
+
+        selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
+        plusClassClicked(null);
+    }
+
+    @Override
+    public void sceneLoaded(){
+        reset(); //TODO -> Do I need this?
+        if(sceneModel.getCurrentClass() != null){
+            currentlyEditingClass = sceneModel.getCurrentClass();
+            bDelete.setVisible(true);
+            bSave.setText("Save Class");
+            currentMode = EDIT_MODE;
+
+            //TODO LOAD THE CLASS TO EDIT.
+            for(long sid : currentlyEditingClass.getStudents()){
+                addStudent(modelManager.getStudentManager().getStudentByID(sid));
+            }
+            classes.get(0).loadClass(currentlyEditingClass);
+        }else{
+            bSave.setText("Add Class");
+            bDelete.setVisible(false);
+            currentMode = ADD_MODE;
+        }
+    }
+    public AddEditClassController() {
+        classes = new ArrayList<>();
+
         currentSearch = new SimpleStringProperty();
         chosenStudents = FXCollections.observableArrayList();
         chosenStudentsLabels = new ArrayList<>();
         searchMatchNames = FXCollections.observableArrayList();
         classTypes = FXCollections.observableArrayList();
-        durationMap = new HashMap<>();
-        paidMap = new HashMap<>();
 
-    }
-
-    @Override
-    public void sceneLoaded(){
-        Class c = sceneModel.getCurrentClass();
-        if(c == null){
-            //regular add mode.
-            currentlyEditingClass = null;
-            current_mode = ADD_MODE;
-
-            bDelete.setVisible(false);
-            bSave.setText("Add Class");
-
-
-            System.out.println("Current mode - adding");
-
-        }else{
-            //Load class mode
-            currentlyEditingClass = c;
-            current_mode = EDIT_MODE;
-            //TODO LOAD THE CLASS...
-
-            Set<StuDurPaid> data = c.getAllData();
-            for(StuDurPaid sdp : data){
-                Student s = modelManager.getStudentManager().getStudentByID(sdp.getStuID());
-                addStudent(s);
-                DurationItem di = durationMap.get(s);
-                di.setDuration(sdp.getDuration());
-
-                if(sdp.getPaidID() != -1) {
-                    PaidItem pi = paidMap.get(s);
-                    Payment pay = modelManager.getPaymentManager().getPaymentByID(sdp.getPaidID());
-                    pi.setPaid(pay.getPaymentAmount());
-                    pi.setPayType(pay.getPaymentType());
-                }
-            }
-            classTypeChoices.setValue(c.getClassType());
-            datePicker.setValue(c.getDate());
-
-            bDelete.setVisible(true);
-            bSave.setText("Save");
-            System.out.println("Current mode - editing");
-        }
-    }
-
-    public void reset(){
-        chosenStudents.clear();
-        chosenStudentsLabels.clear();
-        selectedStudentsBox.getChildren().clear();
-        searchMatchNames.clear();
-        classTypes.clear();
-        durationMap.clear();
-        paidMap.clear();
-        tSingleDuration.setText("");
-        sameDurationCheck.setSelected(false);
-        classTypeChoices.getSelectionModel().clearSelection();
-        datePicker.setValue(LocalDate.now());
-
-        bSave.setText("Add Class");
-    }
-
-    @Override
-    public void initModel(ModelManager modelManager, SceneModel scene){
-        super.initModel(modelManager, scene);
-        classTypeChoices.setItems(modelManager.getClassTypes().getTypesList());
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //Basic setup.
-        datePicker.setValue(LocalDate.now()); //TODO REMOVE?
-        scrollDuration.setFitToWidth(true);
-        scrollPaid.setFitToWidth(true);
-
-        sameDurationCheck.selectedProperty().addListener((obs, oldVal, newVal)->{
-            if(sameDurationCheck.isSelected()) {
-                durationBox.setVisible(false);
-                tSingleDuration.setVisible(true);
-            }else{
-                durationBox.setVisible(true);
-                tSingleDuration.setVisible(false);
-            }
-        });
-
+        classScroll.setFitToWidth(true);
+        classScroll.setFitToHeight(true);
+        searchScroll.setFitToWidth(true);
         //Setup list to properly display students being searched.
-        studentsListView.setItems(searchMatchNames);
-        studentsListView.setCellFactory(stu -> new ListCell<>(){
+        searchListView.setItems(searchMatchNames);
+        searchListView.setCellFactory(stu -> new ListCell<>(){
             @Override
             protected void updateItem(Student s, boolean empty){
                 super.updateItem(s, empty);
@@ -193,9 +144,10 @@ public class AddEditClassController extends BaseController implements Initializa
 
             }
         });
+        classesBox.heightProperty().addListener(observable -> classScroll.setVvalue(1D));
 
-        studentsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        studentsListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) ->{
+        searchListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        searchListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) ->{
             Student selected = newVal;
             if(selected == null){
                 return;
@@ -203,185 +155,48 @@ public class AddEditClassController extends BaseController implements Initializa
             addStudent(selected);
         });
 
-
-        //Setup search bar to modify items in studentsListview when searching...
-        studentSearchBar.textProperty().addListener((obs, oldVal, newVal) ->{
-            currentSearch.set(newVal);
+        studentSearchBar.focusedProperty().addListener((obs, oldVal, newVal)->{
+            if(newVal){
+                Bounds boundsInScene = studentSearchBar.localToParent(studentSearchBar.getBoundsInLocal());
+                System.out.println(boundsInScene);
+                AnchorPane.setLeftAnchor(searchScroll,studentSearchBar.getLayoutX());
+                AnchorPane.setTopAnchor(searchScroll,studentSearchBar.getLayoutY() + studentSearchBar.getHeight());
+                AnchorPane.setRightAnchor(searchScroll, (upperLayer.getWidth() - studentSearchBar.getLayoutX() - studentSearchBar.getWidth()));
+                AnchorPane.setBottomAnchor(searchScroll, (upperLayer.getHeight() - 205 - studentSearchBar.getLayoutY() - studentSearchBar.getHeight()));
+                if(!studentSearchBar.getText().trim().equals("")){
+                    upperLayer.setVisible(true);
+                }
+            }else{
+                upperLayer.setVisible(false);
+            }
         });
+
         studentSearchBar.setOnAction((e)->{
-            if(studentsListView.getItems().size() > 0) { //Same as selecting top student.
-                Student s = studentsListView.getItems().get(0);
+            if(searchListView.getItems().size() > 0) { //Same as selecting top student.
+                Student s = searchListView.getItems().get(0);
                 addStudent(s);
             }
         });
-        currentSearch.addListener((obs, oldVal, newVal) ->{
+        studentSearchBar.textProperty().addListener((obs, oldVal, newVal)->{
             String search = newVal;
             search = search.trim().toLowerCase();
 
             if (search.equals("")){
                 searchMatchNames.clear();
-                studentsListView.getSelectionModel().clearSelection();
-                studentsListView.getItems().clear();
+                searchListView.getSelectionModel().clearSelection();
+                upperLayer.setVisible(false);
 
             }else{
                 String finalSearch = search; //cuz apparently it has to be final :/?
                 searchMatchNames.setAll(
                         modelManager.getStudentManager().getStudents()
-                        .stream()
-                        .filter(s -> s.getName().toLowerCase().contains(finalSearch))
-                        .collect(Collectors.toList()));
-
+                                .stream()
+                                .filter(s -> s.getName().toLowerCase().contains(finalSearch))
+                                .collect(Collectors.toList()));
+                upperLayer.setVisible(true);
             }
-            studentsListView.refresh();
+            searchListView.refresh();
         });
-
-
-        //Bind Paid and Duration Boxes to watch chosenStudents
-        chosenStudents.addListener((ListChangeListener<Student>) c -> {
-            if(c.next()) {
-                if (c.wasPermutated() || c.wasUpdated()) {
-                    System.out.println(c);
-                } else {
-                    //Fixed (BUG)- BUG IF SAME NAME.
-                    for (Student remItm : c.getRemoved()) {
-                        DurationItem di = durationMap.get(remItm);
-                        if(di != null){
-                            durationBox.getChildren().remove(di);
-                        }
-                        PaidItem pi = paidMap.get(remItm);
-                        if(pi != null){
-                            paidBox.getChildren().remove(pi);
-                        }
-                    }
-
-                    for (Student addItm : c.getAddedSubList()) {
-                        DurationItem di = new DurationItem(addItm);
-                        PaidItem pi = new PaidItem(addItm);
-                        durationMap.put(addItm, di);
-                        paidMap.put(addItm, pi);
-                        durationBox.getChildren().add(di);
-                        paidBox.getChildren().add(pi);
-                    }
-                }
-            }
-
-        });
-    }
-
-    public void saveClicked(){
-        if(runChecks()){
-            saveCurrentClass();
-        }
-        
-    }
-
-    private boolean runChecks() {
-        String classType = classTypeChoices.getValue();
-        LocalDate localDate = datePicker.getValue();
-        boolean sameDuration = sameDurationCheck.isSelected();
-        double singleDurationLength;
-
-        if(localDate == null){
-            new WarningPopUp("No Date Picked!");
-            return false;
-        }else if(classType == null){
-            new WarningPopUp("No Type Picked!");
-            return false;
-        }else if(chosenStudents.size() == 0){
-            new WarningPopUp("No Students Picked!");
-            return false;
-        }else if(sameDuration){
-            try {
-                singleDurationLength = Double.parseDouble(tSingleDuration.getText());
-            }catch(NumberFormatException nfe) {
-                //Ignore
-                singleDurationLength = 0;
-            }
-            if(singleDurationLength <= 0){
-                new WarningPopUp("Duration is 0 or malformed");
-                return false;
-            }
-        }else{
-            for(Student student: chosenStudents){
-                DurationItem di = durationMap.get(student);
-                if(di == null){
-                    Logger.getInstance().log("Duration item could not be found for " + student, LogLevel.S);
-                    return false;
-                }else if(di.getDuration() <= 0){
-                    new WarningPopUp("Duration for " + student + " is 0 or malformed");
-                    return false;
-                }
-
-                PaidItem pi = paidMap.get(student);
-                if(pi.getPaid() != 0) {
-                    if(pi.getPaidType() == null){
-                        new WarningPopUp("Paid type for " + student.getName() + " is not chosen");
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
-    public void deleteClicked(ActionEvent e){
-        modelManager.getClassManager().deleteClass(currentlyEditingClass.getID());
-        sceneModel.setCurrentClass(null);
-        sceneModel.setScene(DayViewController.class.getSimpleName());
-
-        reset();
-    }
-    private void saveCurrentClass() {
-        LocalDate date = datePicker.getValue();
-        String classType = classTypeChoices.getValue();
-        boolean sameDuration = sameDurationCheck.isSelected();
-
-        double singleDurationLength = 0;
-        if(sameDuration){
-            singleDurationLength = Double.parseDouble(tSingleDuration.getText());
-        }
-
-        if(current_mode == EDIT_MODE){ //delete and replace the class.
-            modelManager.getClassManager().deleteClass(currentlyEditingClass.getID());
-        }
-
-        Class c = modelManager.createAndAddEmptyClass(date, classType);
-
-        for(Student student : chosenStudents){
-            double duration, paid;
-
-            if(sameDuration){
-                duration = singleDurationLength;
-            }else{
-                DurationItem di = durationMap.get(student);
-                duration = di.getDuration();
-            }
-            paid = paidMap.get(student).getPaid();
-            String paymentType = paidMap.get(student).getPaidType();
-
-            if(paid > 0) {
-                modelManager.addStuDurPaidToClass(c, student, duration, paid, paymentType);
-            }else{
-                modelManager.addStuDurPaidToClass(c, student, duration, 0.0, "");
-            }
-        }
-
-        sceneModel.setCurrentClass(modelManager.getClassManager().getClassByID(c.getID()));
-        sceneModel.setScene(ViewClassController.class.getSimpleName());
-        reset();
-    }
-
-    public void cancelClicked(){
-        if(current_mode == ADD_MODE){
-            reset();
-        }else {
-            //Class back = currentlyEditingClass;
-            currentlyEditingClass = null;
-            sceneModel.setCurrentClass(null);
-            sceneModel.backClicked();
-            reset();
-        }
-
     }
 
     private void removeStudent(ActionEvent e){
@@ -392,8 +207,9 @@ public class AddEditClassController extends BaseController implements Initializa
             selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
         });
     }
-
     private void addStudent(Student selected) {
+        System.out.println("Would add student " + selected.getName());
+
         chosenStudents.add(selected);
         ChosenStudent cs = new ChosenStudent(selected);
         cs.setOnAction(this::removeStudent);
@@ -405,6 +221,118 @@ public class AddEditClassController extends BaseController implements Initializa
             studentSearchBar.setText("");
         });
 
+        studentSearchBar.setText("");
+        searchListView.refresh();
+        //loseFocus();
+    }
+
+
+    public void plusClassClicked(ActionEvent event){
+        FXMLLoader singleClassLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/single-class.fxml"));
+        try {
+            Pane p = singleClassLoader.load();
+            SingleClassController scc = singleClassLoader.getController();
+            scc.initModel(modelManager, sceneModel);
+            scc.setChosenStudents(chosenStudents);
+
+            classesBox.getChildren().add(p);
+            classes.add(scc);
+        }catch(IOException e){
+            e.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void deleteClicked(ActionEvent e){
+        System.out.println("Delete editing class. ");
+        modelManager.deleteClass(currentlyEditingClass.getID());
+        reset();
+
+        //Go back.
+        currentlyEditingClass = null;
+        sceneModel.setCurrentPayment(null);
+        sceneModel.backClicked();
+
+    }
+
+    public void cancelClicked(ActionEvent e){
+        System.out.println("Try to cancel");
+        reset();
+        currentlyEditingClass = null;
+        sceneModel.setCurrentPayment(null);
+        sceneModel.backClicked();
+    }
+
+
+    public void saveClicked(ActionEvent e){
+        System.out.println("Try to save");
+
+        if(classes.size() != classesBox.getChildren().size()){
+            Logger.getInstance().log("Different size of classes detected! Possible loss of data!", LogLevel.S);
+        }
+
+        if(chosenStudents.size() == 0 || classes.size() == 0){
+            new WarningPopUp("No students/class to add.");
+            return; //Don't add.
+        }
+        for(SingleClassController scc : classes){
+            boolean checks = scc.isValidInput();
+            if(!checks){
+                return;
+            }
+        }
+
+        //All valid, building classes.
+        for(SingleClassController scc : classes){
+            long cid = scc.buildAndAddClass();
+
+        }
+
+        //Successfully saved... Delete the previous class:
+        if(currentlyEditingClass != null){
+            modelManager.deleteClass(currentlyEditingClass.getID());
+            currentlyEditingClass = null;
+        }
+        //TODO CONSIDER TRANSITIONS -> MOVE TO END SCREEN?
+        //Have another "save and add another class with new students" button
+        reset();
+        //TODO MAKE THIS TRANSITION BETTER...
+        sceneModel.setCurrentClass(null);
+        sceneModel.setCurrentDate(LocalDate.now());
+        sceneModel.setScene(DayViewController.class.getSimpleName());
+
+    }
+    public void minusClassClicked(ActionEvent e){
+        //Remove last.
+        classes.remove(classes.size()-1);
+        classesBox.getChildren().remove(classesBox.getChildren().size()-1);
+
+        if(classes.size() == 0){
+            plusClassClicked(null); //Just add the class back, so essentially reset the class.
+        }
+        if(classes.size() == 1){
+            if(currentMode == ADD_MODE){
+                bSave.setText("Add class");
+            }else {
+                bSave.setText("Save class");
+            }
+        }else{
+            if(currentMode == ADD_MODE){
+                bSave.setText("Add classes");
+            }else{
+                bSave.setText("Save changes");
+            }
+
+        }
+    }
+
+    @FXML
+    private StackPane pane;
+
+    public void loseFocus(){
+        pane.requestFocus();
     }
 
 }

@@ -1,15 +1,10 @@
 package com.rweqx.controller;
 
-import com.rweqx.controller.AddEditClassController;
-import com.rweqx.controller.AddEditPaymentController;
-import com.rweqx.controller.BaseController;
-
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 import com.rweqx.model.Class;
 import com.rweqx.model.Event;
 import com.rweqx.model.Payment;
-import javafx.scene.layout.HBox;
 
 public class EventItemController extends BaseController {
     protected Event event;

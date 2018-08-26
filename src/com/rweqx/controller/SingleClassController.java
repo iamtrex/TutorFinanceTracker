@@ -32,6 +32,9 @@ public class SingleClassController extends BaseController{
     private DatePicker datePicker;
 
     @FXML
+    private TextField lComment;
+
+    @FXML
     private ComboBox<String> classTypeChoices;
 
     @FXML
@@ -47,6 +50,8 @@ public class SingleClassController extends BaseController{
     private Map<Student, TextField> rateMap;
     private Map<Student, TextField> paidMap;
     private Map<Student, ComboBox<String>> paymentTypeMap;
+    private Map<Student, TextField> commentMap;
+
 
 
 
@@ -58,6 +63,7 @@ public class SingleClassController extends BaseController{
         rateMap = new HashMap<>();
         paidMap = new HashMap<>();
         paymentTypeMap = new HashMap<>();
+        commentMap = new HashMap<>();
     }
 
     @Override
@@ -163,6 +169,7 @@ public class SingleClassController extends BaseController{
         }
 
         paidMap.put(s, new TextField());
+        commentMap.put(s, new TextField());
 
         ComboBox choices = new ComboBox();
         choices.setStyle("-fx-pref-width: 1000;");
@@ -170,7 +177,7 @@ public class SingleClassController extends BaseController{
         paymentTypeMap.put(s, choices);
         Platform.runLater(()->{
             int numRow = classDetailsGrid.getRowCount();
-            classDetailsGrid.addRow(numRow, nameMap.get(s), durationMap.get(s), rateMap.get(s), paidMap.get(s), paymentTypeMap.get(s));
+            classDetailsGrid.addRow(numRow, nameMap.get(s), durationMap.get(s), rateMap.get(s), paidMap.get(s), paymentTypeMap.get(s), commentMap.get(s));
             updateHeight();
         });
     }
@@ -178,8 +185,9 @@ public class SingleClassController extends BaseController{
     public long buildAndAddClass() {
         LocalDate date = datePicker.getValue();
         String classType = classTypeChoices.getValue();
+        String comment = lComment.getText();
 
-        Class c = modelManager.createAndAddEmptyClass(date, classType);
+        Class c = modelManager.createAndAddEmptyClass(date, classType, comment);
 
         boolean isSameDuration = sameDuration.isSelected();
         double sameDur = 0;
@@ -190,6 +198,7 @@ public class SingleClassController extends BaseController{
         for(Student s : chosenStudents){
             double duration, paymentAmount = 0, customRate = -1;
             String paymentType = "";
+            String paidComment = commentMap.get(s).getText();
             if(isSameDuration){
                 duration = sameDur;
             }else{
@@ -201,9 +210,9 @@ public class SingleClassController extends BaseController{
             }
             customRate = Double.parseDouble(rateMap.get(s).getText().trim());
             if(customRate != s.getLatestPaymentRates().getRateByType(classType)){
-                modelManager.addStuDurPaidToClass(c, s, duration, paymentAmount, paymentType, customRate);
+                modelManager.addStuDurPaidToClass(c, s, duration, paymentAmount, paymentType, paidComment, customRate);
             }else{
-                modelManager.addStuDurPaidToClass(c, s, duration, paymentAmount, paymentType); //Same as giving -1 custom rate.
+                modelManager.addStuDurPaidToClass(c, s, duration, paymentAmount, paymentType, paidComment); //Same as giving -1 custom rate.
             }
         }
 
@@ -262,6 +271,7 @@ public class SingleClassController extends BaseController{
                 Payment p = modelManager.getPaymentManager().getPaymentByID(pid);
                 paidMap.get(s).setText(String.valueOf(p.getPaymentAmount()));
                 paymentTypeMap.get(s).setValue(p.getPaymentType());
+                commentMap.get(s).setText(p.getComment());
             }
 
             double rate = sdp.getCustomRate();

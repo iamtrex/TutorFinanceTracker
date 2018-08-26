@@ -12,6 +12,7 @@
       <Label fx:id="lDate" text="Label" />
       <Label fx:id="lAmount" text="Label" />
       <Label fx:id="lPaymentType" text="Label" />
+      <Label fx:id="lComment" text="Label" />
       <Pane HBox.hgrow="ALWAYS" />
       <Button fx:id="bEdit" mnemonicParsing="false" onAction="#editClicked" text="Edit" />
    </children>

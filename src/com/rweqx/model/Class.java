@@ -14,8 +14,8 @@ public class Class extends Event{
     private Set<StuDurPaid> studentsInfoSet;
     private String classType;
 
-    public Class(long eventID, LocalDate date, String classType) {
-        super(eventID, date);
+    public Class(long eventID, LocalDate date, String classType, String comment) {
+        super(eventID, date, comment);
         this.classType = classType;
         studentsInfoSet = new HashSet<>();
 
@@ -23,7 +23,7 @@ public class Class extends Event{
     }
 
     public Class(Class copy) {
-        super(copy.getID(), copy.getDate());
+        super(copy.getID(), copy.getDate(), copy.getComment());
         this.classType = copy.classType;
         studentsInfoSet = new HashSet<>();
         for(StuDurPaid sdp : copy.getAllData()){

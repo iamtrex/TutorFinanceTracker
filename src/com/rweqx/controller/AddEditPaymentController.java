@@ -58,6 +58,10 @@ public class AddEditPaymentController extends BaseController implements Initiali
     @FXML
     private Button bDelete;
 
+    @FXML
+    private TextArea lComment;
+
+
     public AddEditPaymentController(){
         currentSearch = new SimpleStringProperty();
         searchMatchNames = FXCollections.observableArrayList();
@@ -92,8 +96,10 @@ public class AddEditPaymentController extends BaseController implements Initiali
             tPaid.setText(String.valueOf(p.getPaymentAmount()));
             paymentType.setValue(p.getPaymentType());
             datePicker.setValue(p.getDate());
+            lComment.setText(p.getComment());
             bSave.setText("Save");
             bDelete.setVisible(true);
+
             System.out.println("Current mode - editing");
         }
     }
@@ -102,6 +108,7 @@ public class AddEditPaymentController extends BaseController implements Initiali
         searchMatchNames.clear();
         tStudent.setText("");
         tPaid.setText("");
+        lComment.setText("");
         paymentType.getSelectionModel().clearSelection();
         datePicker.setValue(LocalDate.now());
     }
@@ -117,9 +124,11 @@ public class AddEditPaymentController extends BaseController implements Initiali
         long pid;
         if(current_mode == EDIT_MODE){
             pid = modelManager.replacePayment(currentlyEditingPayment.getID(),
-                    selectedStudent, datePicker.getValue(), paymentType.getValue().toString(), Double.parseDouble(tPaid.getText().trim()));
+                    selectedStudent, datePicker.getValue(), paymentType.getValue().toString(),
+                    Double.parseDouble(tPaid.getText().trim()), lComment.getText());
         }else {
-            pid = modelManager.addPayment(selectedStudent, datePicker.getValue(), paymentType.getValue().toString(), Double.parseDouble(tPaid.getText().trim()));
+            pid = modelManager.addPayment(selectedStudent, datePicker.getValue(),
+                    paymentType.getValue().toString(), Double.parseDouble(tPaid.getText().trim()), lComment.getText());
 
         }
 

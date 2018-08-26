@@ -115,25 +115,25 @@ public class ModelManager {
         return 0.0;
     }
 
-    public Class createAndAddEmptyClass(LocalDate date, String classType) {
-        Class c = new Class(getNewID(), date, classType);
+    public Class createAndAddEmptyClass(LocalDate date, String classType, String comment) {
+        Class c = new Class(getNewID(), date, classType, comment);
         classManager.addClass(c);
         return c;
     }
 
-    public void addStuDurPaidToClass(Class c, Student s, Double duration, Double paymentAmount, String paymentType, double customRate){
+    public void addStuDurPaidToClass(Class c, Student s, Double duration, Double paymentAmount, String paymentType, String paidComment,  double customRate){
         StuDurPaid sdp;
         if(paymentAmount == 0){
             sdp = new StuDurPaid(s.getID(), duration, -1, customRate);
         }else {
-            Payment p = new Payment(getNewID(), s.getID(), c.getDate(), paymentType, paymentAmount, c);
+            Payment p = new Payment(getNewID(), s.getID(), c.getDate(), paymentType, paymentAmount, paidComment, c);
             paymentManager.addPayment(p);
             sdp = new StuDurPaid(s.getID(), duration, p.getID(), customRate);
         }
         c.addStudent(sdp);
     }
-    public void addStuDurPaidToClass(Class c, Student s, Double duration, Double paymentAmount, String paymentType){
-        addStuDurPaidToClass(c, s, duration, paymentAmount, paymentType, -1);
+    public void addStuDurPaidToClass(Class c, Student s, Double duration, Double paymentAmount, String paymentType, String paidComment){
+        addStuDurPaidToClass(c, s, duration, paymentAmount, paymentType, paidComment, -1);
     }
 
     /*
@@ -153,8 +153,8 @@ public class ModelManager {
     private long getNewID() {
         long l = idGenerator.nextLong();
 
-        while(classManager.getAllClasses().contains(new Class(l, null, null))
-                || paymentManager.getAllPayments().contains(new Payment(l, -1, null, "", 0))
+        while(classManager.getAllClasses().contains(new Class(l, null, null, null))
+                || paymentManager.getAllPayments().contains(new Payment(l, -1, null, "", 0, ""))
                 || l == -1){ //If ID is already used.
             l = idGenerator.nextLong();
         }
@@ -162,25 +162,25 @@ public class ModelManager {
         return l;
     }
 
-    public long replacePayment(long replaced, Student student, LocalDate date, String paymentType, double paid){
+    public long replacePayment(long replaced, Student student, LocalDate date, String paymentType, double paid, String paidComment){
         long id = getNewID();
 
         Class c = paymentManager.getPaymentByID(replaced).getLinkedClass();
         if(c != null) {
-            Payment p = new Payment(id, student.getID(), date, paymentType, paid, c);
+            Payment p = new Payment(id, student.getID(), date, paymentType, paid, paidComment, c);
             paymentManager.addPayment(p);
             paymentManager.deletePayment(replaced);
             c.replacePayment(replaced, id);
         }else{
-            Payment p = new Payment(id, student.getID(), date, paymentType, paid);
+            Payment p = new Payment(id, student.getID(), date, paymentType, paid, paidComment);
             paymentManager.addPayment(p);
         }
         return id;
     }
 
-    public long addPayment(Student student, LocalDate date, String paymentType, double paid) {
+    public long addPayment(Student student, LocalDate date, String paymentType, double paid, String paidComment) {
         long id = getNewID();
-        Payment p = new Payment(id, student.getID(), date, paymentType, paid);
+        Payment p = new Payment(id, student.getID(), date, paymentType, paid, paidComment);
         paymentManager.addPayment(p);
         return id;
     }

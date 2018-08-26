@@ -13,7 +13,7 @@ public class PaymentTypes {
         types = FXCollections.observableArrayList();
 
         //TODO remove.
-        types.addAll("Cash", "Cheque");
+        types.addAll("Cash", "Cheque", "E-Transfer", "Other");
     }
     public void addType(String s){
         types.add(s);
