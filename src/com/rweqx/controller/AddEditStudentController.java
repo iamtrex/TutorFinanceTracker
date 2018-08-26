@@ -21,7 +21,7 @@ public class AddEditStudentController extends BaseController implements Initiali
     public static final int ADD_MODE = 1;
     public static final int EDIT_MODE = 2;
 
-    private int current_mode = ADD_MODE; //Default is addClass.
+    private int currentMode = ADD_MODE; //Default is addClass.
 
     @FXML
     private Button bSave;
@@ -56,9 +56,11 @@ public class AddEditStudentController extends BaseController implements Initiali
     public void sceneLoaded() {
         Student s = sceneModel.getCurrentStudent();
         if (s == null) {
+            currentMode = ADD_MODE;
             bDelete.setVisible(false);
             bSave.setText("Add Student");
         } else {
+            currentMode = EDIT_MODE;
             bDelete.setVisible(true);
             bSave.setText("Save Student");
         }
