@@ -42,10 +42,6 @@ public class StudentProfileController extends BaseController implements Initiali
     @FXML
     private Button bBack;
 
-    @FXML
-    private Button bShowAll;
-    @FXML
-    private Button bShowMonth;
 
     @FXML
     private ScrollPane eventScroll;
@@ -57,10 +53,13 @@ public class StudentProfileController extends BaseController implements Initiali
     private AnchorPane root;
 
     @FXML
-    private DatePicker datePicker;
+    private DatePicker datePickerStart;
+    @FXML
+    private DatePicker datePickerEnd;
+
+
+
     private LocalDate currentDate;
-
-
     private LongProperty studentID;
     private Student currentStudent;
 
