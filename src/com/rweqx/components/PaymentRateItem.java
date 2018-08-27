@@ -35,8 +35,30 @@ public class PaymentRateItem extends HBox {
         HBox.setHgrow(p, Priority.ALWAYS);
 
         this.getChildren().setAll(lType, p, tRate);
-
     }
+
+    /**
+     * //TODO SORTA HACKY RN, SHOUDL WE MAKE THIS A SEPERATE CLASS?
+     * Uneditable rate type.
+     * @param rateType
+     * @param rate
+     */
+    public PaymentRateItem(String rateType, double rate){
+        type = rateType;
+        tRate = new TextField();
+        tRate.setText(String.valueOf(rate));
+        lType = new Label(rateType);
+        tRate.setEditable(false);
+        tRate.setStyle("-fx-background-color:rgba(255, 255, 255, 0.0);"); //Hide background, make it look like a label
+
+        this.setSpacing(10);
+        Pane p = new Pane();
+
+        HBox.setHgrow(p, Priority.ALWAYS);
+
+        this.getChildren().setAll(lType, p, tRate);
+    }
+
 
     public void setRate(Double rate) {
         tRate.setText(String.valueOf(rate));

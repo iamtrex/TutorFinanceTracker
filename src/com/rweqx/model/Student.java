@@ -4,16 +4,24 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 public class Student {
 
 
 
+    private LocalDate date;
     private long studentID;
     private String name;
     private List<PaymentRatesAtTime> paymentRates;
     private String comment;
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
     public String getComment(){
         return comment;
@@ -35,15 +43,11 @@ public class Student {
         return studentID;
     }
 
-    public void setID(long studentID) {
-        this.studentID = studentID;
-    }
-
     public PaymentRatesAtTime getLatestPaymentRates(){
         Collections.sort(paymentRates, Comparator.comparing(PaymentRatesAtTime::getDate));
         return paymentRates.get(paymentRates.size()-1); //Return latest.
-
     }
+
     public void modifyPaymentRate(LocalDate date, String paymentType, double rate){
         PaymentRatesAtTime newRates = new PaymentRatesAtTime(getLatestPaymentRates());
         newRates.addChangePayment(paymentType, rate);
@@ -51,7 +55,6 @@ public class Student {
         paymentRates.add(newRates);
 
     }
-
 
     public List<PaymentRatesAtTime> getPaymentRates() {
         return paymentRates;
@@ -61,7 +64,8 @@ public class Student {
         this.paymentRates = paymentRates;
     }
 
-    public Student(long studentID, String name, String comment, List<PaymentRatesAtTime> paymentRates){
+    public Student(long studentID, String name, LocalDate date, String comment, List<PaymentRatesAtTime> paymentRates){
+        this.date = date;
         this.studentID = studentID;
         this.name = name;
         this.paymentRates = paymentRates;

@@ -1,11 +1,14 @@
 package com.rweqx.controller;
 
+import com.rweqx.components.PaymentRateItem;
 import com.rweqx.model.Class;
 import com.rweqx.model.Event;
 import com.rweqx.model.Payment;
 import com.rweqx.model.Student;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -76,11 +79,11 @@ public class StudentProfileController extends BaseController implements Initiali
 
     private LongProperty studentID;
     private Student currentStudent;
-
+    private String filterType;
 
     public StudentProfileController() {
         studentID = new SimpleLongProperty(-1);
-
+        filterType = "All";
     }
 
 
@@ -117,12 +120,16 @@ public class StudentProfileController extends BaseController implements Initiali
             }
 
             currentStudent = modelManager.getStudentManager().getStudentByID(ID);
-            lName.setText(currentStudent.getName());
-
-            refreshEventBox();
+            refreshContent();
         });
 
+        filterPicker.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal)->{
+            if (newVal != null && !newVal.equals(oldVal)) {
+                filterType = newVal;
+                refreshEventBox();
 
+            }
+        });
         eventScroll.setFitToWidth(true);
 
     }
@@ -134,12 +141,30 @@ public class StudentProfileController extends BaseController implements Initiali
         System.out.println("Loading Student Profile Scene");
         System.out.println("Student " + sceneModel.getCurrentStudent().getName());
 
+        ObservableList<String> filterItems = FXCollections.observableArrayList();
+        filterItems.setAll("Classes", "Payments", "All");
+        filterPicker.setItems(filterItems);
+
         boolean force = sceneModel.getCurrentStudent().getID() == studentID.get();
         if(force)
             studentID.set(-1); //Resets studentID, forcing refresh of student... sorta hacky but yeah...
 
         studentID.set(sceneModel.getCurrentStudent().getID());
 
+    }
+
+    private void refreshContent(){
+        lName.setText(currentStudent.getName());
+        lAdded.setText("Date Added - " + currentStudent.getDate().toString());
+        lGroup.setText("Group - none"); //TODO
+        lNote.setText("Comments - " + currentStudent.getComment());
+
+        List<String> types = new ArrayList<>(modelManager.getClassTypes().getTypesList());
+        types.forEach(type -> {
+            PaymentRateItem pri = new PaymentRateItem(type, currentStudent.getLatestPaymentRates().getRateByType(type));
+            ratesBox.getChildren().add(pri);
+        });
+        refreshEventBox();
     }
 
 
@@ -153,6 +178,12 @@ public class StudentProfileController extends BaseController implements Initiali
 
 
         for (Event e : events) {
+            if(filterType.equals("Classes") && e instanceof Payment){ //TODO NOT MOST OPTIMAL SINCE WE GET ALL FROM MODELMANAGER,
+                //TODO - SHOUDL INSTEAD PASS TO MODEL WHAT OUR FILTER IS AND HAVE MODELMANAGER DECIDE WHAT EVENTS TO RETURN.
+                continue;
+            }else if(filterType.equals("Payment") && e instanceof Class){
+                continue;
+            }
             try {
                 FXMLLoader loader = null;
                 if (e instanceof Class) {
@@ -184,6 +215,7 @@ public class StudentProfileController extends BaseController implements Initiali
      * Resets layout.
      */
     private void reset() {
+        filterType = "All";
         System.out.println("Will need to reset stu profile. ");
     }
 

@@ -66,9 +66,10 @@ public class StudentManager {
 
     public void createAndAddStudent(String name, String comment, PaymentRatesAtTime rates) {
         //addStudent(new Student(getNewID(), name, List.of(rates)));
+        LocalDate registeredDate = LocalDate.now();
         List<PaymentRatesAtTime> list = new ArrayList<>();
         list.add(rates);
-        addStudent(new Student(getNewID(), name, comment, list));
+        addStudent(new Student(getNewID(), name, registeredDate, comment, list));
     }
 
     private long getNewID() {
