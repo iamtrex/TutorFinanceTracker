@@ -181,7 +181,7 @@ public class StudentProfileController extends BaseController implements Initiali
             if(filterType.equals("Classes") && e instanceof Payment){ //TODO NOT MOST OPTIMAL SINCE WE GET ALL FROM MODELMANAGER,
                 //TODO - SHOUDL INSTEAD PASS TO MODEL WHAT OUR FILTER IS AND HAVE MODELMANAGER DECIDE WHAT EVENTS TO RETURN.
                 continue;
-            }else if(filterType.equals("Payment") && e instanceof Class){
+            }else if(filterType.equals("Payments") && e instanceof Class){
                 continue;
             }
             try {
