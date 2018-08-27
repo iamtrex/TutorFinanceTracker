@@ -1,19 +1,19 @@
 package com.rweqx.controller;
 
+import com.rweqx.components.PaymentRateItem;
 import com.rweqx.model.Class;
 import com.rweqx.model.Event;
 import com.rweqx.model.Payment;
 import com.rweqx.model.Student;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -28,11 +28,6 @@ import java.util.ResourceBundle;
 
 public class StudentProfileController extends BaseController implements Initializable {
 
-    private final int DISPLAY_ALL = 0;
-    private final int DISPLAY_MONTH = 1;
-
-    private int currentDisplayMode;
-
     @FXML
     private Label lOutstanding;
 
@@ -40,12 +35,28 @@ public class StudentProfileController extends BaseController implements Initiali
     private Label lName;
 
     @FXML
-    private Button bBack;
+    private Label lAdded;
 
     @FXML
-    private Button bShowAll;
+    private Label lGroup;
+
     @FXML
-    private Button bShowMonth;
+    private Label lNote;
+
+    @FXML
+    private VBox ratesBox;
+
+    @FXML
+    private ComboBox<String> filterPicker;
+
+
+
+    @FXML
+    private Button bBack;
+    @FXML
+    private Button bEdit;
+
+
 
     @FXML
     private ScrollPane eventScroll;
@@ -57,34 +68,47 @@ public class StudentProfileController extends BaseController implements Initiali
     private AnchorPane root;
 
     @FXML
-    private DatePicker datePicker;
-    private LocalDate currentDate;
+    private DatePicker datePickerStart;
+    @FXML
+    private DatePicker datePickerEnd;
 
+
+
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     private LongProperty studentID;
     private Student currentStudent;
-
+    private String filterType;
 
     public StudentProfileController() {
-        studentID = new SimpleLongProperty();
-        currentDisplayMode = DISPLAY_ALL;
-
-
+        studentID = new SimpleLongProperty(-1);
+        filterType = "All";
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //lName.textProperty().bind(studentName);
-        currentDate = LocalDate.now();
 
-        datePicker.valueProperty().addListener((obs, oldVal, newVal)->{
-            currentDisplayMode = DISPLAY_MONTH;
-            if (currentDate.getMonthValue() != newVal.getMonthValue() || currentDate.getYear() != newVal.getYear()) {
-                currentDate = newVal;
-                refreshEventBox();
-            }
+
+        datePickerStart.valueProperty().addListener((obs, oldVal, newVal)->{
+            if(oldVal == newVal)
+                return;
+
+            startDate = newVal;
+            refreshEventBox();
         });
+
+        datePickerEnd.valueProperty().addListener((obs, oldVal, newVal)->{
+            if(oldVal == newVal)
+                return;
+
+            endDate = newVal;
+            refreshEventBox();
+        });
+
+        datePickerStart.setValue(LocalDate.now());
+        datePickerEnd.setValue(LocalDate.now());
 
         studentID.addListener((obs, oldVal, newVal) -> {
             /*if (oldVal == newVal) {
@@ -96,12 +120,16 @@ public class StudentProfileController extends BaseController implements Initiali
             }
 
             currentStudent = modelManager.getStudentManager().getStudentByID(ID);
-            lName.setText(currentStudent.getName());
-
-            refreshEventBox();
+            refreshContent();
         });
 
+        filterPicker.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal)->{
+            if (newVal != null && !newVal.equals(oldVal)) {
+                filterType = newVal;
+                refreshEventBox();
 
+            }
+        });
         eventScroll.setFitToWidth(true);
 
     }
@@ -113,37 +141,49 @@ public class StudentProfileController extends BaseController implements Initiali
         System.out.println("Loading Student Profile Scene");
         System.out.println("Student " + sceneModel.getCurrentStudent().getName());
 
-        boolean force = sceneModel.getCurrentStudent().getID() == studentID.get();
-        studentID.set(sceneModel.getCurrentStudent().getID());
-        if(force)
-            refreshEventBox();
+        ObservableList<String> filterItems = FXCollections.observableArrayList();
+        filterItems.setAll("Classes", "Payments", "All");
+        filterPicker.setItems(filterItems);
 
+        boolean force = sceneModel.getCurrentStudent().getID() == studentID.get();
+        if(force)
+            studentID.set(-1); //Resets studentID, forcing refresh of student... sorta hacky but yeah...
+
+        studentID.set(sceneModel.getCurrentStudent().getID());
+
+    }
+
+    private void refreshContent(){
+        lName.setText(currentStudent.getName());
+        lAdded.setText("Date Added - " + currentStudent.getDate().toString());
+        lGroup.setText("Group - none"); //TODO
+        lNote.setText("Comments - " + currentStudent.getComment());
+
+        List<String> types = new ArrayList<>(modelManager.getClassTypes().getTypesList());
+        types.forEach(type -> {
+            PaymentRateItem pri = new PaymentRateItem(type, currentStudent.getLatestPaymentRates().getRateByType(type));
+            ratesBox.getChildren().add(pri);
+        });
+        refreshEventBox();
     }
 
 
     private void refreshEventBox() {
-        System.out.println("Refreshing box");
-
-        eventBox.getChildren().clear();
-        List<Event> events;
-
-        datePicker.setValue(currentDate);
-        switch (currentDisplayMode) {
-            case DISPLAY_ALL:
-                events = modelManager.getAllEventsByStudent(currentStudent);
-                break;
-            case DISPLAY_MONTH:
-                events = modelManager.getAllEventsByStudentInYearMonth(currentStudent, currentDate.getYear(), currentDate.getMonthValue());
-                break;
-            default:
-                events = new ArrayList<>();
-                break;
+        if(startDate == null || endDate == null || studentID.get() == -1){
+            return; //skip
         }
+        System.out.println("Refreshing box");
+        eventBox.getChildren().clear();
+        List<Event> events = modelManager.getAllEventsByStudentBetween(studentID.get(), startDate, endDate);
 
-        double outstanding = modelManager.getAllEventsByStudentOutstanding(currentStudent);
-        lOutstanding.setText("Amount outstanding " + outstanding);
 
         for (Event e : events) {
+            if(filterType.equals("Classes") && e instanceof Payment){ //TODO NOT MOST OPTIMAL SINCE WE GET ALL FROM MODELMANAGER,
+                //TODO - SHOUDL INSTEAD PASS TO MODEL WHAT OUR FILTER IS AND HAVE MODELMANAGER DECIDE WHAT EVENTS TO RETURN.
+                continue;
+            }else if(filterType.equals("Payments") && e instanceof Class){
+                continue;
+            }
             try {
                 FXMLLoader loader = null;
                 if (e instanceof Class) {
@@ -175,36 +215,17 @@ public class StudentProfileController extends BaseController implements Initiali
      * Resets layout.
      */
     private void reset() {
+        filterType = "All";
         System.out.println("Will need to reset stu profile. ");
-    }
-
-    public void prevMonthClicked(ActionEvent e){
-        currentDate = currentDate.minus(1, ChronoUnit.MONTHS);
-        currentDisplayMode = DISPLAY_MONTH;
-        refreshEventBox();
-    }
-    public void nextMonthClicked(ActionEvent e){
-        currentDate = currentDate.plus(1, ChronoUnit.MONTHS);
-        currentDisplayMode = DISPLAY_MONTH;
-        refreshEventBox();
-    }
-    public void showAllClicked(ActionEvent e) {
-        currentDisplayMode = DISPLAY_ALL;
-        refreshEventBox();
-    }
-
-    public void showOutstandingClicked(ActionEvent e) {
-        //TODO.
-    }
-
-    public void showMonthClicked(ActionEvent e) {
-        currentDisplayMode = DISPLAY_MONTH;
-        currentDate = LocalDate.now();
-        refreshEventBox();
     }
 
     public void backClicked(ActionEvent e) {
         reset();
         sceneModel.backClicked();
+    }
+
+    public void editClicked(ActionEvent e){
+        sceneModel.setCurrentStudent(currentStudent);
+        sceneModel.setScene(AddEditStudentController.class.getSimpleName());
     }
 }

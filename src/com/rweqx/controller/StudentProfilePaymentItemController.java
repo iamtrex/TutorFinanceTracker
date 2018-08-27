@@ -30,6 +30,10 @@ public class StudentProfilePaymentItemController extends StudentEventItemControl
     @FXML
     private Label lPaymentType;
 
+    @FXML
+    private Label lComment;
+
+
 
     @Override
     public void setEvent(Event e){
@@ -40,7 +44,7 @@ public class StudentProfilePaymentItemController extends StudentEventItemControl
 
         lAmount.setText(String.valueOf(p.getPaymentAmount()));
         lPaymentType.setText(p.getPaymentType());
-
+        lComment.setText(p.getComment());
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -50,6 +54,7 @@ public class StudentProfilePaymentItemController extends StudentEventItemControl
         lDate.setFont(Constants.BASE_FONT);
         lAmount.setFont(Constants.BASE_FONT);
         lPaymentType.setFont(Constants.BASE_FONT);
+        lComment.setFont(Constants.BASE_FONT);
 
     }
 }

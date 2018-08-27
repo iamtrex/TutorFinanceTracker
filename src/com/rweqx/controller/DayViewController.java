@@ -1,8 +1,7 @@
 package com.rweqx.controller;
 
-import com.rweqx.model.Event;
 import com.rweqx.model.Class;
-
+import com.rweqx.model.Event;
 import com.rweqx.model.Payment;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,25 +15,25 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.ResourceBundle;
 
 
 public class DayViewController extends BaseController implements Initializable {
 
-    public void prevDayClicked(){
-        loadDate(dateShown.minus(1, ChronoUnit.DAYS));
-    }
-    public void nextDayClicked(){
-        loadDate(dateShown.plus(1, ChronoUnit.DAYS));
-    }
+    private boolean refreshDisabled = false;
 
-    private LocalDate dateShown;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     @FXML
     private ScrollPane eventScroll;
     @FXML
-    private DatePicker datePicker;
+    private DatePicker startDatePicker;
+    @FXML
+    private DatePicker endDatePicker;
+
 
     @FXML
     private VBox eventsBox;
@@ -50,17 +49,19 @@ public class DayViewController extends BaseController implements Initializable {
     @Override
     public void sceneLoaded(){
         if(sceneModel.getCurrentDate() != null){
-            loadDate(sceneModel.getCurrentDate());
+            setMonth(sceneModel.getCurrentDate().getYear(), sceneModel.getCurrentDate().getMonthValue());
         }else{
-            loadDate(LocalDate.now());
+            thisMonthClicked();
         }
     }
 
-    private void loadDate(LocalDate date) {
-        dateShown = date;
-        datePicker.setValue(date);
+
+    private void refreshEventBox() {
+        if(refreshDisabled || startDate == null || endDate == null){
+            return;
+        }
         eventsBox.getChildren().clear();
-        List<Event> events = modelManager.getAllEventsOnDate(date);
+        List<Event> events = modelManager.getAllEventsBetweenDates(startDate, endDate);
         for (Event e : events) {
             try {
                 FXMLLoader loader;
@@ -96,11 +97,44 @@ public class DayViewController extends BaseController implements Initializable {
         }
     }
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-         datePicker.valueProperty().addListener((obs, oldVal, newVal)->{
-            loadDate(newVal);
+         startDatePicker.valueProperty().addListener((obs, oldVal, newVal)->{
+            startDate = newVal;
+             refreshEventBox();
+         });
+         endDatePicker.valueProperty().addListener((obs, oldVal, newVal)->{
+             endDate = newVal;
+             refreshEventBox();
          });
          eventScroll.setFitToWidth(true);
+    }
+
+
+    public void lastMonthClicked(){
+        refreshDisabled = true;
+        startDatePicker.setValue(LocalDate.now().minus(1, ChronoUnit.MONTHS).with(TemporalAdjusters.firstDayOfMonth()));
+        refreshDisabled = false;
+        endDatePicker.setValue(LocalDate.now().minus(1, ChronoUnit.MONTHS).with(TemporalAdjusters.lastDayOfMonth()));
+    }
+
+    private void setMonth(int year, int month) {
+        refreshDisabled = true;
+        startDatePicker.setValue(LocalDate.of(year, month, 1));
+        refreshDisabled = false;
+        endDatePicker.setValue(LocalDate.of(year, month, 1).with(TemporalAdjusters.lastDayOfMonth()));
+    }
+    public void thisMonthClicked(){
+        refreshDisabled = true;
+        startDatePicker.setValue(LocalDate.now().with(TemporalAdjusters.firstDayOfMonth()));
+        refreshDisabled = false;
+        endDatePicker.setValue(LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()));
+    }
+    public void todayClicked(){
+        refreshDisabled = true;
+        startDatePicker.setValue(LocalDate.now());
+        refreshDisabled = false;
+        endDatePicker.setValue(LocalDate.now());
     }
 }

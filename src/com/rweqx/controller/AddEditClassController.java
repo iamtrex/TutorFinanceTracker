@@ -96,6 +96,7 @@ public class AddEditClassController extends BaseController implements Initializa
 
     @Override
     public void sceneLoaded(){
+        System.out.println("Add Class loaded");
         reset(); //TODO -> Do I need this?
         if(sceneModel.getCurrentClass() != null){
             currentlyEditingClass = sceneModel.getCurrentClass();
@@ -208,24 +209,43 @@ public class AddEditClassController extends BaseController implements Initializa
         });
     }
     private void addStudent(Student selected) {
-        System.out.println("Would add student " + selected.getName());
+        if(!chosenStudents.contains(selected)) {
+            //Don't add repeats.
 
-        chosenStudents.add(selected);
-        ChosenStudent cs = new ChosenStudent(selected);
-        cs.setOnAction(this::removeStudent);
-        chosenStudentsLabels.add(cs);
+            System.out.println("Would add student " + selected.getName());
 
-        Platform.runLater(()->{
-            selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
+            chosenStudents.add(selected);
+            ChosenStudent cs = new ChosenStudent(selected);
+            cs.setOnAction(this::removeStudent);
+            chosenStudentsLabels.add(cs);
 
-            studentSearchBar.setText("");
-        });
-
+            Platform.runLater(() -> {
+                selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
+            });
+        }
         studentSearchBar.setText("");
         searchListView.refresh();
         //loseFocus();
     }
 
+    public void plusDuplicateClassClicked(ActionEvent event){
+        SingleClassController toCopy = classes.get(classes.size()-1); //Get last class
+        FXMLLoader singleClassLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/single-class.fxml"));
+
+        try {
+            Pane p = singleClassLoader.load();
+            SingleClassController scc = singleClassLoader.getController();
+            scc.initModel(modelManager, sceneModel);
+            scc.setChosenStudents(chosenStudents);
+            scc.copy(toCopy);
+            classesBox.getChildren().add(p);
+            classes.add(scc);
+        }catch(IOException e){
+            e.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
     public void plusClassClicked(ActionEvent event){
         FXMLLoader singleClassLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/single-class.fxml"));
@@ -260,9 +280,16 @@ public class AddEditClassController extends BaseController implements Initializa
     public void cancelClicked(ActionEvent e){
         System.out.println("Try to cancel");
         reset();
+
         currentlyEditingClass = null;
         sceneModel.setCurrentPayment(null);
-        sceneModel.backClicked();
+
+        if(currentMode == EDIT_MODE) {
+            sceneModel.backClicked();
+        }else{
+            //Don't move, just reload.
+            sceneLoaded(); //Call self's loaded scene to reset UI.
+        }
     }
 
 

@@ -1,6 +1,5 @@
 package com.rweqx.controller;
 
-import com.rweqx.model.Class;
 import com.rweqx.model.Event;
 import com.rweqx.model.Payment;
 import javafx.fxml.FXML;
@@ -23,6 +22,12 @@ public class DayViewPaymentItemController extends EventItemController {
     @FXML
     private Label lEventType;
 
+    @FXML
+    private Label lDate;
+
+    @FXML
+    private Label lComment;
+
     @Override
     public void setEvent(Event e){
         super.setEvent(e);
@@ -30,6 +35,8 @@ public class DayViewPaymentItemController extends EventItemController {
         lPaymentType.setText(p.getPaymentType());
         lAmount.setText(String.valueOf(p.getPaymentAmount()));
         lStudent.setText(modelManager.getStudentManager().getStudentByID(p.getStudentID()).getName());
+        lDate.setText(p.getDate().toString());
+        lComment.setText(p.getComment());
     }
 
 

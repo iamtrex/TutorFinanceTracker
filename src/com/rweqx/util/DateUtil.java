@@ -1,12 +1,10 @@
 package com.rweqx.util;
 
-import javax.swing.text.DateFormatter;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 
 public class DateUtil {
@@ -31,5 +29,25 @@ public class DateUtil {
     public static int getMonthFromDate(Date date) {
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return localDate.getMonthValue();
+    }
+
+    public static boolean isBetween(LocalDate date, LocalDate startDate, LocalDate endDate) {
+        return sameOrBefore(date, endDate) && sameOrAfter(date, startDate);
+    }
+
+    public static boolean sameOrBefore(LocalDate date, LocalDate laterDate){
+        return date.isBefore(laterDate) || (date.getYear() == laterDate.getYear() && date.getDayOfYear() == laterDate.getDayOfYear());
+    }
+    public static boolean sameOrAfter(LocalDate date, LocalDate earlierDate){
+        return sameOrBefore(earlierDate, date);
+    }
+
+    public static LocalDate endOfMonth(int year, int month) {
+        return  LocalDate.of(year, month, 1).with(TemporalAdjusters.lastDayOfMonth());
+
+    }
+
+    public static LocalDate startOfMonth(int year, int month) {
+        return LocalDate.of(year, month, 1);
     }
 }

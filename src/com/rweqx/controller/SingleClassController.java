@@ -22,6 +22,7 @@ import java.util.concurrent.Executors;
 
 public class SingleClassController extends BaseController{
 
+    private boolean loadDone;
 
     @FXML
     private Pane pane;
@@ -30,16 +31,12 @@ public class SingleClassController extends BaseController{
 
     @FXML
     private DatePicker datePicker;
-
     @FXML
     private TextField lComment;
-
     @FXML
     private ComboBox<String> classTypeChoices;
-
     @FXML
     private CheckBox sameDuration;
-
     @FXML
     private GridPane titleGrid;
     @FXML
@@ -52,12 +49,10 @@ public class SingleClassController extends BaseController{
     private Map<Student, ComboBox<String>> paymentTypeMap;
     private Map<Student, TextField> commentMap;
 
-
-
-
     private ObservableList<Student> chosenStudents;
 
     public SingleClassController(){
+        loadDone = false;
         nameMap = new HashMap<>();
         durationMap = new HashMap<>();
         rateMap = new HashMap<>();
@@ -71,25 +66,6 @@ public class SingleClassController extends BaseController{
         super.initModel(modelManager, sceneModel);
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(this::loadComponents);
-        classTypeChoices.setItems(modelManager.getClassTypes().getTypesList());
-
-        classTypeChoices.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal)->{
-            //Update rates for the selected class type.
-            updateClassRateAll(newVal);
-        });
-
-        sameDuration.selectedProperty().addListener((obs, oldVal, newVal)->{
-
-            for(Student s : chosenStudents){
-                durationMap.get(s).setVisible(!newVal);
-            }
-            //Always show first.
-            Student first = chosenStudents.get(0);
-            durationMap.get(first).setVisible(true);
-
-        });
-
-        datePicker.setValue(LocalDate.now());
 
     }
 
@@ -110,6 +86,7 @@ public class SingleClassController extends BaseController{
 
 
     public void loadComponents(){
+
         //Wait for modelManager and chosenStudents
         while(modelManager == null || chosenStudents == null){
             try{
@@ -119,6 +96,25 @@ public class SingleClassController extends BaseController{
             }
         }
 
+        classTypeChoices.setItems(modelManager.getClassTypes().getTypesList());
+
+        classTypeChoices.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal)->{
+            //Update rates for the selected class type.
+            updateClassRateAll(newVal);
+        });
+
+        sameDuration.selectedProperty().addListener((obs, oldVal, newVal)->{
+
+            for(Student s : chosenStudents){
+                durationMap.get(s).setVisible(!newVal);
+            }
+            //Always show first.
+            Student first = chosenStudents.get(0);
+            durationMap.get(first).setVisible(true);
+
+        });
+
+        datePicker.setValue(LocalDate.now());
         chosenStudents.addListener((ListChangeListener<Student>) c->{
             if(c.next()) {
                 if (c.wasPermutated() || c.wasUpdated()) {
@@ -141,15 +137,18 @@ public class SingleClassController extends BaseController{
             addStudent(s);
         });
 
+        loadDone = true;
+
     }
 
     private void removeStudent(Student s) {
-        classDetailsGrid.getChildren().removeAll(nameMap.get(s), durationMap.get(s), rateMap.get(s), paidMap.get(s), paymentTypeMap.get(s));
+        classDetailsGrid.getChildren().removeAll(nameMap.get(s), durationMap.get(s), rateMap.get(s), paidMap.get(s), paymentTypeMap.get(s), commentMap.get(s));
         nameMap.remove(s);
         durationMap.remove(s);
         rateMap.remove(s);
         paidMap.remove(s);
         paymentTypeMap.remove(s);
+        commentMap.remove(s);
         updateHeight();
 
     }
@@ -257,6 +256,14 @@ public class SingleClassController extends BaseController{
 
     public void loadClass(Class c) {
 
+        while(!loadDone){
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
         datePicker.setValue(c.getDate());
         Set<StuDurPaid> data = c.getAllData();
         String type = c.getClassType();
@@ -282,5 +289,69 @@ public class SingleClassController extends BaseController{
             }
         });
         //Class successfully loaded.
+    }
+
+    public void copy(SingleClassController toCopy) {
+
+        while(!loadDone){
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+        this.datePicker.setValue(toCopy.getDatePicker().getValue());
+        this.lComment.setText(toCopy.getlComment().getText());
+        this.classTypeChoices.getSelectionModel().select(toCopy.getClassTypeChoices().getSelectionModel().getSelectedItem());
+        this.sameDuration.setSelected(toCopy.getSameDuration().isSelected());
+        for(Student s : chosenStudents){
+            this.nameMap.get(s).setText(toCopy.getNameMap().get(s).getText());
+            this.durationMap.get(s).setText(toCopy.getDurationMap().get(s).getText());
+            this.rateMap.get(s).setText(toCopy.getRateMap().get(s).getText());
+            this.paidMap.get(s).setText(toCopy.getPaidMap().get(s).getText());
+            this.paymentTypeMap.get(s).getSelectionModel().select(toCopy.getPaymentTypeMap().get(s).getSelectionModel().getSelectedIndex());
+            this.commentMap.get(s).setText(toCopy.getCommentMap().get(s).getText());
+        }
+    }
+
+    private DatePicker getDatePicker() {
+        return datePicker;
+    }
+
+    private TextField getlComment() {
+        return lComment;
+    }
+
+    private ComboBox<String> getClassTypeChoices() {
+        return classTypeChoices;
+    }
+
+    private CheckBox getSameDuration() {
+        return sameDuration;
+    }
+
+    private Map<Student, Label> getNameMap() {
+        return nameMap;
+    }
+
+    private Map<Student, TextField> getDurationMap() {
+        return durationMap;
+    }
+
+    private Map<Student, TextField> getRateMap() {
+        return rateMap;
+    }
+
+    private Map<Student, TextField> getPaidMap() {
+        return paidMap;
+    }
+
+    private Map<Student, ComboBox<String>> getPaymentTypeMap() {
+        return paymentTypeMap;
+    }
+
+    private Map<Student, TextField> getCommentMap() {
+        return commentMap;
     }
 }

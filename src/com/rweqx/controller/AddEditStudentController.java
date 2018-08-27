@@ -1,6 +1,8 @@
 package com.rweqx.controller;
 
 import com.rweqx.components.PaymentRateItem;
+import com.rweqx.logger.LogLevel;
+import com.rweqx.logger.Logger;
 import com.rweqx.model.PaymentRatesAtTime;
 import com.rweqx.model.Student;
 import javafx.fxml.FXML;
@@ -22,6 +24,8 @@ public class AddEditStudentController extends BaseController implements Initiali
     public static final int EDIT_MODE = 2;
 
     private int currentMode = ADD_MODE; //Default is addClass.
+
+    private Student currentlyEditingStudent;
 
     @FXML
     private Button bSave;
@@ -49,21 +53,16 @@ public class AddEditStudentController extends BaseController implements Initiali
     }
     private void reset() {
         tStudentName.setText("");
+        tComment.setText("");
         paymentRateItems.clear();
         paymentRatesBox.getChildren().clear();
+        currentlyEditingStudent = null;
     }
+
     @Override
     public void sceneLoaded() {
         Student s = sceneModel.getCurrentStudent();
-        if (s == null) {
-            currentMode = ADD_MODE;
-            bDelete.setVisible(false);
-            bSave.setText("Add Student");
-        } else {
-            currentMode = EDIT_MODE;
-            bDelete.setVisible(true);
-            bSave.setText("Save Student");
-        }
+
 
         paymentRatesBox.getChildren().removeAll();
 
@@ -75,6 +74,23 @@ public class AddEditStudentController extends BaseController implements Initiali
             paymentRateItems.add(pri);
         });
 
+        if (s == null) {
+            currentlyEditingStudent = null;
+            currentMode = ADD_MODE;
+            bDelete.setVisible(false);
+            bSave.setText("Add Student");
+        } else {
+            currentlyEditingStudent = s;
+            currentMode = EDIT_MODE;
+            bDelete.setVisible(true);
+            bSave.setText("Save Student");
+
+            tStudentName.setText(s.getName());
+            tComment.setText(s.getComment());
+            paymentRateItems.forEach(pri->{
+                pri.setRate(s.getLatestPaymentRates().getRateByType(pri.getType()));
+            });
+        }
 
     }
 
@@ -83,16 +99,19 @@ public class AddEditStudentController extends BaseController implements Initiali
     public void saveClicked() {
         //TODO - Check validity.
         Map<String, Double> rates = new HashMap<>();
-        paymentRateItems.forEach(pri->{
+        paymentRateItems.forEach(pri -> {
             rates.put(pri.getType(), pri.getRate());
         });
         PaymentRatesAtTime prat = new PaymentRatesAtTime(LocalDate.now(), rates);
 
         String studentName = tStudentName.getText();
         String studentComment = tComment.getText();
-
-        modelManager.createAndAddStudent(studentName, studentComment, prat);
-        //Jump back.
+        if(currentMode == ADD_MODE) {
+            modelManager.createAndAddStudent(studentName, studentComment, prat);
+            //Jump back.
+        }else{
+            modelManager.updateStudent(currentlyEditingStudent, studentName, studentComment, prat);
+        }
         reset();
         sceneModel.getBackProperty().set(true);
     }
@@ -104,7 +123,8 @@ public class AddEditStudentController extends BaseController implements Initiali
 
 
     public void deleteClicked() {
-
+        Logger.getInstance().log("Unsupported feature -> Delete student. ", LogLevel.W);
+        //DO NOT SUPPORT THIS FEATURE YET.
     }
 
     @Override

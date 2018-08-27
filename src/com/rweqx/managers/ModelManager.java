@@ -4,9 +4,8 @@ import com.rweqx.constants.Constants;
 import com.rweqx.io.FileBackup;
 import com.rweqx.io.JSONReader;
 import com.rweqx.io.JSONWriter;
-import com.rweqx.model.*;
 import com.rweqx.model.Class;
-import javafx.util.Pair;
+import com.rweqx.model.*;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -104,6 +103,22 @@ public class ModelManager {
         return events;
     }
 
+    public List<Event> getAllEventsByStudentBetween(long studentID, LocalDate startDate, LocalDate endDate) {
+        List<Event> events = new ArrayList<>();
+        events.addAll(classManager.getAllClassesByStudentBetween(studentID, startDate, endDate));
+        events.addAll(paymentManager.getAllPaymentsByStudentBetween(studentID, startDate, endDate));
+        Collections.sort(events, Comparator.comparing(Event::getDate));
+        return events;
+    }
+
+    public List<Event> getAllEventsBetweenDates(LocalDate startDate, LocalDate endDate) {
+        List<Event> events = new ArrayList<>();
+        events.addAll(classManager.getAllClassesBetweenDates(startDate, endDate));
+        events.addAll(paymentManager.getAllPaymentsBetweenDates(startDate, endDate));
+        Collections.sort(events, Comparator.comparing(Event::getDate));
+        return events;
+    }
+
     public List<Event> getAllEventsOnDate(LocalDate date) {
         List<Event> events = new ArrayList<>();
         events.addAll(classManager.getAllClassesOnDate(date));
@@ -136,19 +151,6 @@ public class ModelManager {
         addStuDurPaidToClass(c, s, duration, paymentAmount, paymentType, paidComment, -1);
     }
 
-    /*
-    public long createAndAddClass(LocalDate date, String classType, List<StuDurPaid> sdp) {
-        //OBSOLETE.
-        System.out.println("OLD SHIT");
-        Class c = new Class(getNewID(), date, classType);
-
-        sdp.forEach(s->{
-           c.addStudent(s);
-        });
-
-        classManager.addClass(c);
-        return c.getID();
-    }*/
 
     private long getNewID() {
         long l = idGenerator.nextLong();
@@ -202,6 +204,13 @@ public class ModelManager {
 
     public void deleteClass(long id) {
         classManager.deleteClass(id);
+    }
+
+    public void updateStudent(Student s, String studentName, String studentComment, PaymentRatesAtTime prat) {
+        s.setName(studentName);
+        s.setComment(studentComment);
+        s.addPaymentRates(prat);
+
     }
 
 }

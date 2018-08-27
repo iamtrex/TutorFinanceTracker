@@ -8,10 +8,12 @@
 
 <HBox spacing="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.rweqx.controller.DayViewClassItemController">
    <children>
+      <Label fx:id="lDate" layoutX="125.0" layoutY="12.0" text="Date" />
       <Label fx:id="lEventType" text="Class" />
       <Label fx:id="lStudents" layoutX="10.0" layoutY="10.0" text="Label" />
       <Label fx:id="lDurations" layoutX="10.0" layoutY="10.0" text="Label" />
       <Label fx:id="lClassType" layoutX="10.0" layoutY="10.0" text="Label" />
+      <Label fx:id="lComment" layoutX="160.0" layoutY="12.0" text="Label" />
       <Pane HBox.hgrow="ALWAYS" />
       <Button fx:id="bEdit" mnemonicParsing="false" onAction="#editClicked" text="Edit" />
    </children>
