@@ -2,13 +2,14 @@ package com.rweqx.managers;
 
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
-import com.rweqx.model.Event;
 import com.rweqx.model.Payment;
 import com.rweqx.util.DateUtil;
-import javafx.beans.property.LongProperty;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PaymentManager {
 
@@ -105,6 +106,16 @@ public class PaymentManager {
         List<Payment> allPayments = new ArrayList<>();
         for(Payment p : payments){
             if(p.getStudentID() == studentID && DateUtil.isBetween(p.getDate(), startDate, endDate)){
+                allPayments.add(p);
+            }
+        }
+        return allPayments;
+    }
+
+    public List<Payment> getAllPaymentsBetweenDates(LocalDate startDate, LocalDate endDate) {
+        List<Payment> allPayments = new ArrayList<>();
+        for(Payment p : payments){
+            if(DateUtil.isBetween(p.getDate(), startDate, endDate)){
                 allPayments.add(p);
             }
         }

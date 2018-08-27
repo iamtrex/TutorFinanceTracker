@@ -1,9 +1,7 @@
 package com.rweqx.controller;
 
-import com.rweqx.model.Event;
 import com.rweqx.model.Class;
-
-import com.rweqx.model.Student;
+import com.rweqx.model.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -24,6 +22,12 @@ public class DayViewClassItemController extends DayViewEventItemController{
     @FXML
     private Label lEventType;
 
+    @FXML
+    private Label lDate;
+
+    @FXML
+    private Label lComment;
+
     @Override
     public void setEvent(Event e){
         super.setEvent(e);
@@ -37,6 +41,9 @@ public class DayViewClassItemController extends DayViewEventItemController{
         }
         studentsStr = studentsStr.substring(0, studentsStr.length() - 2);
         lStudents.setText(studentsStr);
+
+        lDate.setText(c.getDate().toString());
+        lComment.setText(c.getComment());
 
     }
 
