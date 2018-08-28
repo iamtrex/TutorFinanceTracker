@@ -1,30 +1,35 @@
 # TutorFinanceTracker
 
-Tool for tracking a tutor's finances...
+<strong>Tool for tracking a tutor's finances...</strong>
 End Goals -> 
 * Manage students
 * Manage classes and payments
 * View daily results and monthly overviews 
-* View students monthly summary 
+* View and print students monthly summary
 
-BETAv1 Released with basic functionality... -> Can download here:  https://github.com/iamtrex/TutorFinanceTracker/releases
+Currently releasing on a (somewhat) nightly schedule. 
+BETA v2.0 now Released with basic functionality... -> Can download here:  https://github.com/iamtrex/TutorFinanceTracker/releases
 
 Current Updated features ->
-* Add (not edit) student profiles
+* Add and edit student profiles
 * Add and Edit Payments
 * Add and Edit Classes, including ability to add multiple classes with same students at once
-* Day Viewer -> View all events by all students on particular day.
-* Student Profile viewer -> View all-time events or during particular month
+* Calendar -> View any events in any span of time. 
+* Student Profile viewer -> View all-time events or during particular span of time. As well as view student's payment rates, and etc. 
 * Read and saving files to localdisk.
 * Autobackup of saved files (once per day currently -> Will modify in future but keeping it for now due to high instability of program)
+* Printing of a student's profile!
+
+Expected Version 1.0 Release -> Sept 2018. 
 
 Still working on / known bugs ->
 * Weird transitions.
 * Clearing of class/payments while editing.
 * Some UI bugs with how events are displayed
-* Editing student profiles
-* Adding method of payment
-* Adding classtypes.
+* Font size related UI Bugs. 
+* Printing with non-default printer
+* Adding payment types. 
+* Adding class types.
 
 
 ~~Currently none of this works though :) So don't use ty.~~
