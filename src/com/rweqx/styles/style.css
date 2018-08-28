@@ -12,6 +12,12 @@
     -fx-font-size: 14;
     -fx-font-weight: normal;
 }
+
+.text-field{
+
+    -fx-font-size: 14;
+    -fx-font-weight: normal;
+}
 .viewing-label{
     -fx-font-size: 20;
     -fx-font-weight: bold;

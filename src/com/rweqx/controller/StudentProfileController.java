@@ -107,7 +107,7 @@ public class StudentProfileController extends BaseController implements Initiali
             refreshEventBox();
         });
 
-        datePickerStart.setValue(LocalDate.now());
+        datePickerStart.setValue(LocalDate.now().minus(1, ChronoUnit.MONTHS));
         datePickerEnd.setValue(LocalDate.now());
 
         studentID.addListener((obs, oldVal, newVal) -> {
@@ -154,12 +154,16 @@ public class StudentProfileController extends BaseController implements Initiali
     }
 
     private void refreshContent(){
+        if(currentStudent == null){
+            return;
+        }
         lName.setText(currentStudent.getName());
         lAdded.setText("Date Added - " + currentStudent.getDate().toString());
         lGroup.setText("Group - none"); //TODO
         lNote.setText("Comments - " + currentStudent.getComment());
 
         List<String> types = new ArrayList<>(modelManager.getClassTypes().getTypesList());
+        ratesBox.getChildren().clear();
         types.forEach(type -> {
             PaymentRateItem pri = new PaymentRateItem(type, currentStudent.getLatestPaymentRates().getRateByType(type));
             ratesBox.getChildren().add(pri);
@@ -215,6 +219,7 @@ public class StudentProfileController extends BaseController implements Initiali
      * Resets layout.
      */
     private void reset() {
+        //ratesBox.getChildren().clear(); //TODO SHOUDL BE HERE BUT CURRENTLY ABOVE.
         filterType = "All";
         System.out.println("Will need to reset stu profile. ");
     }

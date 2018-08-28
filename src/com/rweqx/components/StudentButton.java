@@ -4,8 +4,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.text.TextAlignment;
 
-import javax.swing.*;
-
 public class StudentButton extends Button {
     private String studentName;
     private long studentID;

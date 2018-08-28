@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 public class PaymentRateItem extends HBox {
     private TextField tRate;
     private Label lType;
+    private Label lRate;
     private String type;
 
 
@@ -31,7 +32,6 @@ public class PaymentRateItem extends HBox {
 
         this.setSpacing(10);
         Pane p = new Pane();
-
         HBox.setHgrow(p, Priority.ALWAYS);
 
         this.getChildren().setAll(lType, p, tRate);
@@ -45,18 +45,15 @@ public class PaymentRateItem extends HBox {
      */
     public PaymentRateItem(String rateType, double rate){
         type = rateType;
-        tRate = new TextField();
-        tRate.setText(String.valueOf(rate));
+
         lType = new Label(rateType);
-        tRate.setEditable(false);
-        tRate.setStyle("-fx-background-color:rgba(255, 255, 255, 0.0);"); //Hide background, make it look like a label
+        lRate = new Label(String.valueOf(rate));
 
         this.setSpacing(10);
         Pane p = new Pane();
-
         HBox.setHgrow(p, Priority.ALWAYS);
 
-        this.getChildren().setAll(lType, p, tRate);
+        this.getChildren().setAll(lType, p, lRate);
     }
 
 

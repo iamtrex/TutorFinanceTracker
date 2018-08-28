@@ -43,6 +43,8 @@ public class Main extends Application {
         primaryStage.setTitle("Tutor Student Finance Tracker");
         primaryStage.setScene(mainScene);
         primaryStage.show();
+        primaryStage.setMinWidth(primaryStage.getWidth());
+        primaryStage.setMinHeight(primaryStage.getHeight());
         primaryStage.setOnCloseRequest((e)->{
             Platform.exit();
         });
