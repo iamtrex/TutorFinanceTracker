@@ -1,13 +1,10 @@
 package com.rweqx.util;
 
-import javafx.print.JobSettings;
 import javafx.print.PageLayout;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 
 public class PrintUtil {
@@ -60,17 +57,19 @@ public class PrintUtil {
         double newHeight = node.getBoundsInParent().getHeight();
         System.out.println("New Node's dimensions: " + newWidth
                 + " width " + newHeight + " height");
-
-        PrinterJob job = PrinterJob.createPrinterJob();
-        if (job != null) {
-            boolean cont = job.showPrintDialog(parentWindow);
-            if(cont) {
-                boolean success = job.printPage(node);
-                if (success) {
-                    job.endJob();
-                    System.exit(0);
+        try {
+            PrinterJob job = PrinterJob.createPrinterJob();
+            if (job != null) {
+                boolean cont = job.showPrintDialog(parentWindow);
+                if (cont) {
+                    boolean success = job.printPage(node);
+                    if (success) {
+                        job.endJob();
+                    }
                 }
             }
+        }catch(Exception e){
+            e.printStackTrace();
         }
 
     }

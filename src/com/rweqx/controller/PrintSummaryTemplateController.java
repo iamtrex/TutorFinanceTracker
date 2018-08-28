@@ -74,13 +74,13 @@ public class PrintSummaryTemplateController extends BaseController{
 
                 eventHours.setText(String.valueOf(duration));
                 eventRates.setText(String.valueOf(rate));
-                eventAmount.setText(String.valueOf(amount));
+                eventAmount.setText("$" + String.valueOf(amount));
                 total += amount;
             } else {
                 Payment p = (Payment) e;
                 eventDesc.setText("Paid - " + p.getPaymentType());
                 double amount = p.getPaymentAmount();
-                eventAmount.setText("-" + String.valueOf(amount));
+                eventAmount.setText("$-" + String.valueOf(amount));
                 total -= amount;
             }
             eventsGrid.addRow(eventsGrid.getRowCount(), eventDate, eventDesc, eventHours, eventRates, eventAmount);
