@@ -107,6 +107,20 @@ public class Class extends Event{
         return classType;
     }
 
+    public double getAvgDuration() {
+        double total = 0;
+        double count = 0;
+
+        for(StuDurPaid sdp : studentsInfoSet){
+            total += sdp.getDuration();
+            count ++;
+        }
+
+        if(count == 0){
+            return 0;
+        }
+        return total/count;
+    }
     public String getDurationRange() {
         //If only one student, return his/her duration.
         if(studentsInfoSet.size() == 1){
@@ -145,4 +159,5 @@ public class Class extends Event{
             }
         }
     }
+
 }

@@ -48,6 +48,16 @@ public class Student {
         return paymentRates.get(paymentRates.size()-1); //Return latest.
     }
 
+    public double getPaymentRateAtTime(LocalDate date, String classType) {
+        Collections.sort(paymentRates, Comparator.comparing(PaymentRatesAtTime::getDate));
+        for(int i=0; i<paymentRates.size()-1; i++){
+            if(paymentRates.get(i+1).getDate().isAfter(date)){
+                return paymentRates.get(i).getRateByType(classType);
+            }
+        }
+        return paymentRates.get(paymentRates.size()-1).getRateByType(classType);
+    }
+
     public void modifyPaymentRate(LocalDate date, String paymentType, double rate){
         PaymentRatesAtTime newRates = new PaymentRatesAtTime(getLatestPaymentRates());
         newRates.addChangePayment(paymentType, rate);
@@ -75,4 +85,5 @@ public class Student {
     public void addPaymentRates(PaymentRatesAtTime prat) {
         paymentRates.add(prat);
     }
+
 }

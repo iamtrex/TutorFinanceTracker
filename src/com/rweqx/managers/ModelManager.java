@@ -213,4 +213,15 @@ public class ModelManager {
 
     }
 
+    public double getExpectedIncomeOfClass(Class c) {
+        double total  = 0;
+        for(StuDurPaid sdp : c.getAllData()){
+            if(sdp.getCustomRate() != -1) {
+                total += sdp.getDuration() * sdp.getCustomRate();
+            }else{
+                total += sdp.getDuration() * studentManager.getStudentByID(sdp.getStuID()).getPaymentRateAtTime(c.getDate(), c.getClassType());
+            }
+        }
+        return total;
+    }
 }

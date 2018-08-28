@@ -3,6 +3,7 @@ package com.rweqx.controller;
 import com.rweqx.model.Class;
 import com.rweqx.model.Event;
 import com.rweqx.model.Payment;
+import com.rweqx.util.MathUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -61,17 +62,18 @@ public class DayViewController extends BaseController implements Initializable {
             return;
         }
         eventsBox.getChildren().clear();
+
+        double hours = 0, income = 0;
+
         List<Event> events = modelManager.getAllEventsBetweenDates(startDate, endDate);
         for (Event e : events) {
             try {
                 FXMLLoader loader;
                 HBox item;
                 if(e instanceof Class){
-                    Class c = (Class) e;
                     loader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/day-view-class-item.fxml"));
                     item = loader.load();
                 }else{
-                    Payment p = (Payment) e;
                     loader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/day-view-payment-item.fxml"));
                     item = loader.load();
 
@@ -83,15 +85,20 @@ public class DayViewController extends BaseController implements Initializable {
                 eic.setEvent(e);
 
                 if(e instanceof Class){
-                    //TODO FILL IN LHOURS AND LINCOME
-                    lHours.setText("TBD");
-                    lIncome.setText("TBD");
+
+                    Class c = (Class) e;
+                    hours += c.getAvgDuration();
+                    income += modelManager.getExpectedIncomeOfClass(c);
                 }
 
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
+
+        lHours.setText(String.valueOf(MathUtil.round(hours, 2)));
+        lIncome.setText(String.valueOf(MathUtil.round(income, 2)));
+
         if(events.size() == 0){
             eventsBox.getChildren().setAll(new Label("No Events on this Day"));
         }
