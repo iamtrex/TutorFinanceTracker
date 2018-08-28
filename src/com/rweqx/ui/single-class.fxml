@@ -32,25 +32,17 @@
                   <TextField fx:id="lComment" promptText="Class Comment" GridPane.columnIndex="3" />
                   <HBox alignment="CENTER_LEFT" prefHeight="24.0" spacing="10.0">
                      <children>
-                        <Label text="Date">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font></Label>
                         <DatePicker fx:id="datePicker" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="10.0" GridPane.columnIndex="1">
                      <children>
-                        <Label text="Class Type">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font></Label>
                         <ComboBox fx:id="classTypeChoices" prefWidth="150.0" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_RIGHT" layoutX="277.0" layoutY="10.0" spacing="10.0" GridPane.columnIndex="2">
+                  <HBox alignment="CENTER" layoutX="277.0" layoutY="10.0" spacing="10.0" GridPane.columnIndex="2">
                      <children>
-                        <Label text="Same Class Length">
+                        <Label alignment="CENTER" text="Same Class Length">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>

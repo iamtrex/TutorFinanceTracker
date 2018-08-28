@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.BindException;
 import java.net.InetAddress;
@@ -36,8 +37,11 @@ public class Main extends Application {
         loadProgram();
         initRootLayout();
 
+        Scene mainScene = new Scene(root, 1200, 675);
+        mainScene.getStylesheets().add(getClass().getResource("/com/rweqx/styles/style.css").toString());
+
         primaryStage.setTitle("Tutor Student Finance Tracker");
-        primaryStage.setScene(new Scene(root, 1200, 675));
+        primaryStage.setScene(mainScene);
         primaryStage.show();
         primaryStage.setOnCloseRequest((e)->{
             Platform.exit();

@@ -13,9 +13,9 @@
    <children>
       <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
          <children>
-            <Button fx:id="bToday" mnemonicParsing="false" onAction="#todayClicked" prefWidth="100.0" text="Today" />
-            <Button fx:id="bThisMonth" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#thisMonthClicked" prefWidth="100.0" text="This Month" />
-            <Button fx:id="bNextMonth" mnemonicParsing="false" onAction="#lastMonthClicked" prefWidth="100.0" text="Last Month" />
+            <Button fx:id="bToday" mnemonicParsing="false" onAction="#todayClicked" prefWidth="175.0" text="Today" />
+            <Button fx:id="bThisMonth" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#thisMonthClicked" prefWidth="175.0" text="This Month" />
+            <Button fx:id="bNextMonth" mnemonicParsing="false" onAction="#lastMonthClicked" prefWidth="175.0" text="Last Month" />
          </children>
       </HBox>
       <HBox>
