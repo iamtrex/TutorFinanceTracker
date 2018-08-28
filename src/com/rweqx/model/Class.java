@@ -103,6 +103,15 @@ public class Class extends Event{
         return -1;
     }
 
+    public Double getCustomRateOfStudent(long stuID) {
+        for(StuDurPaid sdp : studentsInfoSet){
+            if(sdp.getStuID() == stuID){
+                return sdp.getCustomRate();
+            }
+        }
+        Logger.getInstance().log("Cannot find student in class, should not happen... ", LogLevel.S);
+        return -1.0;
+    }
     public Double getDurationOfStudent(long stuID) {
         for(StuDurPaid sdp : studentsInfoSet){
             if(sdp.getStuID() == stuID){

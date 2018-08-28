@@ -5,6 +5,7 @@ import com.rweqx.model.Class;
 import com.rweqx.model.Event;
 import com.rweqx.model.Payment;
 import com.rweqx.model.Student;
+import com.rweqx.util.PrintUtil;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.FXCollections;
@@ -13,10 +14,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -27,6 +31,8 @@ import java.util.ResourceBundle;
 
 
 public class StudentProfileController extends BaseController implements Initializable {
+
+    private List<Event> currentEvents;
 
     @FXML
     private Label lOutstanding;
@@ -179,7 +185,7 @@ public class StudentProfileController extends BaseController implements Initiali
         System.out.println("Refreshing box");
         eventBox.getChildren().clear();
         List<Event> events = modelManager.getAllEventsByStudentBetween(studentID.get(), startDate, endDate);
-
+        currentEvents = events;
 
         for (Event e : events) {
             if(filterType.equals("Classes") && e instanceof Payment){ //TODO NOT MOST OPTIMAL SINCE WE GET ALL FROM MODELMANAGER,
@@ -232,5 +238,44 @@ public class StudentProfileController extends BaseController implements Initiali
     public void editClicked(ActionEvent e){
         sceneModel.setCurrentStudent(currentStudent);
         sceneModel.setScene(AddEditStudentController.class.getSimpleName());
+    }
+
+    public void printPreviewClicked(ActionEvent event){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/print-summary-table.fxml"));
+        try{
+            Pane p = loader.load();
+
+            PrintSummaryTemplateController pstc = loader.getController();
+            pstc.initModel(modelManager, sceneModel);
+            pstc.setEvents(studentID.get(), startDate, endDate, currentEvents);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(p, 750, 900));
+            stage.show();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void printClicked(ActionEvent event){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/print-summary-table.fxml"));
+        try{
+            Pane p = loader.load();
+
+            PrintSummaryTemplateController pstc = loader.getController();
+            pstc.initModel(modelManager, sceneModel);
+            pstc.setEvents(studentID.get(), startDate, endDate, currentEvents);
+
+            //Use invisible stage to setup size of content.
+            Stage stage = new Stage();
+            stage.setScene(new Scene(p, 750, 900));
+            stage.show(); //TODO is there a cleaner solution?
+            stage.hide();
+            PrintUtil.print(pstc.getContentPane(), root.getScene().getWindow());
+            stage.close();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }
