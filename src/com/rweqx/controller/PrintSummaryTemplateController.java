@@ -74,13 +74,13 @@ public class PrintSummaryTemplateController extends BaseController{
 
                 eventHours.setText(String.valueOf(duration));
                 eventRates.setText(String.valueOf(rate));
-                eventAmount.setText("$" + String.valueOf(amount));
+                eventAmount.setText("$" + MathUtil.dollarValueFrom(amount));
                 total += amount;
             } else {
                 Payment p = (Payment) e;
                 eventDesc.setText("Paid - " + p.getPaymentType());
                 double amount = p.getPaymentAmount();
-                eventAmount.setText("$-" + String.valueOf(amount));
+                eventAmount.setText("- $" + MathUtil.dollarValueFrom(amount));
                 total -= amount;
             }
             eventsGrid.addRow(eventsGrid.getRowCount(), eventDate, eventDesc, eventHours, eventRates, eventAmount);
@@ -88,7 +88,11 @@ public class PrintSummaryTemplateController extends BaseController{
         lName.setText(student.getName());
         lInvoiceDate.setText(LocalDate.now().toString());
         lInvoicePeriod.setText(start.toString() + " - " + end.toString());
-        lTotal.setText("$" + String.valueOf(total));
+        if(total >= 0) {
+            lTotal.setText("$" + MathUtil.dollarValueFrom(total));
+        }else{
+            lTotal.setText("- $" + MathUtil.dollarValueFrom(total*-1));
+        }
 
     }
 
