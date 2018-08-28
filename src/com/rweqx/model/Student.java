@@ -14,6 +14,10 @@ public class Student {
     private String name;
     private List<PaymentRatesAtTime> paymentRates;
     private String comment;
+    private List<String> groups;
+    public List<String> getGroups(){
+        return groups;
+    }
 
     public LocalDate getDate() {
         return date;
@@ -74,11 +78,12 @@ public class Student {
         this.paymentRates = paymentRates;
     }
 
-    public Student(long studentID, String name, LocalDate date, String comment, List<PaymentRatesAtTime> paymentRates){
+    public Student(long studentID, String name, LocalDate date, String comment, List<PaymentRatesAtTime> paymentRates, List<String> groups){
         this.date = date;
         this.studentID = studentID;
         this.name = name;
         this.paymentRates = paymentRates;
+        this.groups = groups;
     }
 
 

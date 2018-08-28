@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Payment extends Event{
 
-    private Class linkedClass;
+    private long linkedClassID;
 
     private long studentID;
     private String paymentType;
@@ -30,8 +30,8 @@ public class Payment extends Event{
         return paymentAmount;
     }
 
-    public Class getLinkedClass(){
-        return linkedClass;
+    public long getLinkedClassID(){
+        return linkedClassID;
     }
     public void setPaymentAmount(double paymentAmount) {
         this.paymentAmount = paymentAmount;
@@ -39,12 +39,12 @@ public class Payment extends Event{
 
 
 
-    public Payment(long eventID, long studentID, LocalDate date, String paymentType, double paymentAmount, String comment, Class c) {
+    public Payment(long eventID, long studentID, LocalDate date, String paymentType, double paymentAmount, String comment, long linkedClassID) {
         super(eventID, date, comment);
         this.studentID = studentID;
         this.paymentAmount = paymentAmount;
         this.paymentType = paymentType;
-        this.linkedClass = c;
+        this.linkedClassID = linkedClassID;
 
     }
 
@@ -53,7 +53,7 @@ public class Payment extends Event{
         this.studentID = studentID;
         this.paymentAmount = paymentAmount;
         this.paymentType = paymentType;
-        this.linkedClass = null;
+        this.linkedClassID = -1;
     }
 
 }

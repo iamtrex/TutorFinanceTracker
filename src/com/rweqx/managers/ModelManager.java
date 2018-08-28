@@ -130,8 +130,8 @@ public class ModelManager {
         return 0.0;
     }
 
-    public Class createAndAddEmptyClass(LocalDate date, String classType, String comment) {
-        Class c = new Class(getNewID(), date, classType, comment);
+    public Class createAndAddEmptyClass(LocalDate date, String classType, String comment, List<String> tags) {
+        Class c = new Class(getNewID(), date, classType, comment, tags);
         classManager.addClass(c);
         return c;
     }
@@ -141,7 +141,7 @@ public class ModelManager {
         if(paymentAmount == 0){
             sdp = new StuDurPaid(s.getID(), duration, -1, customRate);
         }else {
-            Payment p = new Payment(getNewID(), s.getID(), c.getDate(), paymentType, paymentAmount, paidComment, c);
+            Payment p = new Payment(getNewID(), s.getID(), c.getDate(), paymentType, paymentAmount, paidComment, c.getID());
             paymentManager.addPayment(p);
             sdp = new StuDurPaid(s.getID(), duration, p.getID(), customRate);
         }
@@ -155,7 +155,7 @@ public class ModelManager {
     private long getNewID() {
         long l = idGenerator.nextLong();
 
-        while(classManager.getAllClasses().contains(new Class(l, null, null, null))
+        while(classManager.getAllClasses().contains(new Class(l, null, null, null, null))
                 || paymentManager.getAllPayments().contains(new Payment(l, -1, null, "", 0, ""))
                 || l == -1){ //If ID is already used.
             l = idGenerator.nextLong();
@@ -167,11 +167,13 @@ public class ModelManager {
     public long replacePayment(long replaced, Student student, LocalDate date, String paymentType, double paid, String paidComment){
         long id = getNewID();
 
-        Class c = paymentManager.getPaymentByID(replaced).getLinkedClass();
-        if(c != null) {
-            Payment p = new Payment(id, student.getID(), date, paymentType, paid, paidComment, c);
+        long cid = paymentManager.getPaymentByID(replaced).getLinkedClassID();
+        if(cid != -1) {
+            Payment p = new Payment(id, student.getID(), date, paymentType, paid, paidComment, cid);
             paymentManager.addPayment(p);
             paymentManager.deletePayment(replaced);
+
+            Class c = classManager.getClassByID(cid);
             c.replacePayment(replaced, id);
         }else{
             Payment p = new Payment(id, student.getID(), date, paymentType, paid, paidComment);
@@ -190,16 +192,15 @@ public class ModelManager {
 
     public void deletePayment(long id) {
         Payment p = paymentManager.getPaymentByID(id);
-        Class c = p.getLinkedClass();
-        if(c != null){
-            c.removePayment(p.getID());
+        long cid = p.getLinkedClassID();
+        if(cid != -1){
+            classManager.getClassByID(cid).removePayment(p.getID());
         }
-
         paymentManager.deletePayment(id);
     }
 
-    public void createAndAddStudent(String studentName, String comment, PaymentRatesAtTime prat) {
-        studentManager.createAndAddStudent(studentName, comment, prat);
+    public void createAndAddStudent(String studentName, String comment, PaymentRatesAtTime prat, List<String> groups) {
+        studentManager.createAndAddStudent(studentName, comment, prat, groups);
     }
 
     public void deleteClass(long id) {

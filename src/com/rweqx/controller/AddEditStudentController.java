@@ -106,8 +106,10 @@ public class AddEditStudentController extends BaseController implements Initiali
 
         String studentName = tStudentName.getText();
         String studentComment = tComment.getText();
+        List<String> groups = new ArrayList<>(); //TODO REPLACE WITH REAL GROUP TAGS FROM USER INPUT.
+
         if(currentMode == ADD_MODE) {
-            modelManager.createAndAddStudent(studentName, studentComment, prat);
+            modelManager.createAndAddStudent(studentName, studentComment, prat, groups);
             //Jump back.
         }else{
             modelManager.updateStudent(currentlyEditingStudent, studentName, studentComment, prat);

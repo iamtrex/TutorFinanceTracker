@@ -5,6 +5,7 @@ import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,13 +14,14 @@ public class Class extends Event{
 
     private Set<StuDurPaid> studentsInfoSet;
     private String classType;
+    private List<String> tags;
 
-    public Class(long eventID, LocalDate date, String classType, String comment) {
+    public Class(long eventID, LocalDate date, String classType, String comment, List<String> tags) {
         super(eventID, date, comment);
         this.classType = classType;
         studentsInfoSet = new HashSet<>();
-
-
+        //this.tags = tags;
+        tags = new ArrayList<>(); //Fill empty lists.
     }
 
     public Class(Class copy) {
@@ -29,7 +31,15 @@ public class Class extends Event{
         for(StuDurPaid sdp : copy.getAllData()){
             studentsInfoSet.add(new StuDurPaid(sdp.getStuID(), sdp.getDuration(), sdp.getPaidID()));
         }
+        this.tags = new ArrayList<>();
+        for(String s : copy.getTags()){
+            tags.add(s);
+        }
         // Full Deep copy of class.
+    }
+
+    public List<String> getTags(){
+        return tags;
     }
 
     public Set<StuDurPaid> getAllData(){

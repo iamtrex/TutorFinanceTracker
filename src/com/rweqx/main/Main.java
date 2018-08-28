@@ -37,7 +37,7 @@ public class Main extends Application {
         loadProgram();
         initRootLayout();
 
-        Scene mainScene = new Scene(root, 1200, 675);
+        Scene mainScene = new Scene(root, 1300, 675);
         mainScene.getStylesheets().add(getClass().getResource("/com/rweqx/styles/style.css").toString());
 
         primaryStage.setTitle("Tutor Student Finance Tracker");
@@ -50,11 +50,6 @@ public class Main extends Application {
         });
 
         logger.log("Done init", LogLevel.D);
-
-        /*   //TODO STYLESHEET?
-            Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
-            StyleManager.getInstance().addUserAgentStylesheet(getClass().getResource("/style.css").toString());
-         */
 
     }
 

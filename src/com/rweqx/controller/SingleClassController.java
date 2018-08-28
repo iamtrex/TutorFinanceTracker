@@ -185,8 +185,9 @@ public class SingleClassController extends BaseController{
         LocalDate date = datePicker.getValue();
         String classType = classTypeChoices.getValue();
         String comment = lComment.getText();
+        List<String> tags = new ArrayList<>(); //TODO Get tags from user input in the future.
 
-        Class c = modelManager.createAndAddEmptyClass(date, classType, comment);
+        Class c = modelManager.createAndAddEmptyClass(date, classType, comment, tags);
 
         boolean isSameDuration = sameDuration.isSelected();
         double sameDur = 0;
