@@ -36,7 +36,7 @@ public class ClassManager {
     public void deleteClass(long classID){
         Class c = classMap.get(classID);
         if(c == null){
-            Logger.getInstance().log("Cannot find class with ID " + classID + " when trying to remove", LogLevel.S);
+            Logger.getInstance().log(getClass().getSimpleName(),"Cannot find class with ID " + classID + " when trying to remove", LogLevel.S);
             return;
         }
         classes.remove(c);
@@ -61,7 +61,7 @@ public class ClassManager {
     public Class getClassByID(long classID) {
         Class c = classMap.get(classID);
         if(c == null){
-            Logger.getInstance().log("Cannot find class with ID " + classID + " it doesn't exit", LogLevel.S);
+            Logger.getInstance().log(getClass().getSimpleName(),"Cannot find class with ID " + classID + " it doesn't exit", LogLevel.S);
         }
         return c;
     }

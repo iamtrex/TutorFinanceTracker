@@ -125,7 +125,7 @@ public class AddEditStudentController extends BaseController implements Initiali
 
 
     public void deleteClicked() {
-        Logger.getInstance().log("Unsupported feature -> Delete student. ", LogLevel.W);
+        Logger.getInstance().log(getClass().getSimpleName(),"Unsupported feature -> Delete student. ", LogLevel.W);
         //DO NOT SUPPORT THIS FEATURE YET.
     }
 

@@ -56,9 +56,9 @@ public class LeftPaneController extends BaseController implements Initializable 
         Button b = (Button) e.getSource();
         if(b == bSave){ //TODO probably better if this does it in a back thread, but must fix it so that there wont' be concurrent editing issues
             //TODO and it doesn't crash if the program is closed while it's trying to save...
-            Logger.getInstance().log("Saving all data", LogLevel.D);
+            Logger.getInstance().log(getClass().getSimpleName(),"Saving all data", LogLevel.D);
             modelManager.saveAll();
-            Logger.getInstance().log("Save complete", LogLevel.D);
+            Logger.getInstance().log(getClass().getSimpleName(),"Save complete", LogLevel.D);
             return;
         }
         if(b == bAddClass){

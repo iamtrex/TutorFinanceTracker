@@ -48,7 +48,7 @@ public class Main extends Application {
             Platform.exit();
         });
 
-        logger.log("Done init", LogLevel.D);
+        logger.log(getClass().getSimpleName(), "Done init", LogLevel.D);
 
     }
 
@@ -56,7 +56,7 @@ public class Main extends Application {
         modelManager = new ModelManager();
         sceneModel = new SceneModel();
 
-        logger.log("Done Loading Model", LogLevel.D);
+        logger.log(getClass().getSimpleName(), "Done Loading Model", LogLevel.D);
     }
 
     @Override

@@ -297,7 +297,7 @@ public class AddEditClassController extends BaseController implements Initializa
         System.out.println("Try to save");
 
         if(classes.size() != classesBox.getChildren().size()){
-            Logger.getInstance().log("Different size of classes detected! Possible loss of data!", LogLevel.S);
+            Logger.getInstance().log(getClass().getSimpleName(),"Different size of classes detected! Possible loss of data!", LogLevel.S);
         }
 
         if(chosenStudents.size() == 0 || classes.size() == 0){

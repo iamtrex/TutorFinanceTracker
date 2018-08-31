@@ -28,7 +28,7 @@ public class PaymentManager {
     public void deletePayment(long paymentID){
         Payment p = paymentMap.get(paymentID);
         if(p == null){
-            Logger.getInstance().log("Cannot find payment with ID " + paymentID + " when trying to remove", LogLevel.S);
+            Logger.getInstance().log(getClass().getSimpleName(),"Cannot find payment with ID " + paymentID + " when trying to remove", LogLevel.S);
             return;
         }
         payments.remove(p);
@@ -47,7 +47,7 @@ public class PaymentManager {
     public Payment getPaymentByID(long paymentID){
         Payment p = paymentMap.get(paymentID);
         if(p== null){
-            Logger.getInstance().log("Cannot find payment with ID " + paymentID + " it doesn't exist.", LogLevel.S);
+            Logger.getInstance().log(getClass().getSimpleName(),"Cannot find payment with ID " + paymentID + " it doesn't exist.", LogLevel.S);
 
         }
         return p;

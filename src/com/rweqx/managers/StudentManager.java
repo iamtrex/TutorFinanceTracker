@@ -55,7 +55,7 @@ public class StudentManager {
         if(studentIDMap.get(id) != null){
             return studentIDMap.get(id);
         }
-        Logger.getInstance().log("Cannot find student with ID " + id, LogLevel.S);
+        Logger.getInstance().log(getClass().getSimpleName(),"Cannot find student with ID " + id, LogLevel.S);
         return null;
     }
 

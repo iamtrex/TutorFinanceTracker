@@ -60,7 +60,7 @@ public class RootController extends BaseController{
         System.out.println("Root Controller attempting to swap scene back");
         Pane p = history.pop();
         if(p == null){
-            Logger.getInstance().log("Tried to back without history pane, doing nothing", LogLevel.W);
+            Logger.getInstance().log(getClass().getSimpleName(), "Tried to back without history pane, doing nothing", LogLevel.W);
             return;
         }
 

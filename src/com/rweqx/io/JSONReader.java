@@ -33,14 +33,14 @@ public class JSONReader {
     public List<Payment> readPaymentFromJson(String fileName){
         File f = new File(fileName);
         if(!f.exists()){
-            Logger.getInstance().log("Payment Save File does not exist, will be created later...", LogLevel.W);
+            Logger.getInstance().log(getClass().getSimpleName(),"Payment Save File does not exist, will be created later...", LogLevel.W);
             return new ArrayList<>();
         }
         try {
 
             String json = new String(Files.readAllBytes(Paths.get(fileName)), "UTF-8");
             if(json.trim().equals("")){
-                Logger.getInstance().log("Empty Payment Save File...", LogLevel.W);
+                Logger.getInstance().log(getClass().getSimpleName(),"Empty Payment Save File...", LogLevel.W);
                 return new ArrayList<>();
             }
 
@@ -66,7 +66,7 @@ public class JSONReader {
     public List<Class> readClassFromJson(String fileName){
         File f = new File(fileName);
         if(!f.exists()){
-            Logger.getInstance().log("Classes Save File does not exist, will be created later...", LogLevel.W);
+            Logger.getInstance().log(getClass().getSimpleName(),"Classes Save File does not exist, will be created later...", LogLevel.W);
 
             return new ArrayList<>();
         }
@@ -74,7 +74,7 @@ public class JSONReader {
 
             String json = new String(Files.readAllBytes(Paths.get(fileName)), "UTF-8");
             if(json.trim().equals("")){
-                Logger.getInstance().log("Empty Classes Save File...", LogLevel.W);
+                Logger.getInstance().log(getClass().getSimpleName(),"Empty Classes Save File...", LogLevel.W);
                 return new ArrayList<>();
             }
 
@@ -100,7 +100,7 @@ public class JSONReader {
     public List<Student> readStudentFromJson(String fileName) {
         File f = new File(fileName);
         if(!f.exists()){
-            Logger.getInstance().log("Students Save File does not exist, will be created later...", LogLevel.W);
+            Logger.getInstance().log(getClass().getSimpleName(),"Students Save File does not exist, will be created later...", LogLevel.W);
 
             return new ArrayList<>();
         }
@@ -108,7 +108,7 @@ public class JSONReader {
 
             String json = new String(Files.readAllBytes(Paths.get(fileName)), "UTF-8");
             if(json.trim().equals("")){
-                Logger.getInstance().log("Empty Students Save File...", LogLevel.W);
+                Logger.getInstance().log(getClass().getSimpleName(),"Empty Students Save File...", LogLevel.W);
                 return new ArrayList<>();
             }
 

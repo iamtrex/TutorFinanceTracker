@@ -82,7 +82,7 @@ public class JSONWriter {
                 f.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
-                Logger.getInstance().log("Cannot create file " + fileName, LogLevel.S);
+                Logger.getInstance().log(getClass().getSimpleName(),"Cannot create file " + fileName, LogLevel.S);
             }
         }
     }

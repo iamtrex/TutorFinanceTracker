@@ -18,7 +18,7 @@ public class EventItemController extends BaseController {
     }
 
     public void editClicked(){
-        Logger.getInstance().log("Editing Event " + event + " switching scene now.", LogLevel.D);
+        Logger.getInstance().log(getClass().getSimpleName(),"Editing Event " + event + " switching scene now.", LogLevel.D);
         if(event instanceof Payment){
             sceneModel.setCurrentPayment((Payment)event);
             sceneModel.setScene(AddEditPaymentController.class.getSimpleName());

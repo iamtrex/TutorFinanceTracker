@@ -1,6 +1,5 @@
 package com.rweqx.model;
 
-import com.rweqx.controller.StudentEventItemController;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 
@@ -57,7 +56,7 @@ public class Class extends Event{
     public void addStudent(StuDurPaid sdp){
         if(studentsInfoSet.stream()
                 .anyMatch(e -> e.getStuID() == sdp.getStuID())){
-            Logger.getInstance().log("Actually overwrote student data -_-", LogLevel.W);
+            Logger.getInstance().log(getClass().getSimpleName(),"Actually overwrote student data -_-", LogLevel.W);
         }
         this.studentsInfoSet.add(sdp);
 
@@ -79,7 +78,7 @@ public class Class extends Event{
      */
     public void addStudent(long stuID, double duration, long paymentID){
         if(containsStudent(stuID)){
-            Logger.getInstance().log("Already has this student, will overwrite data... ", LogLevel.W);
+            Logger.getInstance().log(getClass().getSimpleName(),"Already has this student, will overwrite data... ", LogLevel.W);
         }
         studentsInfoSet.add(new StuDurPaid(stuID, duration, paymentID));
     }
@@ -99,7 +98,7 @@ public class Class extends Event{
                 return sdp.getPaidID();
             }
         }
-        Logger.getInstance().log("Cannot find student in class, should not happen... ", LogLevel.S);
+        Logger.getInstance().log(getClass().getSimpleName(),"Cannot find student in class, should not happen... ", LogLevel.S);
         return -1;
     }
 
@@ -109,7 +108,7 @@ public class Class extends Event{
                 return sdp.getCustomRate();
             }
         }
-        Logger.getInstance().log("Cannot find student in class, should not happen... ", LogLevel.S);
+        Logger.getInstance().log(getClass().getSimpleName(),"Cannot find student in class, should not happen... ", LogLevel.S);
         return -1.0;
     }
     public Double getDurationOfStudent(long stuID) {
@@ -118,7 +117,7 @@ public class Class extends Event{
                 return sdp.getDuration();
             }
         }
-        Logger.getInstance().log("Cannot find student in class, should not happen... ", LogLevel.S);
+        Logger.getInstance().log(getClass().getSimpleName(),"Cannot find student in class, should not happen... ", LogLevel.S);
         return 0.0;
     }
 

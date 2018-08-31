@@ -25,8 +25,9 @@ public class Logger {
         observableList = FXCollections.observableArrayList();
     }
 
-    public void log(String message, LogLevel level){
-        String log = "[" + level.getLogType()+ "] " + message + "\n";
+
+    public void log(String fromClass, String message, LogLevel level){
+        String log = "[" + level.getLogType()+ "][" + fromClass + "] " + message + "\n";
         observableList.add(log);
         System.out.println(log);
     }
