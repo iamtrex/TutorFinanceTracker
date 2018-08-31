@@ -54,21 +54,31 @@ public class Student {
 
     public double getPaymentRateAtTime(LocalDate date, String classType) {
         Collections.sort(paymentRates, Comparator.comparing(PaymentRatesAtTime::getDate));
+
+        if(date.isBefore(paymentRates.get(0).getDate())){
+            return 0; //Rate was unset at this time
+        }
+
         for(int i=0; i<paymentRates.size()-1; i++){
             if(paymentRates.get(i+1).getDate().isAfter(date)){
-                return paymentRates.get(i).getRateByType(classType);
+                Double value = paymentRates.get(i).getRateByType(classType);
+                if(value == null){
+                    return 0;
+                }
+                return value;
             }
         }
         return paymentRates.get(paymentRates.size()-1).getRateByType(classType);
     }
 
+    /* //Removed cuz bad. Should modify by addPaymentRate
     public void modifyPaymentRate(LocalDate date, String paymentType, double rate){
         PaymentRatesAtTime newRates = new PaymentRatesAtTime(getLatestPaymentRates());
         newRates.addChangePayment(paymentType, rate);
         newRates.setDate(date);
         paymentRates.add(newRates);
 
-    }
+    }*/
 
     public List<PaymentRatesAtTime> getPaymentRates() {
         return paymentRates;
