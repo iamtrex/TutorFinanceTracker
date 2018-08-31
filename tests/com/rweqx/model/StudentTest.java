@@ -1,6 +1,5 @@
 package com.rweqx.model;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -16,14 +15,9 @@ class StudentTest {
 
     private final Double DELTA = 1e-6;
 
-    @BeforeEach
-    void setUp() {
-
-
-    }
 
     @Test
-    void getLatestPaymentRates() {
+    void addingAndGettingPaymentRates() {
         Map<String, Double> rates1 = new HashMap<>();
         rates1.put("1 on 1", 75.0);
         rates1.put("1 on 2", 45.0);
@@ -55,19 +49,5 @@ class StudentTest {
 
         assertEquals(0,sRex.getPaymentRateAtTime(LocalDate.now().minus(1, ChronoUnit.DAYS), "Group"),  DELTA);
         assertEquals(0,sRex.getPaymentRateAtTime(LocalDate.now().minus(3, ChronoUnit.DAYS), "1 on 1"),  DELTA);
-
-
-
-
-
-    }
-
-    @Test
-    void getPaymentRateAtTime() {
-    }
-
-
-    @Test
-    void addPaymentRates() {
     }
 }

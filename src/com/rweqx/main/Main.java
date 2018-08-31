@@ -4,6 +4,7 @@ import com.rweqx.controller.OverviewController;
 import com.rweqx.controller.RootController;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
+import com.rweqx.logger.LoggerUI;
 import com.rweqx.managers.ModelManager;
 import com.rweqx.model.SceneModel;
 import javafx.application.Application;
@@ -13,11 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.BindException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
 
 public class Main extends Application {
 
@@ -33,6 +30,8 @@ public class Main extends Application {
     public void start(Stage primaryStage){
         this.primaryStage = primaryStage;
         logger = Logger.getInstance();
+        LoggerUI logUI = new LoggerUI();
+
 
         loadProgram();
         initRootLayout();

@@ -1,5 +1,8 @@
 package com.rweqx.model;
 
+import com.rweqx.logger.LogLevel;
+import com.rweqx.logger.Logger;
+
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
@@ -56,6 +59,8 @@ public class Student {
         Collections.sort(paymentRates, Comparator.comparing(PaymentRatesAtTime::getDate));
 
         if(date.isBefore(paymentRates.get(0).getDate())){
+            Logger.getInstance().log("Error - Rate was unset at this time, could not search for it. Returning 0 for now. ", LogLevel.W);
+
             return 0; //Rate was unset at this time
         }
 
@@ -63,6 +68,8 @@ public class Student {
             if(paymentRates.get(i+1).getDate().isAfter(date)){
                 Double value = paymentRates.get(i).getRateByType(classType);
                 if(value == null){
+                    Logger.getInstance().log("Error - Could not find this classType during this time... " +
+                            "Returning a rate of 0 instead. ", LogLevel.W);
                     return 0;
                 }
                 return value;
