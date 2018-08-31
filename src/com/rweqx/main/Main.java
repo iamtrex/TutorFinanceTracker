@@ -63,8 +63,8 @@ public class Main extends Application {
     public void stop() throws Exception {
         super.stop();
         modelManager.saveAll();
-
-        System.out.println("Terminated program!");
+        System.out.println("Terminating Program!");
+        System.exit(0);
     }
 
 
