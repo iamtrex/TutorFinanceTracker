@@ -4,7 +4,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 public abstract class Constants {
-    public static final String VERSION = "BETA 1.0";
+    public static final String VERSION = "BETA 3.0";
 
     public static final String SAVE_FOLDER = "TutorTracker";
     public static final String CLASS_SAVE_FILE = "/classes.json";
