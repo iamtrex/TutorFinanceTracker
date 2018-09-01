@@ -57,7 +57,7 @@ public class RootController extends BaseController{
 
     private void switchSceneBack() {
 
-        System.out.println("Root Controller attempting to swap scene back");
+
         Pane p = history.pop();
         if(p == null){
             Logger.getInstance().log(getClass().getSimpleName(), "Tried to back without history pane, doing nothing", LogLevel.W);
@@ -69,6 +69,7 @@ public class RootController extends BaseController{
         BaseController bc = subSceneControllerMap.get(p);
         if(bc == null)
             throw new IllegalStateException();
+        Logger.getInstance().log("Back button clicked, switching scene back to " + bc.getClass().getSimpleName(), this.getClass().getSimpleName(), LogLevel.D);
         bc.sceneLoaded();
 
         System.out.println(bc.getClass().getSimpleName());
@@ -77,9 +78,10 @@ public class RootController extends BaseController{
     }
 
     private void switchSceneTo(String sceneName) {
+        Logger.getInstance().log("Switching Scene to " + sceneName, this.getClass().getSimpleName(), LogLevel.D);
+
         Pane p = subSceneMap.get(sceneName);
         if(p != null){
-
             //TELL SCENE IT'S BEING LOADED FIRST.
             BaseController bc = subSceneControllerMap.get(p);
             if(bc == null)
@@ -108,7 +110,6 @@ public class RootController extends BaseController{
         });
 
         sceneModel.getBackProperty().addListener((obs, oldVal, newVal)->{
-            System.out.println("Back property is now " + newVal);
             if(newVal){
                 switchSceneBack();
                 sceneModel.getBackProperty().set(false);
@@ -128,7 +129,6 @@ public class RootController extends BaseController{
             addPaneAndController(StudentProfileController.class.getSimpleName(), "/com/rweqx/ui/student-profile.fxml");
             addPaneAndController(AddEditStudentController.class.getSimpleName(), "/com/rweqx/ui/add-edit-student.fxml");
 
-            //SETUP LEFT PANE.
             FXMLLoader leftPaneLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/left-pane.fxml"));
             Pane leftPane = leftPaneLoader.load();
             LeftPaneController lpc = leftPaneLoader.getController();

@@ -1,5 +1,7 @@
 package com.rweqx.logger;
 
+import com.rweqx.constants.Constants;
+import com.rweqx.io.JSONWriter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -32,4 +34,8 @@ public class Logger {
         System.out.println(log);
     }
 
+    public void writeLogs() {
+        JSONWriter writer = new JSONWriter();
+        writer.writeLogsToFile(observableList, Constants.LOG_SAVE_FILE);
+    }
 }

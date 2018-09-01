@@ -96,7 +96,7 @@ public class AddEditClassController extends BaseController implements Initializa
 
     @Override
     public void sceneLoaded(){
-        System.out.println("Add Class loaded");
+
         reset(); //TODO -> Do I need this?
         if(sceneModel.getCurrentClass() != null){
             currentlyEditingClass = sceneModel.getCurrentClass();
@@ -202,6 +202,8 @@ public class AddEditClassController extends BaseController implements Initializa
 
     private void removeStudent(ActionEvent e){
         ChosenStudent source = (ChosenStudent)e.getSource();
+
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Removing Student " + source.getStudent().getName(), LogLevel.D);
         chosenStudentsLabels.remove(source);
         chosenStudents.remove(source.getStudent());
         Platform.runLater(()->{
@@ -212,7 +214,7 @@ public class AddEditClassController extends BaseController implements Initializa
         if(!chosenStudents.contains(selected)) {
             //Don't add repeats.
 
-            System.out.println("Would add student " + selected.getName());
+            Logger.getInstance().log(this.getClass().getSimpleName(),"AddingStudent " + selected.getName(), LogLevel.D);
 
             chosenStudents.add(selected);
             ChosenStudent cs = new ChosenStudent(selected);
@@ -222,13 +224,17 @@ public class AddEditClassController extends BaseController implements Initializa
             Platform.runLater(() -> {
                 selectedStudentsBox.getChildren().setAll(chosenStudentsLabels);
             });
+        }else{
+
+            Logger.getInstance().log(this.getClass().getSimpleName(),"Repeat student, not adding." + selected.getName(), LogLevel.D);
         }
         studentSearchBar.setText("");
         searchListView.refresh();
-        //loseFocus();
     }
 
     public void plusDuplicateClassClicked(ActionEvent event){
+
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Adding duplicate of last class", LogLevel.D);
         SingleClassController toCopy = classes.get(classes.size()-1); //Get last class
         FXMLLoader singleClassLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/single-class.fxml"));
 
@@ -248,6 +254,8 @@ public class AddEditClassController extends BaseController implements Initializa
     }
 
     public void plusClassClicked(ActionEvent event){
+
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Adding a new class to chain.", LogLevel.D);
         FXMLLoader singleClassLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/single-class.fxml"));
         try {
             Pane p = singleClassLoader.load();
@@ -266,7 +274,7 @@ public class AddEditClassController extends BaseController implements Initializa
     }
 
     public void deleteClicked(ActionEvent e){
-        System.out.println("Delete editing class. ");
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Deleting the editing class", LogLevel.D);
         modelManager.deleteClass(currentlyEditingClass.getID());
         reset();
 
@@ -278,7 +286,7 @@ public class AddEditClassController extends BaseController implements Initializa
     }
 
     public void cancelClicked(ActionEvent e){
-        System.out.println("Try to cancel");
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Cancel changes to current class.", LogLevel.D);
         reset();
 
         currentlyEditingClass = null;
@@ -294,7 +302,8 @@ public class AddEditClassController extends BaseController implements Initializa
 
 
     public void saveClicked(ActionEvent e){
-        System.out.println("Try to save");
+
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Saving class.", LogLevel.D);
 
         if(classes.size() != classesBox.getChildren().size()){
             Logger.getInstance().log(getClass().getSimpleName(),"Different size of classes detected! Possible loss of data!", LogLevel.S);
@@ -307,6 +316,7 @@ public class AddEditClassController extends BaseController implements Initializa
         for(SingleClassController scc : classes){
             boolean checks = scc.isValidInput();
             if(!checks){
+                Logger.getInstance().log(this.getClass().getSimpleName(),"Check failed for class # " + classes.indexOf(scc), LogLevel.D);
                 return;
             }
         }
@@ -319,9 +329,11 @@ public class AddEditClassController extends BaseController implements Initializa
 
         //Successfully saved... Delete the previous class:
         if(currentlyEditingClass != null){
+            Logger.getInstance().log(this.getClass().getSimpleName(),"Since overwrite successful, deleting previous class", LogLevel.D);
             modelManager.deleteClass(currentlyEditingClass.getID());
             currentlyEditingClass = null;
         }
+
         //TODO CONSIDER TRANSITIONS -> MOVE TO END SCREEN?
         //Have another "save and add another class with new students" button
         reset();
@@ -332,7 +344,9 @@ public class AddEditClassController extends BaseController implements Initializa
 
     }
     public void minusClassClicked(ActionEvent e){
-        //Remove last.
+
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Removing last class in chain.", LogLevel.D);
+
         classes.remove(classes.size()-1);
         classesBox.getChildren().remove(classesBox.getChildren().size()-1);
 

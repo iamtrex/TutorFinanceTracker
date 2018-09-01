@@ -39,11 +39,20 @@ public class LoggerUI {
             });
 
             stage.setScene(new Scene(root, 300, 400));
+            stage.setX(0); //puts window on topleft corner of the screen.
+            stage.setY(0);
+
         } catch (IOException io) {
             io.printStackTrace();
             System.out.println("Can't even load root :(");
         }
 
+    }
 
-        stage.show();}
+    public void showWindow(){
+        if(stage != null) {
+            Logger.getInstance().log(this.getClass().getSimpleName(), "Showing Log Window ", LogLevel.D);
+            stage.show();
+        }
+    }
 }

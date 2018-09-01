@@ -31,39 +31,46 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
         logger = Logger.getInstance();
         LoggerUI logUI = new LoggerUI();
+        logger.log(this.getClass().getSimpleName(), "Starting Program", LogLevel.D);
+        logUI.showWindow();
 
-
+        logger.log(this.getClass().getSimpleName(), "Loading Model", LogLevel.D);
         loadProgram();
-        initRootLayout();
+        logger.log(getClass().getSimpleName(), "Done Loading Model", LogLevel.D);
 
+        logger.log(this.getClass().getSimpleName(), "Initializing Root Layout", LogLevel.D);
+        initRootLayout();
+        logger.log(getClass().getSimpleName(), "Done Loading Root Layout", LogLevel.D);
+
+        logger.log(this.getClass().getSimpleName(), "Setting up Window.", LogLevel.D);
         Scene mainScene = new Scene(root, 1300, 675);
         mainScene.getStylesheets().add(getClass().getResource("/com/rweqx/styles/style.css").toString());
 
         primaryStage.setTitle("Tutor Student Finance Tracker");
         primaryStage.setScene(mainScene);
-        primaryStage.show();
-        primaryStage.setMinWidth(primaryStage.getWidth());
-        primaryStage.setMinHeight(primaryStage.getHeight());
         primaryStage.setOnCloseRequest((e)->{
             Platform.exit();
         });
 
-        logger.log(getClass().getSimpleName(), "Done init", LogLevel.D);
+        logger.log(getClass().getSimpleName(), "Done Initialization, showing window.", LogLevel.D);
+        primaryStage.show();
+        primaryStage.setMinWidth(primaryStage.getWidth());
+        primaryStage.setMinHeight(primaryStage.getHeight());
 
     }
 
     private void loadProgram() {
         modelManager = new ModelManager();
         sceneModel = new SceneModel();
-
-        logger.log(getClass().getSimpleName(), "Done Loading Model", LogLevel.D);
     }
 
     @Override
     public void stop() throws Exception {
         super.stop();
         modelManager.saveAll();
-        System.out.println("Terminating Program!");
+        logger.log(this.getClass().getSimpleName(), "Shutting down.", LogLevel.D);
+        logger.writeLogs();
+
         System.exit(0);
     }
 
@@ -77,8 +84,6 @@ public class Main extends Application {
             rc.initModel(modelManager, sceneModel);
 
             sceneModel.setScene(OverviewController.class.getSimpleName());
-
-
         }catch(IOException e){
             e.printStackTrace();
         }catch(Exception e){
@@ -86,9 +91,7 @@ public class Main extends Application {
         }
     }
 
-
     public static void main(String[] args) {
         launch(args);
-
     }
 }

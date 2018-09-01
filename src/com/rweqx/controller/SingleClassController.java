@@ -2,6 +2,8 @@ package com.rweqx.controller;
 
 import com.rweqx.components.ClickEditTextField;
 import com.rweqx.components.WarningPopUp;
+import com.rweqx.logger.LogLevel;
+import com.rweqx.logger.Logger;
 import com.rweqx.managers.ModelManager;
 import com.rweqx.model.*;
 import com.rweqx.model.Class;
@@ -182,6 +184,8 @@ public class SingleClassController extends BaseController{
     }
 
     public long buildAndAddClass() {
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Building and adding single class in chain.", LogLevel.D);
+
         LocalDate date = datePicker.getValue();
         String classType = classTypeChoices.getValue();
         String comment = lComment.getText();
@@ -257,6 +261,7 @@ public class SingleClassController extends BaseController{
 
     public void loadClass(Class c) {
 
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Loading class with ID into single class -> " + c.getID(), LogLevel.D);
         while(!loadDone){
             try {
                 Thread.sleep(10);

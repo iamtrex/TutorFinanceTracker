@@ -10,6 +10,7 @@ public abstract class Constants {
     public static final String CLASS_SAVE_FILE = "/classes.json";
     public static final String STUDENT_SAVE_FILE = "/students.json";
     public static final String PAYMENT_SAVE_FILE = "/payments.json";
+    public static final String LOG_SAVE_FILE = "/logs.json";
 
     public static final String NUMBER_REGEX = "\\d*\\.?\\d*";
 

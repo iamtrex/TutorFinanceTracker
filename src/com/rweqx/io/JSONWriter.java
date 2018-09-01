@@ -9,6 +9,7 @@ import com.rweqx.logger.Logger;
 import com.rweqx.model.Class;
 import com.rweqx.model.Payment;
 import com.rweqx.model.Student;
+import javafx.collections.ObservableList;
 import org.hildan.fxgson.FxGson;
 
 import java.io.File;
@@ -26,6 +27,7 @@ public class JSONWriter {
         gson = FxGson.coreBuilder().setPrettyPrinting().create();
 
     }
+
 
     public void writeStudentsToFile(List<Student> students, String studentFile){
         System.out.println("Writing students" + students);
@@ -50,7 +52,7 @@ public class JSONWriter {
         try {
             Writer writer = new FileWriter(fileName);
 
-            System.out.println("Writing " + toWrite);
+            //System.out.println("Writing " + toWrite);
 
             writer.write(toWrite);
             writer.flush();
@@ -88,5 +90,12 @@ public class JSONWriter {
     }
 
 
+    public void writeLogsToFile(ObservableList<String> logs, String logSaveFile) {
+        System.out.println("Writing logs ");
+        String fileName = Constants.SAVE_FOLDER + logSaveFile;
+        checkFile(fileName);
 
+        String json = gson.toJson(logs);
+        write(fileName, json);
+    }
 }
