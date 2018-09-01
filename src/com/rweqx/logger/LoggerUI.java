@@ -38,7 +38,7 @@ public class LoggerUI {
                 }
             });
 
-            stage.setScene(new Scene(root, 300, 400));
+            stage.setScene(new Scene(root, 400, 500));
             stage.setX(0); //puts window on topleft corner of the screen.
             stage.setY(0);
 

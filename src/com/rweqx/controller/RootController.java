@@ -69,7 +69,7 @@ public class RootController extends BaseController{
         BaseController bc = subSceneControllerMap.get(p);
         if(bc == null)
             throw new IllegalStateException();
-        Logger.getInstance().log("Back button clicked, switching scene back to " + bc.getClass().getSimpleName(), this.getClass().getSimpleName(), LogLevel.D);
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Back button clicked, switching scene back to " + bc.getClass().getSimpleName(), LogLevel.D);
         bc.sceneLoaded();
 
         System.out.println(bc.getClass().getSimpleName());
@@ -78,7 +78,7 @@ public class RootController extends BaseController{
     }
 
     private void switchSceneTo(String sceneName) {
-        Logger.getInstance().log("Switching Scene to " + sceneName, this.getClass().getSimpleName(), LogLevel.D);
+        Logger.getInstance().log( this.getClass().getSimpleName(),"Switching Scene to " + sceneName, LogLevel.D);
 
         Pane p = subSceneMap.get(sceneName);
         if(p != null){
