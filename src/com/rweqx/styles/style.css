@@ -4,6 +4,13 @@
 
 }
 
+.check-box > .box{
+    -fx-padding: 6;
+}
+.check-box > .box > .mark{
+    -fx-padding: 6;
+}
+
 .combo-box *{
     -fx-font-size: 14;
     -fx-font-weight: normal;

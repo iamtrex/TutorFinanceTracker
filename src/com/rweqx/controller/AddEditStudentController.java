@@ -97,7 +97,7 @@ public class AddEditStudentController extends BaseController implements Initiali
 
     //TODO IMPLEMENT THESE METHODS.
     public void saveClicked() {
-        //TODO - Check validity.
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Saving Student", LogLevel.D);
         Map<String, Double> rates = new HashMap<>();
         paymentRateItems.forEach(pri -> {
             rates.put(pri.getType(), pri.getRate());
@@ -109,9 +109,11 @@ public class AddEditStudentController extends BaseController implements Initiali
         List<String> groups = new ArrayList<>(); //TODO REPLACE WITH REAL GROUP TAGS FROM USER INPUT.
 
         if(currentMode == ADD_MODE) {
+            Logger.getInstance().log(this.getClass().getSimpleName(),"Creating new student with name " + studentName, LogLevel.D);
             modelManager.createAndAddStudent(studentName, studentComment, prat, groups);
             //Jump back.
         }else{
+            Logger.getInstance().log(this.getClass().getSimpleName(),"Updating current student " + currentlyEditingStudent.getName(), LogLevel.D);
             modelManager.updateStudent(currentlyEditingStudent, studentName, studentComment, prat);
         }
         reset();
@@ -119,13 +121,16 @@ public class AddEditStudentController extends BaseController implements Initiali
     }
 
     public void cancelClicked() {
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Cancelling changes to " + currentlyEditingStudent.getName(), LogLevel.D);
+
         reset();
+        sceneModel.setCurrentStudent(null);
         sceneModel.getBackProperty().set(true);
     }
 
 
     public void deleteClicked() {
-        Logger.getInstance().log(getClass().getSimpleName(),"Unsupported feature -> Delete student. ", LogLevel.W);
+        Logger.getInstance().log(getClass().getSimpleName(),"Unsupported feature -> Delete student. Does nothing.", LogLevel.W);
         //DO NOT SUPPORT THIS FEATURE YET.
     }
 

@@ -156,14 +156,18 @@ public class AddEditClassController extends BaseController implements Initializa
             addStudent(selected);
         });
 
+        studentSearchBar.localToSceneTransformProperty().addListener((obs, oldVal, newVal)->{
+            //Setup the overlaying pane to properly be underneath the searchbar.
+            //Bounds boundsInScene = studentSearchBar.localToParent(studentSearchBar.getBoundsInLocal());
+            //System.out.println(boundsInScene);
+            AnchorPane.setLeftAnchor(searchScroll,studentSearchBar.getLayoutX());
+            AnchorPane.setTopAnchor(searchScroll,studentSearchBar.getLayoutY() + studentSearchBar.getHeight());
+            AnchorPane.setRightAnchor(searchScroll, (upperLayer.getWidth() - studentSearchBar.getLayoutX() - studentSearchBar.getWidth()));
+            AnchorPane.setBottomAnchor(searchScroll, (upperLayer.getHeight() - 205 - studentSearchBar.getLayoutY() - studentSearchBar.getHeight()));
+        });
         studentSearchBar.focusedProperty().addListener((obs, oldVal, newVal)->{
             if(newVal){
-                Bounds boundsInScene = studentSearchBar.localToParent(studentSearchBar.getBoundsInLocal());
-                System.out.println(boundsInScene);
-                AnchorPane.setLeftAnchor(searchScroll,studentSearchBar.getLayoutX());
-                AnchorPane.setTopAnchor(searchScroll,studentSearchBar.getLayoutY() + studentSearchBar.getHeight());
-                AnchorPane.setRightAnchor(searchScroll, (upperLayer.getWidth() - studentSearchBar.getLayoutX() - studentSearchBar.getWidth()));
-                AnchorPane.setBottomAnchor(searchScroll, (upperLayer.getHeight() - 205 - studentSearchBar.getLayoutY() - studentSearchBar.getHeight()));
+
                 if(!studentSearchBar.getText().trim().equals("")){
                     upperLayer.setVisible(true);
                 }

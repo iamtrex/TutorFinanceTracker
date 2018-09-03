@@ -45,8 +45,8 @@ public class ChosenStudent extends AnchorPane {
             fireEvent(e);
         });
 
-        this.setPrefWidth(150);
-        this.setPrefHeight(20);
+        this.setPrefWidth(200);
+        this.setPrefHeight(30);
         this.getChildren().setAll(removeButton);
         AnchorPane.setLeftAnchor(removeButton, 0.0);
         AnchorPane.setRightAnchor(removeButton, 0.0);
@@ -62,7 +62,7 @@ public class ChosenStudent extends AnchorPane {
 
     public final EventHandler<ActionEvent> getOnAction() { return onActionProperty().get(); }
 
-    private ObjectProperty<EventHandler<ActionEvent>> onAction = new ObjectPropertyBase<EventHandler<ActionEvent>>() {
+    private ObjectProperty<EventHandler<ActionEvent>> onAction = new ObjectPropertyBase<>() {
         @Override protected void invalidated() {
             setEventHandler(ActionEvent.ACTION, get());
         }

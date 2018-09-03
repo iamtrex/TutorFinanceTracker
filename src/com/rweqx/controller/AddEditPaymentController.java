@@ -1,6 +1,8 @@
 package com.rweqx.controller;
 
 import com.rweqx.components.WarningPopUp;
+import com.rweqx.logger.LogLevel;
+import com.rweqx.logger.Logger;
 import com.rweqx.managers.ModelManager;
 import com.rweqx.model.Class;
 import com.rweqx.model.Payment;
@@ -105,6 +107,7 @@ public class AddEditPaymentController extends BaseController implements Initiali
     }
 
     public void reset(){
+
         searchMatchNames.clear();
         tStudent.setText("");
         tPaid.setText("");
@@ -114,8 +117,12 @@ public class AddEditPaymentController extends BaseController implements Initiali
     }
 
     public void saveClicked(){
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Attempting to save class", LogLevel.D);
         if(runChecks()){
+            Logger.getInstance().log(this.getClass().getSimpleName(),"Saving...", LogLevel.D);
             saveCurrentPayment();
+        }else{
+            Logger.getInstance().log(this.getClass().getSimpleName(),"Did not pass checks.", LogLevel.D);
         }
     }
 
@@ -123,10 +130,12 @@ public class AddEditPaymentController extends BaseController implements Initiali
 
         long pid;
         if(current_mode == EDIT_MODE){
+            Logger.getInstance().log(this.getClass().getSimpleName(),"Replacing Payment " + currentlyEditingPayment.getID(), LogLevel.D);
             pid = modelManager.replacePayment(currentlyEditingPayment.getID(),
                     selectedStudent, datePicker.getValue(), paymentType.getValue().toString(),
                     Double.parseDouble(tPaid.getText().trim()), lComment.getText());
         }else {
+            Logger.getInstance().log(this.getClass().getSimpleName(),"Creating new payment", LogLevel.D);
             pid = modelManager.addPayment(selectedStudent, datePicker.getValue(),
                     paymentType.getValue().toString(), Double.parseDouble(tPaid.getText().trim()), lComment.getText());
 
@@ -161,6 +170,7 @@ public class AddEditPaymentController extends BaseController implements Initiali
     }
 
     public void deleteClicked(ActionEvent e){
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Deleting current payment.", LogLevel.D);
         modelManager.deletePayment(currentlyEditingPayment.getID());
         currentlyEditingPayment = null;
         sceneModel.setCurrentPayment(null);
@@ -168,6 +178,7 @@ public class AddEditPaymentController extends BaseController implements Initiali
         reset();
     }
     public void cancelClicked(){
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Cancel changes to current payment", LogLevel.D);
         if(current_mode == ADD_MODE) {
             reset();
         }else{
@@ -178,6 +189,7 @@ public class AddEditPaymentController extends BaseController implements Initiali
     }
 
     public void selectStudent(Student student){
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Choosing Student " + student.getName(), LogLevel.D);
         this.selectedStudent = student;
         if(student != null) {
             tStudent.setText(student.getName());

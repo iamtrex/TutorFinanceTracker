@@ -107,6 +107,9 @@ public class SingleClassController extends BaseController{
 
         sameDuration.selectedProperty().addListener((obs, oldVal, newVal)->{
 
+            if(chosenStudents.size() == 0){
+                return;
+            }
             for(Student s : chosenStudents){
                 durationMap.get(s).setVisible(!newVal);
             }

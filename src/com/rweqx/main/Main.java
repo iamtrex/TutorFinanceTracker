@@ -54,8 +54,8 @@ public class Main extends Application {
 
         logger.log(getClass().getSimpleName(), "Done Initialization, showing window.", LogLevel.D);
         primaryStage.show();
-        primaryStage.setMinWidth(primaryStage.getWidth());
-        primaryStage.setMinHeight(primaryStage.getHeight());
+        //primaryStage.setMinWidth(primaryStage.getWidth());
+        //primaryStage.setMinHeight(primaryStage.getHeight());
 
     }
 
