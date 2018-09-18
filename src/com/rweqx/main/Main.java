@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 
 public class Main extends Application {
@@ -43,7 +44,11 @@ public class Main extends Application {
         logger.log(getClass().getSimpleName(), "Done Loading Root Layout", LogLevel.D);
 
         logger.log(this.getClass().getSimpleName(), "Setting up Window.", LogLevel.D);
-        Scene mainScene = new Scene(root, 1300, 675);
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        double w = 1300 * screenSize.getWidth() / 1920;
+        double h = 675 * screenSize.getHeight() / 1080;
+        Scene mainScene = new Scene(root, w, h);
         mainScene.getStylesheets().add(getClass().getResource("/com/rweqx/styles/style.css").toString());
 
         primaryStage.setTitle("Tutor Student Finance Tracker");

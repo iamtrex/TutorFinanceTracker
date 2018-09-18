@@ -31,8 +31,8 @@ public class RootController extends BaseController{
     @FXML
     private StackPane paneHolder;
 
-    private Stack<Pane> history;
-    //private Stack<String> history;
+    //private Stack<Pane> history;
+    private Stack<String> history;
 
 
     public RootController(){
@@ -56,9 +56,8 @@ public class RootController extends BaseController{
     }
 
     private void switchSceneBack() {
-
-
-        Pane p = history.pop();
+        history.pop();
+        String p = history.pop();
         if(p == null){
             Logger.getInstance().log(getClass().getSimpleName(), "Tried to back without history pane, doing nothing", LogLevel.W);
             return;
@@ -66,6 +65,7 @@ public class RootController extends BaseController{
 
         System.out.println(p);
         //TELL SCENE IT'S BEING LOADED FIRST.
+        /*
         BaseController bc = subSceneControllerMap.get(p);
         if(bc == null)
             throw new IllegalStateException();
@@ -74,6 +74,8 @@ public class RootController extends BaseController{
 
         System.out.println(bc.getClass().getSimpleName());
         paneHolder.getChildren().setAll(p);
+        */
+        sceneModel.setScene(p);
 
     }
 
@@ -90,7 +92,8 @@ public class RootController extends BaseController{
 
 
             if(paneHolder.getChildren().size() > 0) {
-                history.push((Pane) paneHolder.getChildren().get(0));
+                //history.push((Pane) paneHolder.getChildren().get(0));
+                history.push(sceneName);
 
             }
 

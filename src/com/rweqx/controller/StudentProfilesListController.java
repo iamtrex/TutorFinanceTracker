@@ -9,12 +9,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import org.controlsfx.glyphfont.INamedCharacter;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -25,6 +27,9 @@ import java.util.stream.Collectors;
  *
  */
 public class StudentProfilesListController extends BaseController implements Initializable {
+
+    @FXML
+    private ScrollPane scrollPane;
 
     @FXML
     private FlowPane studentsPane;
@@ -44,6 +49,7 @@ public class StudentProfilesListController extends BaseController implements Ini
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        scrollPane.setFitToWidth(true);
         currSearch = searchbar.getText();
         searchbar.textProperty().addListener((obs, oldVal, newVal)->{
             filterList(newVal);
@@ -74,8 +80,8 @@ public class StudentProfilesListController extends BaseController implements Ini
             StudentButton sb = new StudentButton(s.getID(), s.getName());
             studentButtons.add(sb);
             sb.setOnAction(this::handleStudentButton);
-
         }
+        studentButtons.sort(Comparator.comparing(StudentButton::getStudentName));
         studentsPane.getChildren().setAll(studentButtons);
     }
 
@@ -90,6 +96,7 @@ public class StudentProfilesListController extends BaseController implements Ini
     }
 
     public void newStudentClicked(ActionEvent e){
+        //sceneModel.setCurrentStudent(null);
         sceneModel.setScene(AddEditStudentController.class.getSimpleName());
     }
 

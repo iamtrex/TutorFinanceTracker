@@ -16,12 +16,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -145,6 +149,7 @@ public class StudentProfileController extends BaseController implements Initiali
         //Load currentStudent...
         super.sceneLoaded();
         System.out.println("Loading Student Profile Scene");
+
         System.out.println("Student " + sceneModel.getCurrentStudent().getName());
 
         ObservableList<String> filterItems = FXCollections.observableArrayList();
@@ -232,6 +237,7 @@ public class StudentProfileController extends BaseController implements Initiali
 
     public void backClicked(ActionEvent e) {
         reset();
+        sceneModel.setCurrentStudent(null);
         sceneModel.backClicked();
     }
 
@@ -250,7 +256,11 @@ public class StudentProfileController extends BaseController implements Initiali
             pstc.setEvents(studentID.get(), startDate, endDate, currentEvents);
 
             Stage stage = new Stage();
-            stage.setScene(new Scene(p, 750, 900));
+
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            double w = 750 * screenSize.getWidth() / 1920;
+            double h = 900 * screenSize.getHeight() / 1080;
+            stage.setScene(new Scene(p, w, h));
             stage.show();
         }catch(Exception e){
             e.printStackTrace();

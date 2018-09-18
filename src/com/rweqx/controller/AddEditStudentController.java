@@ -124,8 +124,8 @@ public class AddEditStudentController extends BaseController implements Initiali
         Logger.getInstance().log(this.getClass().getSimpleName(),"Cancelling changes to " + currentlyEditingStudent.getName(), LogLevel.D);
 
         reset();
-        sceneModel.setCurrentStudent(null);
-        sceneModel.getBackProperty().set(true);
+        //sceneModel.setCurrentStudent(null);
+        sceneModel.backClicked();
     }
 
 
