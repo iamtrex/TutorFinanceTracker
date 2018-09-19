@@ -121,7 +121,9 @@ public class AddEditStudentController extends BaseController implements Initiali
     }
 
     public void cancelClicked() {
-        Logger.getInstance().log(this.getClass().getSimpleName(),"Cancelling changes to " + currentlyEditingStudent.getName(), LogLevel.D);
+        if(currentlyEditingStudent != null) {
+            Logger.getInstance().log(this.getClass().getSimpleName(), "Cancelling changes to " + currentlyEditingStudent.getName(), LogLevel.D);
+        }
 
         reset();
         //sceneModel.setCurrentStudent(null);

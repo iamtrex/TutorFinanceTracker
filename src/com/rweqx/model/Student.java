@@ -1,5 +1,6 @@
 package com.rweqx.model;
 
+import com.rweqx.constants.Constants;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 
@@ -59,9 +60,17 @@ public class Student {
         Collections.sort(paymentRates, Comparator.comparing(PaymentRatesAtTime::getDate));
 
         if(date.isBefore(paymentRates.get(0).getDate())){
-            Logger.getInstance().log(getClass().getSimpleName(), "Error - Rate was unset at this time, could not search for it. Returning 0 for now. ", LogLevel.W);
+            //Logger.getInstance().log(getClass().getSimpleName(), "Error - Rate was unset at this time, could not search for it. Returning 0 for now. ", LogLevel.W);
+            //Rate was unset at this time. could be issue with previous versions...
+            Logger.getInstance().log(getClass().getSimpleName(), "Student was created on Beta v4 or before. Going to use first date", LogLevel.D);
+            Double value = paymentRates.get(0).getRateByType(classType); //Take the oldest one for now...
 
-            return 0; //Rate was unset at this time
+            if(value != null){
+                //Fix the error:
+                paymentRates.get(0).setDate(Constants.NULL_DATE);
+                return value;
+            }
+            return 0;
         }
 
         for(int i=0; i<paymentRates.size()-1; i++){

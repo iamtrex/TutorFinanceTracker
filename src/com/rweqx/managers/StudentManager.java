@@ -1,5 +1,6 @@
 package com.rweqx.managers;
 
+import com.rweqx.constants.Constants;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 import com.rweqx.model.Class;
@@ -67,6 +68,7 @@ public class StudentManager {
     public void createAndAddStudent(String name, String comment, PaymentRatesAtTime rates, List<String> groups) {
         LocalDate registeredDate = LocalDate.now();
         List<PaymentRatesAtTime> list = new ArrayList<>();
+        rates.setDate(Constants.NULL_DATE); //Set date to before time existed :P
         list.add(rates);
         addStudent(new Student(getNewID(), name, registeredDate, comment, list, groups));
     }

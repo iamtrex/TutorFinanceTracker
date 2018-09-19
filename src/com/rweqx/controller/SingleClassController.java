@@ -71,11 +71,12 @@ public class SingleClassController extends BaseController{
 
     }
 
-    private void updateClassRateAll(String classType) {
+    private void updateClassRateAll() {
+        String classType = classTypeChoices.getValue();
         for(Student s : chosenStudents){
-            if(classType != null) {
+            if(classType != null && datePicker.getValue() != null) {
                 rateMap.get(s).setText(String.valueOf(
-                        s.getLatestPaymentRates().getRateByType(classType)));
+                        s.getPaymentRateAtTime(datePicker.getValue(), classType)));
             }else{
                 rateMap.get(s).setText("");
             }
@@ -102,7 +103,7 @@ public class SingleClassController extends BaseController{
 
         classTypeChoices.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal)->{
             //Update rates for the selected class type.
-            updateClassRateAll(newVal);
+            updateClassRateAll();
         });
 
         sameDuration.selectedProperty().addListener((obs, oldVal, newVal)->{
@@ -120,6 +121,11 @@ public class SingleClassController extends BaseController{
         });
 
         datePicker.setValue(LocalDate.now());
+
+        datePicker.valueProperty().addListener((obs, oldVal, newVal)->{
+            updateClassRateAll();
+        });
+
         chosenStudents.addListener((ListChangeListener<Student>) c->{
             if(c.next()) {
                 if (c.wasPermutated() || c.wasUpdated()) {
@@ -168,8 +174,9 @@ public class SingleClassController extends BaseController{
         rateMap.put(s, new ClickEditTextField());
 
         String type = classTypeChoices.getSelectionModel().getSelectedItem();
-        if(type != null){
-            rateMap.get(s).setText(String.valueOf(s.getLatestPaymentRates().getRateByType(type)));
+        if(type != null && datePicker.getValue()!= null){
+            rateMap.get(s).setText(String.valueOf(s.getPaymentRateAtTime(datePicker.getValue(), type)));
+            //rateMap.get(s).setText(String.valueOf(s.getLatestPaymentRates().getRateByType(type)));
         }
 
         paidMap.put(s, new TextField());
@@ -216,7 +223,7 @@ public class SingleClassController extends BaseController{
                 paymentType = paymentTypeMap.get(s).getValue();
             }
             customRate = Double.parseDouble(rateMap.get(s).getText().trim());
-            if(customRate != s.getLatestPaymentRates().getRateByType(classType)){
+            if(customRate != s.getPaymentRateAtTime(datePicker.getValue(), classType)){
                 modelManager.addStuDurPaidToClass(c, s, duration, paymentAmount, paymentType, paidComment, customRate);
             }else{
                 modelManager.addStuDurPaidToClass(c, s, duration, paymentAmount, paymentType, paidComment); //Same as giving -1 custom rate.
