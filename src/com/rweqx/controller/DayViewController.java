@@ -119,11 +119,12 @@ public class DayViewController extends BaseController implements Initializable {
     }
 
 
-    public void lastMonthClicked(){
+    public void prevMonthClicked(){
+
         refreshDisabled = true;
-        startDatePicker.setValue(LocalDate.now().minus(1, ChronoUnit.MONTHS).with(TemporalAdjusters.firstDayOfMonth()));
+        startDatePicker.setValue(startDatePicker.getValue().minus(1, ChronoUnit.MONTHS).with(TemporalAdjusters.firstDayOfMonth()));
         refreshDisabled = false;
-        endDatePicker.setValue(LocalDate.now().minus(1, ChronoUnit.MONTHS).with(TemporalAdjusters.lastDayOfMonth()));
+        endDatePicker.setValue(endDatePicker.getValue().minus(1, ChronoUnit.MONTHS).with(TemporalAdjusters.lastDayOfMonth()));
     }
 
     private void setMonth(int year, int month) {
@@ -131,6 +132,13 @@ public class DayViewController extends BaseController implements Initializable {
         startDatePicker.setValue(LocalDate.of(year, month, 1));
         refreshDisabled = false;
         endDatePicker.setValue(LocalDate.of(year, month, 1).with(TemporalAdjusters.lastDayOfMonth()));
+    }
+
+    public void nextMonthClicked(){
+        refreshDisabled = true;
+        startDatePicker.setValue(startDatePicker.getValue().plus(1, ChronoUnit.MONTHS).with(TemporalAdjusters.firstDayOfMonth()));
+        refreshDisabled = false;
+        endDatePicker.setValue(endDatePicker.getValue().plus(1, ChronoUnit.MONTHS).with(TemporalAdjusters.lastDayOfMonth()));
     }
     public void thisMonthClicked(){
         refreshDisabled = true;
@@ -140,8 +148,8 @@ public class DayViewController extends BaseController implements Initializable {
     }
     public void todayClicked(){
         refreshDisabled = true;
-        startDatePicker.setValue(LocalDate.now());
+        startDatePicker.setValue(LocalDate.now().with(TemporalAdjusters.firstDayOfMonth()));
         refreshDisabled = false;
-        endDatePicker.setValue(LocalDate.now());
+        endDatePicker.setValue(LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()));
     }
 }

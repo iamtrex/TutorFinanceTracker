@@ -6,7 +6,7 @@ import javafx.scene.text.FontWeight;
 import java.time.LocalDate;
 
 public abstract class Constants {
-    public static final String VERSION = "BETA 5.0";
+    public static final String VERSION = "BETA 5.1";
 
     public static final String SAVE_FOLDER = "TutorTracker";
     public static final String CLASS_SAVE_FILE = "/classes.json";

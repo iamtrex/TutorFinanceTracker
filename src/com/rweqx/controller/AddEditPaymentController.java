@@ -189,10 +189,12 @@ public class AddEditPaymentController extends BaseController implements Initiali
     }
 
     public void selectStudent(Student student){
-        Logger.getInstance().log(this.getClass().getSimpleName(),"Choosing Student " + student.getName(), LogLevel.D);
+
+
         this.selectedStudent = student;
         if(student != null) {
             tStudent.setText(student.getName());
+            Logger.getInstance().log(this.getClass().getSimpleName(),"Choosing Student " + student.getName(), LogLevel.D);
         }else{
             tStudent.setText("");
         }

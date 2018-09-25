@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -52,9 +53,18 @@ public class JSONWriter {
         try {
             Writer writer = new FileWriter(fileName);
 
-            //System.out.println("Writing " + toWrite);
-
             writer.write(toWrite);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void append(String fileName, String toWrite){
+
+        try {
+            Writer writer = new FileWriter(fileName, true);
+            writer.append(toWrite);
             writer.flush();
             writer.close();
         } catch (IOException e) {
@@ -95,7 +105,10 @@ public class JSONWriter {
         String fileName = Constants.SAVE_FOLDER + logSaveFile;
         checkFile(fileName);
 
+        logs.add("Log Date " + LocalDate.now().toString() + "\n");
+
         String json = gson.toJson(logs);
-        write(fileName, json);
+        append(fileName, json);
+        //write(fileName, json, false);
     }
 }
