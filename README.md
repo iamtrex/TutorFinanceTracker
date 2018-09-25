@@ -7,8 +7,10 @@ End Goals ->
 * View daily results and monthly overviews 
 * View and print students monthly summary
 
+<strong>REQUIRES JAVA VERSION 10 OR HIGHER!</strong>
+
 Currently releasing on a (somewhat) nightly schedule. 
-BETA v2.0 now Released with basic functionality... -> Can download here:  https://github.com/iamtrex/TutorFinanceTracker/releases
+BETA v5.1 now Released with basic functionality... -> Can download here:  https://github.com/iamtrex/TutorFinanceTracker/releases
 
 Current Updated features ->
 * Add and edit student profiles
