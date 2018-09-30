@@ -16,6 +16,8 @@ import javafx.stage.Stage;
 
 import java.awt.*;
 import java.io.IOException;
+import java.net.BindException;
+import java.net.ServerSocket;
 
 public class Main extends Application {
 
@@ -29,6 +31,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage){
+        bindSocket();
+
         this.primaryStage = primaryStage;
         logger = Logger.getInstance();
         LoggerUI logUI = new LoggerUI();
@@ -61,6 +65,26 @@ public class Main extends Application {
         primaryStage.show();
         //primaryStage.setMinWidth(primaryStage.getWidth());
         //primaryStage.setMinHeight(primaryStage.getHeight());
+
+    }
+
+    private void bindSocket() {
+        new Thread(()->{
+            try {
+                ServerSocket ss = new ServerSocket(7778);
+                while(true){
+                    ss.accept();
+                    try {
+                        Thread.sleep(1000);
+                    }catch(InterruptedException e){}
+                }
+            } catch (BindException e) {
+                System.out.println("Already bound, shutting down...");
+                System.exit(0);
+            } catch(Exception e){
+                System.out.println("Uh oh... Another error...");
+            }
+        }).start();
 
     }
 
