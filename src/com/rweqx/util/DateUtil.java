@@ -2,6 +2,7 @@ package com.rweqx.util;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
@@ -49,5 +50,10 @@ public class DateUtil {
 
     public static LocalDate startOfMonth(int year, int month) {
         return LocalDate.of(year, month, 1);
+    }
+
+    public static String getNameFromCurrentDate(LocalDateTime now) {
+        return now.getYear() + "_" + now.getMonthValue() + "_" + now.getDayOfMonth() + "_" + now.getHour() +
+                "_" + now.getMinute() + "_" + now.getSecond() + "_" + now.getNano();
     }
 }

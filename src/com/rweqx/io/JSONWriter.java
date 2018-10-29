@@ -9,6 +9,7 @@ import com.rweqx.logger.Logger;
 import com.rweqx.model.Class;
 import com.rweqx.model.Payment;
 import com.rweqx.model.Student;
+import com.rweqx.util.DateUtil;
 import javafx.collections.ObservableList;
 import org.hildan.fxgson.FxGson;
 
@@ -17,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -37,15 +39,27 @@ public class JSONWriter {
 
         String json = gson.toJson(students);
         write(fileName, json);
+
+        String backupName = getFileBackupName(fileName);
+        write(backupName, json);
     }
 
     public void writePaymentToFile(List<Payment> paymentList, String paymentFile){
         System.out.println("Writing payments" + paymentList);
 
         String fileName = Constants.SAVE_FOLDER + paymentFile;
+        String backupName = getFileBackupName(fileName);
+
         checkFile(fileName);
+
         String json = gson.toJson(paymentList);
         write(fileName, json);
+        write(backupName, json);
+    }
+
+    private String getFileBackupName(String fileName) {
+        File f = new File(fileName);
+        return fileName + "_" + DateUtil.getNameFromCurrentDate(LocalDateTime.now());
     }
 
     private void write(String fileName, String toWrite){
@@ -84,6 +98,10 @@ public class JSONWriter {
         String json = gson.toJson(classList);
         write(fileName, json);
 
+
+        String backupName = getFileBackupName(fileName);
+        write(backupName, json);
+
     }
 
     private void checkFile(String fileName) {
@@ -109,6 +127,9 @@ public class JSONWriter {
 
         String json = gson.toJson(logs);
         append(fileName, json);
+
+        String backupName = getFileBackupName(fileName);
+        write(backupName, json);
         //write(fileName, json, false);
     }
 }
