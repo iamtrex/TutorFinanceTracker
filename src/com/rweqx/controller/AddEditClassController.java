@@ -257,6 +257,20 @@ public class AddEditClassController extends BaseController implements Initializa
         }
     }
 
+    public void plusClassSameDateClicked(ActionEvent event){
+
+        Logger.getInstance().log(this.getClass().getSimpleName(),"Adding a new class with same date.", LogLevel.D);
+        LocalDate date = classes.get(0).getDate();
+
+        if(saveClicked(null)){
+            //Set the class to be of the current date.
+            classes.get(0).setDate(date);
+        }
+
+
+
+    }
+
     public void plusClassClicked(ActionEvent event){
 
         Logger.getInstance().log(this.getClass().getSimpleName(),"Adding a new class to chain.", LogLevel.D);
@@ -305,7 +319,7 @@ public class AddEditClassController extends BaseController implements Initializa
     }
 
 
-    public void saveClicked(ActionEvent e){
+    public boolean saveClicked(ActionEvent e){
 
         Logger.getInstance().log(this.getClass().getSimpleName(),"Saving class.", LogLevel.D);
 
@@ -315,13 +329,13 @@ public class AddEditClassController extends BaseController implements Initializa
 
         if(chosenStudents.size() == 0 || classes.size() == 0){
             new WarningPopUp("No students/class to add.");
-            return; //Don't add.
+            return false; //Don't add.
         }
         for(SingleClassController scc : classes){
             boolean checks = scc.isValidInput();
             if(!checks){
                 Logger.getInstance().log(this.getClass().getSimpleName(),"Check failed for class # " + classes.indexOf(scc), LogLevel.D);
-                return;
+                return false;
             }
         }
 
@@ -344,7 +358,8 @@ public class AddEditClassController extends BaseController implements Initializa
         //TODO MAKE THIS TRANSITION BETTER...
         sceneModel.setCurrentClass(null);
         sceneModel.setCurrentDate(LocalDate.now());
-        sceneModel.setScene(DayViewController.class.getSimpleName());
+        //sceneModel.setScene(DayViewController.class.getSimpleName()); Don't change scene...
+        return true;
 
     }
     public void minusClassClicked(ActionEvent e){

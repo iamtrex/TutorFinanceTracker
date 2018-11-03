@@ -331,6 +331,12 @@ public class SingleClassController extends BaseController{
         }
     }
 
+    public LocalDate getDate(){
+        return datePicker.getValue();
+    }
+    public void setDate(LocalDate date){
+        datePicker.setValue(date);
+    }
     private DatePicker getDatePicker() {
         return datePicker;
     }
