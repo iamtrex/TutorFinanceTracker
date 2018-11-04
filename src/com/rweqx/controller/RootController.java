@@ -1,5 +1,6 @@
 package com.rweqx.controller;
 
+import com.rweqx.components.ToolBar;
 import com.rweqx.logger.LogLevel;
 import com.rweqx.logger.Logger;
 import com.rweqx.managers.ModelManager;
@@ -126,11 +127,10 @@ public class RootController extends BaseController{
             addPaneAndController(AddEditPaymentController.class.getSimpleName(), "/com/rweqx/ui/add-edit-payment.fxml");
             addPaneAndController(StudentProfilesListController.class.getSimpleName(), "/com/rweqx/ui/student-profiles-list.fxml");
             addPaneAndController(DayViewController.class.getSimpleName(), "/com/rweqx/ui/day-view.fxml");
-
-
-
             addPaneAndController(StudentProfileController.class.getSimpleName(), "/com/rweqx/ui/student-profile.fxml");
             addPaneAndController(AddEditStudentController.class.getSimpleName(), "/com/rweqx/ui/add-edit-student.fxml");
+
+            addPaneAndController(AddEditClass3Controller.class.getSimpleName(), "/com/rweqx/ui/add-edit-class-3.fxml");
 
             FXMLLoader leftPaneLoader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/left-pane.fxml"));
             Pane leftPane = leftPaneLoader.load();
@@ -140,7 +140,14 @@ public class RootController extends BaseController{
             rootGrid.getChildren().add(leftPane);
             GridPane.setRowIndex(leftPane, 0);
             GridPane.setColumnIndex(leftPane, 0);
+            GridPane.setRowSpan(leftPane, 2);
             System.out.println(rootGrid.getChildren());
+
+            ToolBar toolbar = new ToolBar();
+            rootGrid.getChildren().add(toolbar);
+            GridPane.setRowIndex(toolbar, 0);
+            GridPane.setColumnIndex(toolbar, 1);
+            toolbar.setSceneModel(sceneModel);
 
         }catch(IOException e){
             e.printStackTrace();

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root fx:id="sidebar" style="-fx-border-color: black;" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="800.0" prefWidth="200.0" styleClass="side-bar" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <HBox fx:id="toolbar" prefHeight="50.0" prefWidth="200.0" spacing="10.0" VBox.vgrow="NEVER">
+            <children>
+                <Button fx:id="bExtend" mnemonicParsing="false" text="&gt;&gt;" />
+                <Label fx:id="lTitle" prefHeight="26.0" prefWidth="238.0" text="Label" />
+                <Button mnemonicParsing="false" text="+" />
+            </children>
+        </HBox>
+        <ScrollPane fx:id="content" fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="150.0" VBox.vgrow="ALWAYS">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+            </content>
+            <VBox.margin>
+                <Insets />
+            </VBox.margin>
+        </ScrollPane>
+        <HBox fx:id="bottomBar" prefHeight="100.0" prefWidth="200.0" />
+
+    </children>
+</fx:root>

@@ -19,6 +19,7 @@
         <Button fx:id="bSettings" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchScene" text="Settings" />
       <Button fx:id="bSave" layoutX="10.0" layoutY="210.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchScene" text="Force Save" />
         <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
+      <Button fx:id="bAddClass3" layoutX="12.0" layoutY="237.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#switchScene" text="Add Class 3" />
         <Label fx:id="lVersion" prefHeight="17.0" text="Label" />
     </children>
    <padding>

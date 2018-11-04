@@ -42,6 +42,10 @@ public class LeftPaneController extends BaseController implements Initializable 
     @FXML
     private Button bSave;
 
+    @FXML
+    private Button bAddClass3;
+
+
     private Map<Button, String> clickMap;
 
     @FXML
@@ -84,6 +88,8 @@ public class LeftPaneController extends BaseController implements Initializable 
         clickMap.put(bStats, StatsController.class.getSimpleName());
         clickMap.put(bBackupAndRestore, BackupRestoreController.class.getSimpleName());
         clickMap.put(bSettings, SettingsController.class.getSimpleName());
+
+        clickMap.put(bAddClass3, AddEditClass3Controller.class.getSimpleName());
 
         lVersion.setText("Version - " + Constants.VERSION);
         leftPaneBox.setFillWidth(true);
