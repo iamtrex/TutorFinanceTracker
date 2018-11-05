@@ -44,8 +44,6 @@ public class AddEditClassController extends BaseController implements Initializa
     private List<ChosenStudent> chosenStudentsLabels;
 
     private ObservableList<Student> searchMatchNames;
-    private ObservableList<String> classTypes;
-
 
 
     @FXML
@@ -122,7 +120,6 @@ public class AddEditClassController extends BaseController implements Initializa
         chosenStudents = FXCollections.observableArrayList();
         chosenStudentsLabels = new ArrayList<>();
         searchMatchNames = FXCollections.observableArrayList();
-        classTypes = FXCollections.observableArrayList();
 
     }
 

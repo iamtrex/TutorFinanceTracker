@@ -376,4 +376,8 @@ public class SingleClassController extends BaseController{
     private Map<Student, TextField> getCommentMap() {
         return commentMap;
     }
+
+    public List<Student> getSelectedStudents() {
+        return chosenStudents;
+    }
 }

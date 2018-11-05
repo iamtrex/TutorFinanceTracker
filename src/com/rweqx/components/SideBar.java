@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
@@ -62,7 +63,7 @@ public class SideBar extends VBox {
             double width = wasExtended ? 200 : 0;
             @Override
             public void handle(ActionEvent event) {
-                width += 200/COUNT * (wasExtended ? -1 : 1);
+                width += 200/((double)COUNT) * (wasExtended ? -1 : 1);
                 System.out.println(width);
                 SideBar.this.setWidth(width);
                 SideBar.this.setPrefWidth(width);
@@ -77,4 +78,7 @@ public class SideBar extends VBox {
     }
 
 
+    public void setContent(Pane content) {
+
+    }
 }
