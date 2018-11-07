@@ -2,6 +2,8 @@ package com.rweqx.controller;
 
 import com.rweqx.components.SideBar;
 import com.rweqx.components.StudentListButton;
+import com.rweqx.managers.ModelManager;
+import com.rweqx.model.SceneModel;
 import com.rweqx.model.Student;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -59,30 +61,39 @@ public class AddEditClass3Controller extends BaseController implements Initializ
     @FXML
     private SideBar addClassSideBar;
 
+    private StudentListSearchController studentListSearchController;
 
 
     @Override
     public void sceneLoaded(){
-
+        //Call dependancy's scene loaded:
+        if(studentListSearchController != null){
+            studentListSearchController.sceneLoaded();
+        }
     }
 
-
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-        bSave.setOnAction(this::onSaveClicked);
+    public void initModel(ModelManager mm, SceneModel sm){
+        super.initModel(mm, sm);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/rweqx/ui/student-list-search.fxml"));
             Pane studentListSearch = loader.load();
             StudentListSearchController slsc = loader.getController();
             slsc.initModel(modelManager, sceneModel);
             slsc.setCallback((student, isSelected) -> onStudentSelected(student, isSelected));
-
+            this.studentListSearchController = slsc;
             addClassSideBar.setContent(studentListSearch);
 
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
         }
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        bSave.setOnAction(this::onSaveClicked);
     }
 
     private void onStudentSelected(Student student, boolean isSelected) {

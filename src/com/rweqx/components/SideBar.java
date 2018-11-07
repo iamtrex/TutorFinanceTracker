@@ -22,6 +22,9 @@ public class SideBar extends VBox {
     private final int TRANSLATE_AMOUNT = 200;
 
     @FXML
+    private AnchorPane contentAnchor;
+
+    @FXML
     private HBox toolbar;
 
     @FXML
@@ -79,6 +82,12 @@ public class SideBar extends VBox {
 
 
     public void setContent(Pane content) {
+        AnchorPane.setBottomAnchor(content, 0.0);
+        AnchorPane.setTopAnchor(content, 0.0);
+        AnchorPane.setLeftAnchor(content, 0.0);
+        AnchorPane.setRightAnchor(content, 0.0);
+        contentAnchor.getChildren().add(content);
+
 
     }
 }
